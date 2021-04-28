@@ -33,7 +33,7 @@ rules:
       - description: 'spacebar = language switch'
         type: basic
         from: { key_code: spacebar, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: spacebar , modifiers: [ left_control ] } ]
+        to: [ { key_code: spacebar , modifiers: [ right_command,right_control,right_shift,right_option  ] } ]
 
       - description: 'command + spacebar = emoji'
         type: basic
@@ -1254,22 +1254,22 @@ rules:
 
 
       #==========================================================#
-      # ( e ) --> safari / finder / mail                         #
+      # ( e ) --> chrome / finder / DEVONthink 3                 #
       #==========================================================#
       - description: 'command + e = finder'
         type: basic
         from: { key_code: e, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
         to: [ { shell_command: open -a finder } ]
 
-      - description: 'option + e = mail'
+      - description: 'option + e = devonthink'
         type: basic
         from: { key_code: e, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: open -a mail } ]
+        to: [ { shell_command: open -a 'DEVONthink 3' } ]
 
-      - description: 'e = safari'
+      - description: 'e = chrome'
         type: basic
         from: { key_code: e, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: open -a Safari } ]
+        to: [ { shell_command: open -a 'Google Chrome' } ]
 
 
       #==========================================================#
