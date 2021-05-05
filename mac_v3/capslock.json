@@ -86,7 +86,10 @@
             {
               "key_code": "spacebar",
               "modifiers": [
-                "left_control"
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
               ]
             }
           ]
@@ -4798,7 +4801,7 @@
           ]
         },
         {
-          "description": "option + e = mail",
+          "description": "option + e = devonthink",
           "type": "basic",
           "from": {
             "key_code": "e",
@@ -4814,12 +4817,12 @@
           },
           "to": [
             {
-              "shell_command": "open -a mail"
+              "shell_command": "open -a 'DEVONthink 3'"
             }
           ]
         },
         {
-          "description": "e = safari",
+          "description": "e = chrome",
           "type": "basic",
           "from": {
             "key_code": "e",
@@ -4834,7 +4837,7 @@
           },
           "to": [
             {
-              "shell_command": "open -a Safari"
+              "shell_command": "open -a 'Google Chrome'"
             }
           ]
         },
