@@ -43,6 +43,7 @@ rules:
       #==========================================================#
       # ( h ) + ( ⌘⌥⇧⌃ )  -> ( left )                            #
       #==========================================================#
+
       # command: selection
       - description: 'command + h = shift + left'
         type: basic
@@ -163,7 +164,7 @@ rules:
       - description: 'option + k = param up'
         type: basic
         from: { key_code: k, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
-        to: [ key_code: up_arrow }, { key_code: up_arrow },{ key_code: up_arrow ]
+        to: [ { key_code: up_arrow }, { key_code: up_arrow },{ key_code: up_arrow} ]
 
       # shift + control: mouse wheel
       - description: 'shift + control + k = mouse wheel up'
@@ -249,11 +250,11 @@ rules:
       # control: desktop management
       - description: 'control + u = ctrl + command + f (fullscreen)'
         type: basic
-        from: { key_code: u, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
+        from: { key_code: u , modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: f , modifiers: [ left_control,left_command ] } ]
 
       # option: move line up
-       - description: 'option + u = move line up'
+      - description: 'option + u = move line up'
         type: basic
         from: { key_code: u, modifiers: { mandatory: [ left_option,  right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: up_arrow, modifiers: [ left_option, left_shift ] } ]
@@ -688,43 +689,49 @@ rules:
         from: { key_code: close_bracket, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: '0' , modifiers: [ left_shift ] } ]
 
-
-      #==========================================================#
-      # slash/backslash to comment
-      #==========================================================#
-      - description: 'backslash \ = command + / (comment)'
-        type: basic
-        from: { key_code: backslash, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: slash , modifiers: [ left_command ] } ]
-
-      - description: 'slash / = command + / (comment)'
-        type: basic
-        from: { key_code: slash, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: slash , modifiers: [ left_command ] } ]
-
-
       #==========================================================#
       # semicolon / quote -->  !=   (+command) :"
       #==========================================================#
-      - description: 'command + semicolon = !'
-        type: basic
-        from: { key_code: semicolon, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: '1' , modifiers: [ left_shift ] } ]
-
-      - description: 'semicolon = :'
+      - description: 'semicolon = !'
         type: basic
         from: { key_code: semicolon, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: semicolon , modifiers: [ left_shift ] } ]
+        to: [ { key_code: '1' , modifiers: [ left_shift ] } ]
 
-      - description: 'command + quote = equal_sign'
+      - description: 'command + semicolon = -'
+        type: basic
+        from: { key_code: semicolon, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: hyphen } ]
+
+      - description: 'option + semicolon = _'
+        type: basic
+        from: { key_code: semicolon, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: hyphen , modifiers: [ left_shift ] } ]
+
+      - description: 'command + quote = +'
         type: basic
         from: { key_code: quote, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: equal_sign } ]
+        to: [ { key_code: equal_sign , modifiers: [ left_shift ] } ]
+
+      - description: 'option + quote = $'
+        type: basic
+        from: { key_code: quote, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: '4' , modifiers: [ left_shift ] } ]
 
       - description: 'quote = equal_sign'
         type: basic
         from: { key_code: quote, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: equal_sign } ]
 
+      #==========================================================#
+      # / -> language switch; command: chinese 
+      #==========================================================#
+      - description: 'slash = abc'
+        type: basic
+        from: { key_code: slash, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        to: [ { select_input_source: { input_source_id: "^com\\.apple\\.keylayout\\.ABC$", language: "en" } } ]
+      - description: 'command + slash = pingyin'
+        type: basic
+        from: { key_code: slash, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        to: [ { select_input_source: { input_mode_id: "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$", input_source_id: "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$", language: "zh-Hans" } } ]
 
 ...
