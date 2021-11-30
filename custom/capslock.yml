@@ -297,13 +297,13 @@ rules:
       # option: mouse back
       - description: 'option + i = mouse back'
         type: basic
-        from: { key_code: i, modifiers: { mandatory: [ left_shift,  right_command,right_control,right_shift,right_option ] } }
+        from: { key_code: i, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         to: [ { pointing_button: button4 } ]
 
       # shift + control: mouse back
       - description: 'shift + control + i = mouse back'
         type: basic
-        from: { key_code: i, modifiers: { mandatory: [ left_shift,left_control,  right_command,right_control,right_shift,right_option ] } }
+        from: { key_code: i, modifiers: { mandatory: [ left_option, left_control,  right_command,right_control,right_shift,right_option ] } }
         to: [ { pointing_button: button4 } ]
 
       # normal: cursor move
@@ -343,13 +343,13 @@ rules:
       # option: mouse forward
       - description: 'option + o = mouse forward'
         type: basic
-        from: { key_code: o, modifiers: { mandatory: [ left_shift,  right_command,right_control,right_shift,right_option ] } }
+        from: { key_code: o, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         to: [ { pointing_button: button5 } ]
 
       # shift + control: mouse forward
       - description: 'shift + control + o = mouse forward'
         type: basic
-        from: { key_code: o, modifiers: { mandatory: [ left_shift,left_control,  right_command,right_control,right_shift,right_option ] } }
+        from: { key_code: o, modifiers: { mandatory: [ left_option, left_control,  right_command,right_control,right_shift,right_option ] } }
         to: [ { pointing_button: button5 } ]
 
       # normal: cursor move
