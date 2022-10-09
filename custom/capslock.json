@@ -1740,13 +1740,12 @@
           ]
         },
         {
-          "description": "command + t = typora",
+          "description": "w = logseq",
           "type": "basic",
           "from": {
-            "key_code": "t",
+            "key_code": "w",
             "modifiers": {
               "mandatory": [
-                "left_command",
                 "right_command",
                 "right_control",
                 "right_shift",
@@ -1756,15 +1755,15 @@
           },
           "to": [
             {
-              "shell_command": "open -a Typora"
+              "shell_command": "open -a Logseq"
             }
           ]
         },
         {
-          "description": "option + t = notes",
+          "description": "option + w = notes",
           "type": "basic",
           "from": {
-            "key_code": "t",
+            "key_code": "w",
             "modifiers": {
               "mandatory": [
                 "left_option",
@@ -1782,12 +1781,13 @@
           ]
         },
         {
-          "description": "t = vscode",
+          "description": "command + w = vscode",
           "type": "basic",
           "from": {
-            "key_code": "t",
+            "key_code": "w",
             "modifiers": {
               "mandatory": [
+                "left_command",
                 "right_command",
                 "right_control",
                 "right_shift",
@@ -1844,7 +1844,7 @@
           ]
         },
         {
-          "description": "f = Alfred 4",
+          "description": "f = Alfred 5",
           "type": "basic",
           "from": {
             "key_code": "f",
@@ -1859,7 +1859,7 @@
           },
           "to": [
             {
-              "shell_command": "open -a 'Alfred 4'"
+              "shell_command": "open -a 'Alfred 5'"
             }
           ]
         }
