@@ -2465,7 +2465,7 @@
           ]
         },
         {
-          "description": "semicolon = !",
+          "description": "semicolon = _",
           "type": "basic",
           "from": {
             "key_code": "semicolon",
@@ -2480,7 +2480,7 @@
           },
           "to": [
             {
-              "key_code": "1",
+              "key_code": "hyphen",
               "modifiers": [
                 "left_shift"
               ]
@@ -2509,58 +2509,10 @@
           ]
         },
         {
-          "description": "option + semicolon = _",
+          "description": "option + semicolon = $",
           "type": "basic",
           "from": {
             "key_code": "semicolon",
-            "modifiers": {
-              "mandatory": [
-                "left_option",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "hyphen",
-              "modifiers": [
-                "left_shift"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "command + quote = +",
-          "type": "basic",
-          "from": {
-            "key_code": "quote",
-            "modifiers": {
-              "mandatory": [
-                "left_command",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "equal_sign",
-              "modifiers": [
-                "left_shift"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "option + quote = $",
-          "type": "basic",
-          "from": {
-            "key_code": "quote",
             "modifiers": {
               "mandatory": [
                 "left_option",
@@ -2601,6 +2553,54 @@
           ]
         },
         {
+          "description": "command + quote = +",
+          "type": "basic",
+          "from": {
+            "key_code": "quote",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "equal_sign",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "option + quote = &",
+          "type": "basic",
+          "from": {
+            "key_code": "quote",
+            "modifiers": {
+              "mandatory": [
+                "left_option",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "7",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
           "description": "slash = abc",
           "type": "basic",
           "from": {
@@ -2624,7 +2624,7 @@
           ]
         },
         {
-          "description": "command + slash = pingyin",
+          "description": "command + slash = rime",
           "type": "basic",
           "from": {
             "key_code": "slash",
@@ -2641,8 +2641,8 @@
           "to": [
             {
               "select_input_source": {
-                "input_mode_id": "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$",
-                "input_source_id": "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$",
+                "input_mode_id": "^im\\.rime\\.inputmethod\\.Squirrel$",
+                "input_source_id": "^im\\.rime\\.inputmethod\\.Squirrel\\.Rime$",
                 "language": "zh-Hans"
               }
             }
