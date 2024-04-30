@@ -307,10 +307,10 @@ rules:
         to: [ { pointing_button: button4 } ]
 
       # normal: cursor move
-      - description: ' i = home'
+      - description: ' i = cmd+left'
         type: basic
         from: { key_code: i, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: home } ]
+        to: [ { key_code: left_arrow, modifiers: [ left_command ] } ]
 
 
       #==========================================================#
@@ -353,10 +353,10 @@ rules:
         to: [ { pointing_button: button5 } ]
 
       # normal: cursor move
-      - description: ' o = end'
+      - description: ' o = cmd+right'
         type: basic
         from: { key_code: o, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: end } ]
+        to: [ { key_code: right_arrow, modifiers: [ left_command ] } ]
 
 
       #==========================================================#
@@ -478,10 +478,15 @@ rules:
         from: { key_code: e, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         to: [ { shell_command: open -a 'Calender } ]
 
-      - description: 'e = chrome'
+      # - description: 'e = chrome'
+      #   type: basic
+      #   from: { key_code: e, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+      #   to: [ { shell_command: open -a 'Google Chrome' } ]
+
+      - description: 'e = arc'
         type: basic
         from: { key_code: e, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: open -a 'Google Chrome' } ]
+        to: [ { shell_command: open -a 'Arc' } ]
 
       #==========================================================#
       # ( w ) --> logseq / vscode / notes                        #

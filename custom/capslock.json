@@ -1104,7 +1104,7 @@
           ]
         },
         {
-          "description": " i = home",
+          "description": " i = cmd+left",
           "type": "basic",
           "from": {
             "key_code": "i",
@@ -1119,7 +1119,10 @@
           },
           "to": [
             {
-              "key_code": "home"
+              "key_code": "left_arrow",
+              "modifiers": [
+                "left_command"
+              ]
             }
           ]
         },
@@ -1267,7 +1270,7 @@
           ]
         },
         {
-          "description": " o = end",
+          "description": " o = cmd+right",
           "type": "basic",
           "from": {
             "key_code": "o",
@@ -1282,7 +1285,10 @@
           },
           "to": [
             {
-              "key_code": "end"
+              "key_code": "right_arrow",
+              "modifiers": [
+                "left_command"
+              ]
             }
           ]
         },
@@ -1720,7 +1726,7 @@
           ]
         },
         {
-          "description": "e = chrome",
+          "description": "e = arc",
           "type": "basic",
           "from": {
             "key_code": "e",
@@ -1735,7 +1741,7 @@
           },
           "to": [
             {
-              "shell_command": "open -a 'Google Chrome'"
+              "shell_command": "open -a 'Arc'"
             }
           ]
         },
