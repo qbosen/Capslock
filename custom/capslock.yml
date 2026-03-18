@@ -490,58 +490,40 @@ rules:
       - description: 'command + e = finder'
         type: basic
         from: { key_code: e, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: open -a finder } ]
+        to: [ { shell_command: "~/.local/bin/toggle_app 'Finder'" } ]
 
       - description: 'option + e = calender'
         type: basic
         from: { key_code: e, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: open -a 'Calender } ]
+        to: [ { shell_command: "~/.local/bin/toggle_app 'Calendar'" } ]
 
       - description: 'e = chrome'
         type: basic
         from: { key_code: e, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: open -a 'Google Chrome' } ]
+        to: [ { shell_command: "~/.local/bin/toggle_app 'Google Chrome'" } ]
 
       # - description: 'e = arc'
       #   type: basic
       #   from: { key_code: e, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-      #   to: [ { shell_command: open -a 'Arc' } ]
+      #   to: [ { shell_command: "~/.local/bin/toggle_app 'Arc'" } ]
 
       #==========================================================#
-      # ( w ) --> logseq / vscode / notes                        #
+      # ( w ) --> logseq / obsidian / zed                        #
       #==========================================================#
+      - description: 'command + w = obsidian'
+        type: basic
+        from: { key_code: w, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        to: [ { shell_command: "~/.local/bin/toggle_app 'Obsidian'" } ]
+
+      - description: 'option + w = zed'
+        type: basic
+        from: { key_code: w, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        to: [ { shell_command: "~/.local/bin/toggle_app 'Zed'" } ]
+
       - description: 'w = logseq'
         type: basic
         from: { key_code: w, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: open -a Logseq } ]
-
-      - description: 'option + w = notes'
-        type: basic
-        from: { key_code: w, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: open -a notes } ]
-
-      - description: 'command + w = vscode'
-        type: basic
-        from: { key_code: w, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: open -a 'Visual Studio Code' } ]
-
-      #==========================================================#
-      # ( f ) --> alfred 5 / Dash / Dictionary                   #
-      #==========================================================#
-      - description: 'command + f = Dash'
-        type: basic
-        from: { key_code: f, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: open -a Dash } ]
-
-      - description: 'option + f = Dictionary'
-        type: basic
-        from: { key_code: f, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: open -a Dictionary } ]
-
-      - description: 'f = Alfred 5'
-        type: basic
-        from: { key_code: f, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: open -a 'Alfred 5' } ]
+        to: [ { shell_command: "~/.local/bin/toggle_app 'Logseq'" } ]
 
 
   ################################################################
@@ -623,54 +605,54 @@ rules:
 
 
 
-  ################################################################
-  #                        Hyper Clipboard                       #
-  ################################################################
-  - description: Hyper Clipboard
-    manipulators:
-
-      #==========================================================#
-      # ( numbers ) -->  copy & paste TEXT via pbcopy|pbpaste    #
-      #==========================================================#
-      - description: 'command + 1 = copy to clip1'
-        type: basic
-        from: { key_code: '1', modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: c, modifiers: [ left_command ] } , { shell_command: 'pbpaste > ~/.clip1' } ]
-
-      - description: '1 = paste from clip1'
-        type: basic
-        from: { key_code: '1', modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: 'cat ~/.clip1 | pbcopy ' },{ key_code: v, modifiers: [ left_command ] } ]
-
-      - description: 'command + 2 = copy to clip2'
-        type: basic
-        from: { key_code: '2', modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: c, modifiers: [ left_command ] } , { shell_command: 'pbpaste > ~/.clip2' } ]
-
-      - description: '2 = paste from clip2'
-        type: basic
-        from: { key_code: '2', modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: 'cat ~/.clip2 | pbcopy ' },{ key_code: v, modifiers: [ left_command ] } ]
-
-      - description: 'command + 3 = copy to clip3'
-        type: basic
-        from: { key_code: '3', modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: c, modifiers: [ left_command ] } , { shell_command: 'pbpaste > ~/.clip3' } ]
-
-      - description: '3 = paste from clip3'
-        type: basic
-        from: { key_code: '3', modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: 'cat ~/.clip3 | pbcopy ' },{ key_code: v, modifiers: [ left_command ] } ]
-
-      - description: 'command + 4 = copy to clip4'
-        type: basic
-        from: { key_code: '4', modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: c, modifiers: [ left_command ] } , { shell_command: 'pbpaste > ~/.clip4' } ]
-
-      - description: '4 = paste from clip4'
-        type: basic
-        from: { key_code: '4', modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: 'cat ~/.clip4 | pbcopy ' },{ key_code: v, modifiers: [ left_command ] } ]
+  # ################################################################
+  # #                        Hyper Clipboard                       #
+  # ################################################################
+  # - description: Hyper Clipboard
+  #   manipulators:
+  #
+  #     #==========================================================#
+  #     # ( numbers ) -->  copy & paste TEXT via pbcopy|pbpaste    #
+  #     #==========================================================#
+  #     - description: 'command + 1 = copy to clip1'
+  #       type: basic
+  #       from: { key_code: '1', modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+  #       to: [ { key_code: c, modifiers: [ left_command ] } , { shell_command: 'pbpaste > ~/.clip1' } ]
+  #
+  #     - description: '1 = paste from clip1'
+  #       type: basic
+  #       from: { key_code: '1', modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+  #       to: [ { shell_command: 'cat ~/.clip1 | pbcopy ' },{ key_code: v, modifiers: [ left_command ] } ]
+  #
+  #     - description: 'command + 2 = copy to clip2'
+  #       type: basic
+  #       from: { key_code: '2', modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+  #       to: [ { key_code: c, modifiers: [ left_command ] } , { shell_command: 'pbpaste > ~/.clip2' } ]
+  #
+  #     - description: '2 = paste from clip2'
+  #       type: basic
+  #       from: { key_code: '2', modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+  #       to: [ { shell_command: 'cat ~/.clip2 | pbcopy ' },{ key_code: v, modifiers: [ left_command ] } ]
+  #
+  #     - description: 'command + 3 = copy to clip3'
+  #       type: basic
+  #       from: { key_code: '3', modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+  #       to: [ { key_code: c, modifiers: [ left_command ] } , { shell_command: 'pbpaste > ~/.clip3' } ]
+  #
+  #     - description: '3 = paste from clip3'
+  #       type: basic
+  #       from: { key_code: '3', modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+  #       to: [ { shell_command: 'cat ~/.clip3 | pbcopy ' },{ key_code: v, modifiers: [ left_command ] } ]
+  #
+  #     - description: 'command + 4 = copy to clip4'
+  #       type: basic
+  #       from: { key_code: '4', modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+  #       to: [ { key_code: c, modifiers: [ left_command ] } , { shell_command: 'pbpaste > ~/.clip4' } ]
+  #
+  #     - description: '4 = paste from clip4'
+  #       type: basic
+  #       from: { key_code: '4', modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+  #       to: [ { shell_command: 'cat ~/.clip4 | pbcopy ' },{ key_code: v, modifiers: [ left_command ] } ]
 
 
 
