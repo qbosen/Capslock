@@ -37,10 +37,11 @@
 这里使用 magnet 原生
 ## 应用捷径
 
-| 键\修饰 |    ✱     |    ⌘     |   ⌥    |
-| :-----: | :------: | :------: | :----: |
-|    E    |  Chrome  |  Finder  | Calendar |
-|    W    |  Logseq  | Obsidian |  Zed   |
+| 键\修饰 |    ✱     |      ⌘       |    ⌥     |
+| :-----: | :------: | :----------: | :------: |
+|    Q    |  Claude  |  play/pause  |          |
+|    E    |  Chrome  |    Finder    | Calendar |
+|    W    |  Logseq  |   Obsidian   |   Zed    |
 
 * 所有应用快捷键支持 toggle：当前窗口即该应用时隐藏，否则激活
 * iTerm2 通常通过 Cmd + ESC 唤起与隐藏

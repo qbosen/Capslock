@@ -477,15 +477,20 @@ rules:
 
 
       #==========================================================#
-      # ( cmd + q ) --> play/pause                               #
+      # ( q ) --> Claude / play_pause                            #
       #==========================================================#
-      - description: 'cmmand + q = play/pause'
+      - description: 'command + q = play/pause'
         type: basic
         from: { key_code: q, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
         to: [ { consumer_key_code: "play_or_pause"} ]
 
+      - description: 'q = Claude'
+        type: basic
+        from: { key_code: q, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        to: [ { shell_command: "~/.local/bin/toggle_app 'Claude'" } ]
+
       #==========================================================#
-      # ( e ) --> chrome / finder / Calender                 #
+      # ( e ) --> chrome / finder / Calendar                     #
       #==========================================================#
       - description: 'command + e = finder'
         type: basic
