@@ -2384,54 +2384,6 @@
               ]
             }
           ]
-        },
-        {
-          "description": "slash = abc",
-          "type": "basic",
-          "from": {
-            "key_code": "slash",
-            "modifiers": {
-              "mandatory": [
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "select_input_source": {
-                "input_source_id": "^com\\.apple\\.keylayout\\.ABC$",
-                "language": "en"
-              }
-            }
-          ]
-        },
-        {
-          "description": "command + slash = rime",
-          "type": "basic",
-          "from": {
-            "key_code": "slash",
-            "modifiers": {
-              "mandatory": [
-                "left_command",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "select_input_source": {
-                "input_mode_id": "^im\\.rime\\.inputmethod\\.Squirrel$",
-                "input_source_id": "^im\\.rime\\.inputmethod\\.Squirrel\\.Rime$",
-                "language": "zh-Hans"
-              }
-            }
-          ]
         }
       ]
     }
