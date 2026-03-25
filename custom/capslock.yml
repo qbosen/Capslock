@@ -531,6 +531,19 @@ rules:
         to: [ { shell_command: "~/.local/bin/toggle_app 'Logseq'" } ]
 
 
+      #==========================================================#
+      # ( s ) --> Context Search / Espanso Search                #
+      #==========================================================#
+      - description: 'command + s = Espanso Search (toggle)'
+        type: basic
+        from: { key_code: s, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        to: [ { shell_command: "~/.local/bin/toggle_espanso_search" } ]
+
+      - description: 's = Context Search'
+        type: basic
+        from: { key_code: s, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: s, modifiers: [ right_command,right_control,right_shift,right_option ] } ]
+
   ################################################################
   #                       Hyper Terminal                         #
   ################################################################
