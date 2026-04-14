@@ -1698,6 +1698,28 @@
       ]
     },
     {
+      "description": "Cmd + Esc Toggle",
+      "manipulators": [
+        {
+          "description": "cmd + esc = toggle Ghostty",
+          "type": "basic",
+          "from": {
+            "key_code": "escape",
+            "modifiers": {
+              "mandatory": [
+                "left_command"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "~/.local/bin/toggle_app Ghostty"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "description": "Hyper Application",
       "manipulators": [
         {
