@@ -2455,6 +2455,113 @@
           ]
         }
       ]
+    },
+    {
+      "description": "Hyper Mouse (Neru)",
+      "manipulators": [
+        {
+          "description": "f = neru hints",
+          "type": "basic",
+          "from": {
+            "key_code": "f",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "/opt/homebrew/bin/neru hints"
+            }
+          ]
+        },
+        {
+          "description": "g = neru grid",
+          "type": "basic",
+          "from": {
+            "key_code": "g",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "/opt/homebrew/bin/neru grid"
+            }
+          ]
+        },
+        {
+          "description": "enter = mouse left click",
+          "type": "basic",
+          "from": {
+            "key_code": "return_or_enter",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "pointing_button": "button1"
+            }
+          ]
+        },
+        {
+          "description": "command + enter = mouse right click",
+          "type": "basic",
+          "from": {
+            "key_code": "return_or_enter",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option",
+                "left_command"
+              ]
+            }
+          },
+          "to": [
+            {
+              "pointing_button": "button2"
+            }
+          ]
+        },
+        {
+          "description": "option + enter = mouse middle click",
+          "type": "basic",
+          "from": {
+            "key_code": "return_or_enter",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option",
+                "left_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "pointing_button": "button3"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
