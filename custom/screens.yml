@@ -1,0 +1,16 @@
+# 屏幕编号缓存：鼠标模式下数字键跳到第 N 块屏幕正中。
+# 编号按摆放位置从左到右、从上到下数，与系统内部顺序无关。
+#
+# 换显示器或改了排列后跑 `make screens` 重新探测，然后同步更新：
+#   1) 这个文件里的 short / name / screen
+#   2) custom/capslock.yml 鼠标模式里三条 'jump to screen N' 规则的 screen 参数
+#
+# screen 字段就是 Karabiner set_mouse_cursor_position 的 screen 参数，
+# 注意它和这里的编号 n 通常不一样（本机 LG 排第 2，但系统内部序是 0）。
+
+detected: 2026-08-06
+
+screens:
+  - { n: 1, short: 内建, name: Built-in Retina Display, screen: 1, pos: "-1512,253" }
+  - { n: 2, short: LG, name: LG HDR 4K, screen: 0, pos: "0,0" }
+  - { n: 3, short: Sidecar, name: Sidecar Display (AirPlay), screen: 2, pos: "714,-744" }

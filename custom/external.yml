@@ -1,0 +1,123 @@
+# 外部快捷键：不经 Karabiner，由各应用或 macOS 自己注册的全局热键。
+# 由 bin/keymap.py 读取，和 capslock.yml 的键位一起渲染进 keymap.html。
+#
+# keys 语法：修饰键用 + 连接，最后写按键
+#   hyper                  CapsLock 映射出的 ⌘⌃⇧⌥（会和 capslock.yml 的位面合并显示）
+#   cmd / shift / option / control / fn
+#   按键：字母、数字、space、esc、return、tab、-、=、[、]、;、'、,、.、/
+#   例：hyper+s   cmd+shift+space   option+a   fn
+#
+# verified 字段填「从哪读到的」，留空表示只是描述、未验证。
+
+title: 外部快捷键
+
+groups:
+  - name: 应用唤起
+    note: 各应用自己注册的全局热键
+    items:
+      - keys: hyper+1
+        label: 微信
+        app: WeChat
+      - keys: cmd+shift+space
+        label: 豆包
+        app: Doubao
+      - keys: option+shift+space
+        label: Gemini 迷你聊天
+        app: Gemini
+        verified: com.google.GeminiMacOS.shareddata → miniChatShortcutMode=shiftOptionSpace
+      - keys: cmd+space
+        label: Alfred 启动器
+        app: Alfred 5
+        note: 系统 Spotlight 已改到 ⌥space，让出 ⌘space
+
+  - name: 窗口管理
+    note: Magnet 分屏布局 · Contexts 窗口检索
+    items:
+      - keys: hyper+s
+        label: 窗口检索
+        app: Contexts
+        verified: com.contextsformac.Contexts → KeyCode=1(S) ModifierFlags=⌘⌃⇧⌥
+      # 以下全部读自 com.crowdcafe.windowmagnet 的 horizontalCommands / verticalCommands
+      - { keys: option+control+left,  label: 左半屏,   app: Magnet, verified: expandWindowWest }
+      - { keys: option+control+right, label: 右半屏,   app: Magnet, verified: expandWindowEast }
+      - { keys: option+control+up,    label: 上半屏,   app: Magnet, verified: expandWindowNorth }
+      - { keys: option+control+down,  label: 下半屏,   app: Magnet, verified: expandWindowSouth }
+      - { keys: option+control+u,     label: 左上角,   app: Magnet, verified: expandWindowNorthWest }
+      - { keys: option+control+i,     label: 右上角,   app: Magnet, verified: expandWindowNorthEast }
+      - { keys: option+control+j,     label: 左下角,   app: Magnet, verified: expandWindowSouthWest }
+      - { keys: option+control+k,     label: 右下角,   app: Magnet, verified: expandWindowSouthEast }
+      - { keys: option+control+d,     label: 左 1/3,   app: Magnet, verified: expandWindowLeftThird }
+      - { keys: option+control+f,     label: 中 1/3,   app: Magnet, verified: expandWindowCenterThird }
+      - { keys: option+control+g,     label: 右 1/3,   app: Magnet, verified: expandWindowRightThird }
+      - { keys: option+control+e,     label: 左 2/3,   app: Magnet, verified: expandWindowLeftTwoThirds }
+      - { keys: option+control+r,     label: 中 2/3,   app: Magnet, verified: centerTwoThirds }
+      - { keys: option+control+t,     label: 右 2/3,   app: Magnet, verified: expandWindowRightTwoThirds }
+      - { keys: option+control+enter, label: 最大化,   app: Magnet, verified: maximizeWindow }
+      - { keys: option+control+c,     label: 居中,     app: Magnet, verified: centerWindow }
+      - { keys: option+control+delete, label: 还原,    app: Magnet, verified: restoreWindow }
+      - { keys: cmd+option+control+right, label: 移到下个显示器, app: Magnet, verified: moveWindowToNextDisplay }
+      - { keys: cmd+option+control+left,  label: 移到上个显示器, app: Magnet, verified: moveWindowToPreviousDisplay }
+
+  - name: Bob 翻译
+    note: 划词、截图、输入三种翻译入口
+    items:
+      - keys: option+a
+        label: 输入翻译
+        app: Bob
+        verified: com.hezongyidev.Bob → shortcut_key_inputTranslate=⌥A
+      - keys: option+s
+        label: 截图翻译
+        app: Bob
+        note: Bob 默认值，未写入偏好文件
+      - keys: option+d
+        label: 划词翻译
+        app: Bob
+        note: Bob 默认值，未写入偏好文件
+
+  - name: 截图与识别
+    note: Shottr 的增强截图，以及 macOS 自带截图
+    items:
+      - keys: hyper+a
+        label: 区域截图
+        app: Snipaste
+        note: Snipaste 用 Qt 存配置，热键读不到偏好文件，按实际使用记录
+      - keys: hyper+3
+        label: 滚动截图
+        app: Shottr
+        verified: cc.ffitch.shottr → KeyboardShortcuts_scrolling=⌘⌃⇧⌥3
+      - keys: hyper+4
+        label: 文字识别 OCR
+        app: Shottr
+        verified: cc.ffitch.shottr → KeyboardShortcuts_ocr=⌘⌃⇧⌥4
+      - keys: cmd+shift+3
+        label: 全屏截图存文件
+        app: macOS
+        verified: com.apple.symbolichotkeys → 28
+      - keys: cmd+shift+4
+        label: 区域截图存文件
+        app: macOS
+        verified: com.apple.symbolichotkeys → 30
+      - keys: cmd+control+3
+        label: 全屏截图到剪贴板
+        app: macOS
+        verified: com.apple.symbolichotkeys → 29
+      - keys: cmd+control+4
+        label: 区域截图到剪贴板
+        app: macOS
+        verified: com.apple.symbolichotkeys → 31
+      - keys: cmd+shift+5
+        label: 截图与录屏工具栏
+        app: macOS
+        verified: com.apple.symbolichotkeys → 184
+
+  - name: 系统
+    note: macOS 自身的全局快捷键
+    items:
+      - keys: fn
+        label: 语音转文字
+        app: macOS 听写
+        verified: com.apple.HIToolbox → AppleDictationAutoEnable=1
+      - keys: option+space
+        label: Spotlight 搜索
+        app: macOS
+        verified: com.apple.symbolichotkeys → 64

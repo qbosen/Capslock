@@ -1,0 +1,53 @@
+# Keychron Q10 固件层键位：由键盘自己发出，不经 Karabiner。
+# 来源：~/.config/via/keychron_q10_ansi_knob.layout.json（VIA / Keychron Launcher 导出）
+#
+# 改这里只是记录，真正生效要在 VIA 里改键并写入键盘。改完记得同步更新本文件。
+#
+# 宏键在 VIA 里的编号：MACRO(n) 取 macros 数组第 n 项。
+# M1-M5 现已统一改为直发 F20-F24 裸键，不再使用 VIA 宏，语义全部由 Karabiner 定义。
+
+title: Q10 固件层
+source: ~/.config/via/keychron_q10_ansi_knob.layout.json
+
+groups:
+  - name: 键盘宏键
+    note: 左侧 M1-M5 与旋钮，键盘固件直接发出，不占用任何修饰键
+    items:
+      - key: knob
+        label: 静音 / 音量
+        emits: KC_MUTE（按下）· KC_VOLD / KC_VOLU（旋转）
+      - key: m1
+        label: 播放 / 暂停
+        emits: KC_F20 → Karabiner 转 play_or_pause
+        note: 与 Hyper+⌘Q 功能重复，想改用途只需动 Karabiner
+      - key: m2
+        label: 按住 = 鼠标模式
+        emits: KC_F21 → Karabiner 置 mouse_mode，松开清零
+        note: 按住才生效，松开立刻退出；要常驻用 ⇪R。在常驻模式里点一下 M2 也是退出
+      - key: m3
+        label: Hyper + ⌃ 位面
+        emits: KC_F22 → Karabiner 转成右四修饰键 + 左 ⌃
+        note: 原来的 Esc 已由双击 CapsLock 承担
+      - key: m4
+        label: Hyper + ⌃⇧ 位面
+        emits: KC_F23 → Karabiner 转成右四修饰键 + 左 ⌃⇧
+        note: 避开左手小指同时按 CapsLock 和 Shift
+      - key: m5
+        label: 语音转文字
+        emits: KC_F24 → Karabiner 转 fn → macOS 听写
+
+  - name: 键盘 Fn 层
+    note: 按住右侧 MO(1) 时生效，全部由固件处理，Karabiner 看不到
+    items:
+      - { key: f3, label: 调度中心, emits: CUSTOM(0) }
+      - { key: f4, label: 启动台, emits: CUSTOM(1) }
+      - { key: f1, label: 屏幕调暗, emits: KC_BRID }
+      - { key: f2, label: 屏幕调亮, emits: KC_BRIU }
+      - { key: f7, label: 上一曲, emits: KC_MPRV }
+      - { key: f8, label: 播放 / 暂停, emits: KC_MPLY }
+      - { key: f9, label: 下一曲, emits: KC_MNXT }
+      - { key: f10, label: 静音, emits: KC_MUTE }
+      - { key: f11, label: 音量减, emits: KC_VOLD }
+      - { key: f12, label: 音量加, emits: KC_VOLU }
+      - { key: q, label: 灯效开关, emits: RGB_TOG }
+      - { key: w, label: 切换灯效, emits: RGB_MOD }

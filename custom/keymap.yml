@@ -1,0 +1,453 @@
+# keymap.html 的全部文字与布局配置。
+#
+# 目标：改快捷键、改说法、改界面文案，都只动这个文件和 capslock.yml / external.yml，
+# 然后 `make keymap` 重新生成，不需要碰 bin/keymap.py 或模板 HTML。
+#
+# 各段用途：
+#   ui        —— 网页上的所有界面文字（标题、视图名、提示语、按钮）
+#   layers    —— 位面如何分簇、怎么命名
+#   groups    —— capslock.yml 里各规则组的中文名与一句话说明
+#   actions   —— 动作中文对照表；键位描述里等号右边的原文查这张表
+#   symbols   —— 修饰键符号
+#   keys      —— 按键在界面上的显示名
+#   keyboards —— 键盘视图与全览视图的物理布局，[键码, 键帽, 宽度]
+
+ui:
+  title: Capslock 键位图
+  search_placeholder: 搜索快捷键…
+  views:
+    sheet: 速查表
+    overview: 位面全览
+    board: 键盘
+    groups: 功能
+    drill: 练习
+  sheet:
+    title: Capslock 键位速查表
+    subtitle: "{config} · {count} 条映射 · ⇪ = 按住 CapsLock（Hyper），其后为同时按住的修饰键"
+    tip: 按功能分组的单页速查表，A4 横向可完整打印
+    btn_png: 下载 PNG
+    btn_copy: 复制为图片
+    btn_print: 打印 / 存为 PDF
+    msg_png: 已下载 PNG（2 倍分辨率）
+    msg_copy: 已复制到剪贴板，可直接粘贴
+    msg_copy_fail: 复制失败（浏览器限制），请改用「下载 PNG」
+    continued: "（续）"
+    # 应用类快捷键越攒越多，速查表可以按组隐藏——隐藏结果同样作用于导出的 PNG / PDF
+    filter_title: 显示分组
+    filter_all: 全选
+    filter_none: 全不选
+    filter_focus: 只看核心
+    filter_state: "{shown}/{total} 组 · {count} 条"
+  board:
+    detail_title: 按键详情
+    detail_hint: 点任意高亮键，看它在所有位面上的映射；当前位面会高亮标注。
+    detail_empty: 这个键没有任何映射。
+    current_layer: 当前位面
+    detail_count: "{key} · {n} 个位面有映射"
+  groups_view:
+    nav_title: 功能分类
+    all: 全部
+    empty: 没有匹配「{q}」的快捷键。
+    # 没有归入任何一级分类的组，兜底放这里
+    other: 其他
+  meta: "{count} 条映射 · {layers} 个位面 · {groups} 个功能组"
+  plane_count: "{n} 个键"
+  cluster_planes: "{n} 个位面"
+  current_config_suffix: （当前使用）
+  footer: "bin/keymap.py 生成 · 数据源 {sources} · 改完配置跑 make keymap 重新生成"
+  no_output: （无输出）
+  # 同一功能组里，标签和动作完全一致的多个键位（如跳屏的 1 和 Q）在列表视图合并成一行；
+  # 键盘视图仍然各自高亮，因为它们在空间上确实是不同的键
+  # 速查表/功能视图上的开关：把 M3/M4 能替代的 Hyper 组合直接显示成 M 键，便于记忆
+  macro_toggle: 用 M 键显示
+  macro_hint: 把 M3/M4 可替代的 Hyper 组合显示成宏键
+  merge_aliases: true
+  alias_sep: " / "
+  screen_jump: "跳到屏幕{n} · {short}"
+
+# ── 练习页 ─────────────────────────────────────────────────────────
+# 分三种练法，依据是「浏览器到底看不看得见这一下」：
+#   text    Karabiner 改写后浏览器收得到，输入框里能真看到光标动、字被删
+#   pointer 鼠标模式：指针真在动，靶场里点得中
+#   card    会把浏览器切走、或压根到不了浏览器（唤起应用 / 窗口管理 / 应用内），只能闪卡自测
+# 没列进 text / pointer 的组一律当 card；text 组里判不出输出信号的条目会自动降级成 card。
+practice:
+  exam_size: 12
+  kinds:
+    text: [Hyper Navigation, Hyper Deletion, Hyper Shifter, Hyper Terminal]
+    pointer: [Hyper Mouse Mode, Hyper Mouse (Neru)]
+  # 打开练习页时默认勾选的组：光标移动、删除、符号、鼠标（窗口组不在 text 名单里，自动是闪卡）
+  focus: [Hyper Navigation, Hyper Deletion, Hyper Shifter, Hyper Mouse Mode]
+  # 这些输出会切走标签页、抢走焦点或弹系统面板，真按下去练不成，降级为闪卡
+  block_signals:
+    [cmd+Tab, cmd+shift+Tab, ctrl+Tab, ctrl+shift+Tab,
+     ctrl+ArrowLeft, ctrl+ArrowRight, ctrl+ArrowUp, ctrl+ArrowDown,
+     "cmd+~", "cmd+`", cmd+h, cmd+ctrl+f, "cmd+opt+-", "cmd+opt+=",
+     cmd+ctrl+d, cmd+ctrl+opt+S, Escape]
+  sample: |
+    Karabiner 把 CapsLock 变成 Hyper，左手不用离开主键区。
+    hjkl move the caret, and ⌥ jumps by word.
+    第三行用来练删除：this line will be deleted.
+  ui:
+    tip: 光标放进输入框直接按快捷键，页面判定的是 Karabiner 发出的信号。想停随时停，不记成绩。
+    modes: { free: 自由模式, exam: 考试模式 }
+    mode_hint:
+      free: 随便按，右侧实时告诉你刚触发了什么；提示一直摆着，不计分
+      exam: 从选中的组里抽题，答对进下一题，最后给一份生疏度报告
+    start: 开始考试
+    restart: 再来一轮
+    stop: 结束
+    groups_title: 练哪些
+    focus_btn: 核心四组
+    all_btn: 全选
+    none_btn: 清空
+    empty: 先在上面选至少一个分组。
+    # 三种练法在题面上的说明
+    kind_text: 在输入框里真按一次
+    kind_pointer: 进鼠标模式打靶
+    kind_card: 闪卡自测 · 打出这个组合键
+    kind_tag: { text: 真练, pointer: 打靶, card: 闪卡 }
+    kind_note:
+      text: 光标已经放好，直接按。判的是 Karabiner 发出的信号，不是你按了哪几个键。
+      pointer: 先按 ⇪R 或 M2 进鼠标模式，再用 hjkl 把指针挪到靶心点一下（f 或 ⏎ 左键）。
+      card: 这条会把浏览器切走，没法真按——把组合键打出来就行，⌘ / cmd / command 都认。
+    prompt: 怎么做到
+    answer_placeholder: 打出组合键，如 cmd shift l
+    check: 判定
+    reveal: 看答案
+    skip: 跳过
+    right: 对了
+    wrong: 不对，再试一次
+    revealed: 答案是 {combo}
+    live_title: 刚刚按下
+    live_none: 按点什么试试
+    live_unknown: "{sig} —— 没有对应的快捷键"
+    live_hit: "{combo} · {label}"
+    hints_title: 提示
+    hints_toggle: 显示提示
+    progress: "{i}/{n} · 对 {ok}"
+    report_title: 这轮结果
+    report_line: "正确率 {rate}% · 平均 {ms} 秒 / 题"
+    report_weak: 还生疏的
+    report_perfect: 全对，这几组可以往难的位面挪了。
+    range_hint: 靶子出现在这块区域里，命中 {hit} 个
+    stats_reset: 清空练习记录
+    stats_note: 练习记录只存在这台机器的浏览器里
+
+# 位面分簇：Hyper 系和原生组合各排一行，簇内按条数从多到少
+layers:
+  clusters:
+    - { match: hyper, tag: Hyper, note: 按住 CapsLock }
+    - { match: mod, tag: 原生, note: 不经 CapsLock }
+  hyper_alone: Hyper 单键
+  hyper_prefix: "Hyper + "
+  no_modifier: 无修饰键
+  firmware: 键盘固件层
+  # 某些位面有单键触发器（Q10 宏键），在标签和标题上标出来
+  # 应用内快捷键各自成面，位面名就是应用名
+  app_scope: 应用内
+  triggers:
+    hyper+left_control: M3
+    hyper+left_control+left_shift: M4
+  # 带 variable_if 条件的规则单独成面：这些键只在对应模式里生效。
+  # 一条规则挂多个模式条件时（区域定位 = 鼠标模式 + 按住 Tab），位面名按这里的顺序拼起来。
+  modes:
+    mouse_mode: 鼠标模式
+    zone: 按住 Tab
+  mode_sep: " · "
+  # 同一个键的快慢变体不单独列出。鼠标加减速已改用 speed_multiplier（实时生效），
+  # 不再靠变量分档，所以这里暂时是空的——以后有别的变体变量再往里加。
+  variant_conditions: []
+
+# 功能视图的一级分类。二级就是下面 groups 段和 external/apps/keyboard 里的各个组，
+# 按这里列的顺序排。没被列进来的组自动落到最后的「其他」，不会丢。
+# 想调整归属或顺序，改这里就行，不用动 HTML。
+categories:
+  - id: text
+    zh: 文本编辑
+    note: 手不离主键区完成移动、选择、删改
+    groups: [Hyper Navigation, Hyper Deletion, Hyper Shifter]
+  - id: mouse
+    zh: 鼠标
+    note: 不碰鼠标完成定位、点击、滚动
+    groups: [Hyper Mouse (Neru), Hyper Mouse Mode]
+  - id: app
+    zh: 应用与窗口
+    note: 唤起应用、摆放窗口
+    groups: [Hyper Window, Hyper Application, "ext:应用唤起", "ext:窗口管理"]
+  - id: dev
+    zh: 终端与开发
+    note: 终端控制键，在任何终端和编辑器里都通用
+    groups: [Hyper Terminal]
+  - id: ghostty
+    zh: Ghostty
+    note: 唤起终端与应用内分屏，只在 Ghostty 前台生效
+    groups: [Cmd + Esc Toggle, "app:Ghostty:分屏", "app:Ghostty:分屏尺寸", "app:Ghostty:终端杂项"]
+  - id: tool
+    zh: 工具
+    note: 翻译、截图、系统级功能
+    groups: ["ext:Bob 翻译", "ext:截图与识别", "ext:系统"]
+  - id: kb
+    zh: 键盘
+    note: CapsLock 本身，以及 Q10 固件层
+    groups: [CapsLock to Hyper, Q10 Macro Keys, "hw:键盘宏键", "hw:键盘 Fn 层"]
+
+# groups
+groups:
+  Q10 Macro Keys:
+    zh: Q10 宏键
+    note: M1-M5 统一发 F20-F24 裸键，语义全在 Karabiner，改用途不用重刷键盘
+  CapsLock to Hyper:
+    zh: 基础映射
+    note: CapsLock 本身的双重身份，以及系统级切换
+  Hyper Navigation:
+    zh: 光标移动与选择
+    note: hjkl 四向 + uiop 翻页行首尾；⌘ 变选择，⌥ 按词/段跳
+  Hyper Window:
+    zh: 窗口与桌面
+    note: 标签页、应用、同应用窗口、桌面切换；⌃⇧ 层是 ⇧ 层的副本，供 M4 单键触发
+  Hyper Deletion:
+    zh: 删除
+    note: 全在 N / M 两个键上——行看单位大小（M 字符 / N 词），列看范围（⇪ 往回 · ⌘ 整行 · ⌥ 往前）
+  Hyper Application:
+    zh: 应用切换
+    note: 一键唤起 / 隐藏常用应用
+  Hyper Terminal:
+    zh: 终端控制键
+    note: 终端与编辑器通用的 ⌃ 系控制键，以及 VSCode 调试
+  Hyper Shifter:
+    zh: 符号输入
+    note: 括号在底排 , . 上（中指+无名指各管一边）；其余是角落里够不着的符号
+  Hyper Mouse (Neru):
+    zh: 键盘鼠标
+    note: 不碰鼠标完成点击、滚动、定位
+  Hyper Mouse Mode:
+    zh: 鼠标模式
+    note: 两种进法——按住 M2 是临时的，松开就退；⇪R 是常驻的，点一下 space 或 esc 退出。
+      按住 Tab 时右手主键区变成屏幕缩略图，一键跳到任意区域；按住 ` 拖动
+  Cmd + Esc Toggle:
+    zh: 唤起终端
+    note: ⌘+Esc 唤起 / 收起 Ghostty
+
+# actions
+actions:
+  left: 左移
+  right: 右移
+  up: 上移
+  down: 下移
+  cmd+left: 行首
+  cmd+right: 行尾
+  page_up: 上一页
+  page_down: 下一页
+  move word ahead: 前移一词
+  word move right: 后移一词
+  move para down: 下移一段
+  param up: 上移一段
+  move line up: 上移一行
+  move line down: 下移一行
+  shift + left: 选中左字符
+  shift + right: 选中右字符
+  shift + up: 选中上行
+  shift + down: 选中下行
+  shift + home: 选到行首
+  shift + end: 选到行尾
+  shift + page_up: 选到上页
+  shift + page_down: 选到下页
+  option + shift + left (select word ahead): 选中前一词
+  option + shift + right (select word after): 选中后一词
+  option + shift + down (select para ahead): 选中下段
+  option + shift + up (select line above): 选中上行
+  select whole line to head: 选到行首
+  select whole: 选中整行
+  delete a char ahead: 删前一字符
+  delete a char after: 删后一字符
+  delete a word ahead: 删前一词
+  delete a word after: 删后一词
+  delete word ahead: 删前一词
+  delete word after: 删后一词
+  delete whole line: 删整行
+  delete to line start: 删到行首
+  delete to line end: 删到行尾
+  undo: 撤销
+  zone layer: 区域定位层（按住）
+  # 区域定位：右手主键区当屏幕缩略图，3 排 × 5 列
+  zone 上左: 区域 左上
+  zone 上中左: 区域 中左上
+  zone 上正: 区域 正上
+  zone 上中右: 区域 中右上
+  zone 上右: 区域 右上
+  zone 中左: 区域 正左
+  zone 中中左: 区域 中左
+  zone 中正: 区域 正中
+  zone 中中右: 区域 中右
+  zone 中右: 区域 正右
+  zone 下左: 区域 左下
+  zone 下中左: 区域 中左下
+  zone 下正: 区域 正下
+  zone 下中右: 区域 中右下
+  zone 下右: 区域 右下
+  ctrl + left (prev desktop): 上个桌面
+  ctrl + right (next desktop): 下个桌面
+  ctrl + down (focus application): 当前应用窗口
+  ctrl + up (expose all): 调度中心
+  option + command + h (expose all): 隐藏其他窗口
+  command + h (hide current window): 隐藏当前窗口
+  ctrl + command + f (fullscreen): 全屏切换
+  LaunchPad: 启动台
+  ctrl + shift + tab (prev tab): 上个标签页
+  command + tab (next tab): 下个标签页
+  command + tab (next application): 下个应用
+  command + tab (prev application): 上个应用
+  command + shift + ` (prev window within app): 同应用上个窗口
+  command ` (next window within app): 同应用下个窗口
+  option + command + equal_sign (zoom in): 放大
+  option + command + hyphen (zoom out): 缩小
+  toggle Ghostty: Ghostty 终端
+  Claude: Claude
+  finder: 访达
+  chrome: Chrome
+  calender: 日历
+  obsidian: Obsidian
+  zed: Zed
+  logseq: Logseq
+  CCwork: CCwork
+  Espanso Search (toggle): Espanso 搜索
+  Context Search: 窗口检索
+  play/pause: 播放 / 暂停
+  emoji: 表情面板
+  language switch: 切换输入法
+  capslock switch: 大写锁定
+  escape: Esc（双击 CapsLock）
+  hyper(hold): 按住 = Hyper
+  esc(click) | hyper(hold): 轻点 Esc，长按 Hyper
+  fn (with any modifier combo): 当作 Fn 键
+  define: 查词
+  ctrl-d (EOF): 终端 EOF
+  ctrl-b: tmux 前缀
+  ctrl-v: Vim 块选
+  ctrl-c: 中断
+  ctrl-z: 挂起
+  ctrl-r: 历史搜索
+  F5 (vscode debug): 启动调试
+  ctrl + F5 (vscode run): 运行
+  shift + F5 (vscode stop): 停止调试
+  neru hints: 屏幕点选
+  neru grid: 网格定位
+  neru recursive grid: 递归网格
+  neru monitor select: 选择显示器
+  neru scroll: 滚动模式
+  mouse left click: 鼠标左键
+  mouse right click: 鼠标右键
+  mouse middle click: 鼠标中键
+  mouse back: 后退
+  mouse forward: 前进
+  mouse move left: 指针左移
+  mouse move right: 指针右移
+  mouse move up: 指针上移
+  mouse move down: 指针下移
+  mouse slow: 按住减速（精调）
+  mouse fast: 按住加速
+  mouse select: 按住拖拽选中
+  enter mouse mode: 进入鼠标模式
+  exit mouse mode: 退出鼠标模式
+  hyper + control: 等于按住 Hyper+⌃
+  hyper + control + shift: 等于按住 Hyper+⌃⇧
+  mouse wheel left: 滚轮左
+  mouse wheel right: 滚轮右
+  mouse wheel up: 滚轮上
+  mouse wheel down: 滚轮下
+  (: 左括号 (
+  ): 右括号 )
+  '{': 左花括号 {
+  '}': 右花括号 }
+  <: 小于号 <
+  '>': 大于号 >
+  +: 加号 +
+  '-': 减号 -
+  _: 下划线 _
+  '&': 与号 &
+  $: 美元号 $
+  '[': 左方括号 [
+  ']': 右方括号 ]
+  equal_sign: 等号 =
+  backslash: 反斜杠 \
+  pipe: 竖线 |
+  backtick: 反引号 `
+
+# symbols
+symbols:
+  # CapsLock 映射出的 Hyper，位面前缀和组合键里都用它
+  hyper: ⇪
+  left_command: ⌘
+  right_command: ⌘
+  left_option: ⌥
+  right_option: ⌥
+  left_shift: ⇧
+  right_shift: ⇧
+  left_control: ⌃
+  right_control: ⌃
+  fn: fn
+  caps_lock: ⇪
+
+# keys
+keys:
+  # 修饰键本身被当作按键使用时（比如鼠标模式里按住 ⌥ 减速）的显示名
+  left_option: ⌥
+  left_command: ⌘
+  left_shift: ⇧
+  left_control: ⌃
+  knob: 旋钮
+  m1: M1
+  m2: M2
+  m3: M3
+  m4: M4
+  m5: M5
+  # Karabiner 侧用 F20-F24 接收，界面上仍按宏键名显示
+  f20: M1
+  f21: M2
+  f22: M3
+  f23: M4
+  f24: M5
+  left_arrow: ←
+  right_arrow: →
+  up_arrow: ↑
+  down_arrow: ↓
+  return_or_enter: ⏎
+  delete_or_backspace: ⌫
+  delete_forward: ⌦
+  spacebar: 空格
+  escape: esc
+  tab: ⇥
+  caps_lock: ⇪
+  page_up: PgUp
+  page_down: PgDn
+  home: Home
+  end: End
+  grave_accent_and_tilde: '`'
+  open_bracket: '['
+  close_bracket: ']'
+  semicolon: ;
+  quote: ''''
+  comma: ','
+  period: .
+  slash: /
+  hyphen: '-'
+  equal_sign: '='
+  backslash: \
+
+# 键盘布局：每项 [键码, 键帽显示, 宽度(u)]
+# full    —— 键盘视图用的完整布局
+# compact —— 全览视图用的紧凑布局，去掉了用不到的功能键与修饰键
+keyboards:
+  full:
+    - [[knob, 旋钮, 1], [escape, esc, 1], [f1, F1, 1], [f2, F2, 1], [f3, F3, 1], [f4, F4, 1], [f5, F5, 1], [f6, F6, 1], [f7, F7, 1], [f8, F8, 1], [f9, F9, 1], [f10, F10, 1], [f11, F11, 1], [f12, F12, 1]]
+    - [[m1, M1, 1], [grave_accent_and_tilde, "`", 1], ["1", "1", 1], ["2", "2", 1], ["3", "3", 1], ["4", "4", 1], ["5", "5", 1], ["6", "6", 1], ["7", "7", 1], ["8", "8", 1], ["9", "9", 1], ["0", "0", 1], [hyphen, "-", 1], [equal_sign, "=", 1], [delete_or_backspace, "⌫", 2]]
+    - [[m2, M2, 1], [tab, tab, 1.5], [q, Q, 1], [w, W, 1], [e, E, 1], [r, R, 1], [t, T, 1], [y, Y, 1], [u, U, 1], [i, I, 1], [o, O, 1], [p, P, 1], [open_bracket, "[", 1], [close_bracket, "]", 1], [backslash, "\\", 1.5]]
+    - [[m3, M3, 1], [caps_lock, "⇪ Hyper", 1.75], [a, A, 1], [s, S, 1], [d, D, 1], [f, F, 1], [g, G, 1], [h, H, 1], [j, J, 1], [k, K, 1], [l, L, 1], [semicolon, ";", 1], [quote, "'", 1], [return_or_enter, return, 2.25]]
+    - [[m4, M4, 1], [left_shift, shift, 2.25], [z, Z, 1], [x, X, 1], [c, C, 1], [v, V, 1], [b, B, 1], [n, N, 1], [m, M, 1], [comma, ",", 1], [period, ".", 1], [slash, "/", 1], [right_shift, shift, 2.75]]
+    - [[m5, M5, 1], [left_control, ctrl, 1.25], [left_option, opt, 1.25], [left_command, cmd, 1.25], [spacebar, space, 6.25], [right_command, cmd, 1.25], [right_option, opt, 1.25], [fn, fn, 1.25], [right_control, ctrl, 1.25]]
+  compact:
+    - [[escape, esc, 1], ["1", "1", 1], ["2", "2", 1], ["3", "3", 1], ["4", "4", 1], ["5", "5", 1], ["6", "6", 1], ["7", "7", 1], ["8", "8", 1], ["9", "9", 1], ["0", "0", 1], [hyphen, "-", 1], [equal_sign, "=", 1]]
+    - [[q, Q, 1], [w, W, 1], [e, E, 1], [r, R, 1], [t, T, 1], [y, Y, 1], [u, U, 1], [i, I, 1], [o, O, 1], [p, P, 1], [open_bracket, "[", 1], [close_bracket, "]", 1]]
+    - [[a, A, 1], [s, S, 1], [d, D, 1], [f, F, 1], [g, G, 1], [h, H, 1], [j, J, 1], [k, K, 1], [l, L, 1], [semicolon, ";", 1], [quote, "'", 1], [return_or_enter, "⏎", 1.6]]
+    - [[z, Z, 1], [x, X, 1], [c, C, 1], [v, V, 1], [b, B, 1], [n, N, 1], [m, M, 1], [comma, ",", 1], [period, ".", 1], [slash, "/", 1], [spacebar, space, 4.4]]

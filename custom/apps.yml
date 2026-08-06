@@ -1,0 +1,46 @@
+# 应用内快捷键：只在某个应用前台时生效，不是全局热键。
+# 和 external.yml 的区别就在这里——external 是抢占全局的，这里的只在应用内有效。
+#
+# keys 语法同 external.yml。改了应用自己的配置后，回来同步更新这里。
+# 组或条目加 hidden: true 可以只保留记录、不出现在键位图里（external.yml 同样支持）。
+
+title: 应用内快捷键
+
+apps:
+  - app: Ghostty
+    bundle: com.mitchellh.ghostty
+    source: ~/.config/ghostty/config
+    groups:
+      - name: 分屏
+        note: 创建、切换、缩放分屏
+        items:
+          - { keys: cmd+d, label: 右侧新建分屏, action: "new_split:right" }
+          - { keys: cmd+shift+d, label: 下方新建分屏, action: "new_split:down" }
+          - { keys: cmd+shift+h, label: 切到左侧分屏, action: "goto_split:left" }
+          - { keys: cmd+shift+j, label: 切到下方分屏, action: "goto_split:bottom" }
+          - { keys: cmd+shift+k, label: 切到上方分屏, action: "goto_split:top" }
+          - { keys: cmd+shift+l, label: 切到右侧分屏, action: "goto_split:right" }
+          - { keys: cmd+shift+enter, label: 分屏最大化切换, action: toggle_split_zoom }
+          - { keys: cmd+shift+backspace, label: 均分各分屏, action: equalize_splits }
+      - name: 分屏尺寸
+        note: 每次调整 20 像素，hjkl 方向和分屏切换一致
+        items:
+          - { keys: cmd+control+h, label: 分屏左扩, action: "resize_split:left,20" }
+          - { keys: cmd+control+j, label: 分屏下扩, action: "resize_split:down,20" }
+          - { keys: cmd+control+k, label: 分屏上扩, action: "resize_split:up,20" }
+          - { keys: cmd+control+l, label: 分屏右扩, action: "resize_split:right,20" }
+      - name: 终端杂项
+        items:
+          - { keys: cmd+u, label: 切换背景透明, action: toggle_background_opacity }
+          - { keys: cmd+i, label: 检查器, action: "inspector:toggle" }
+          - { keys: cmd+r, label: 重载配置, action: reload_config }
+          - { keys: control+shift+up, label: 跳到上一个提示符, action: "jump_to_prompt:-1" }
+          - { keys: control+shift+down, label: 跳到下一个提示符, action: "jump_to_prompt:1" }
+      - name: 已解绑
+        note: 刻意解除的默认键，避免误关窗口
+        hidden: true   # 只做记录，不进键位图——这些键按下去什么都不会发生
+        items:
+          - { keys: cmd+shift+w, label: 已解绑（原关闭窗口）, action: unbind }
+          - { keys: cmd+option+w, label: 已解绑（原关闭标签）, action: unbind }
+          - { keys: cmd+control+w, label: 已解绑, action: unbind }
+          - { keys: cmd+shift+option+w, label: 已解绑, action: unbind }
