@@ -4,32 +4,104 @@
   "repo": "https://github.com/qbosen/Capslock",
   "rules": [
     {
-      "description": "F13 to Fn (Keychron Q10)",
+      "description": "CapsLock to Hyper",
       "manipulators": [
         {
-          "description": "f13 = fn (with any modifier combo)",
+          "description": "capslock double tap = exit mouse mode",
           "type": "basic",
           "from": {
-            "key_code": "f13",
+            "key_code": "caps_lock",
             "modifiers": {
               "optional": [
                 "any"
               ]
             }
           },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "caps_tap",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
           "to": [
             {
-              "key_code": "fn"
+              "key_code": "right_shift",
+              "modifiers": [
+                "right_command",
+                "right_control",
+                "right_option"
+              ]
+            }
+          ],
+          "to_if_alone": [
+            {
+              "set_variable": {
+                "name": "caps_tap",
+                "value": 0
+              }
+            },
+            {
+              "set_variable": {
+                "name": "mouse_mode",
+                "value": 0
+              }
+            },
+            {
+              "set_notification_message": {
+                "id": "mouse_mode",
+                "text": ""
+              }
             }
           ]
-        }
-      ]
-    },
-    {
-      "description": "CapsLock to Hyper",
-      "manipulators": [
+        },
         {
-          "description": "capslock = esc(click) | hyper(hold)",
+          "description": "capslock double tap = escape",
+          "type": "basic",
+          "from": {
+            "key_code": "caps_lock",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "caps_tap",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "right_shift",
+              "modifiers": [
+                "right_command",
+                "right_control",
+                "right_option"
+              ]
+            }
+          ],
+          "to_if_alone": [
+            {
+              "key_code": "escape"
+            },
+            {
+              "set_variable": {
+                "name": "caps_tap",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "description": "capslock = hyper(hold)",
           "type": "basic",
           "from": {
             "key_code": "caps_lock",
@@ -48,7 +120,36 @@
                 "right_option"
               ]
             }
-          ]
+          ],
+          "to_if_alone": [
+            {
+              "set_variable": {
+                "name": "caps_tap",
+                "value": 1
+              }
+            }
+          ],
+          "to_delayed_action": {
+            "to_if_invoked": [
+              {
+                "set_variable": {
+                  "name": "caps_tap",
+                  "value": 0
+                }
+              }
+            ],
+            "to_if_canceled": [
+              {
+                "set_variable": {
+                  "name": "caps_tap",
+                  "value": 0
+                }
+              }
+            ]
+          },
+          "parameters": {
+            "basic.to_delayed_action_delay_milliseconds": 300
+          }
         },
         {
           "description": "escape = capslock switch",
@@ -130,6 +231,126 @@
       ]
     },
     {
+      "description": "Q10 Macro Keys",
+      "manipulators": [
+        {
+          "description": "M1 = play/pause",
+          "type": "basic",
+          "from": {
+            "key_code": "f20",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "consumer_key_code": "play_or_pause"
+            }
+          ]
+        },
+        {
+          "description": "M5 = fn (with any modifier combo)",
+          "type": "basic",
+          "from": {
+            "key_code": "f24",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "fn"
+            }
+          ]
+        },
+        {
+          "description": "M2 = hold for mouse mode",
+          "type": "basic",
+          "from": {
+            "key_code": "f21",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "mouse_mode",
+                "value": 1
+              }
+            }
+          ],
+          "to_after_key_up": [
+            {
+              "set_variable": {
+                "name": "mouse_mode",
+                "value": 0
+              }
+            },
+            {
+              "set_notification_message": {
+                "id": "mouse_mode",
+                "text": ""
+              }
+            }
+          ]
+        },
+        {
+          "description": "M3 = hyper + control",
+          "type": "basic",
+          "from": {
+            "key_code": "f22",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "right_shift",
+              "modifiers": [
+                "right_command",
+                "right_control",
+                "right_option",
+                "left_control"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "M4 = hyper + control + shift",
+          "type": "basic",
+          "from": {
+            "key_code": "f23",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "right_shift",
+              "modifiers": [
+                "right_command",
+                "right_control",
+                "right_option",
+                "left_control",
+                "left_shift"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "description": "Hyper Navigation",
       "manipulators": [
         {
@@ -183,55 +404,6 @@
           ]
         },
         {
-          "description": "shift + h = ctrl + shift + tab (prev tab)",
-          "type": "basic",
-          "from": {
-            "key_code": "h",
-            "modifiers": {
-              "mandatory": [
-                "left_shift",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "tab",
-              "modifiers": [
-                "left_control",
-                "left_shift"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "control + h = ctrl + left (prev desktop)",
-          "type": "basic",
-          "from": {
-            "key_code": "h",
-            "modifiers": {
-              "mandatory": [
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "left_arrow",
-              "modifiers": [
-                "left_control"
-              ]
-            }
-          ]
-        },
-        {
           "description": "option + h = move word ahead",
           "type": "basic",
           "from": {
@@ -252,30 +424,6 @@
               "modifiers": [
                 "left_option"
               ]
-            }
-          ]
-        },
-        {
-          "description": "shift + control + h = mouse wheel left",
-          "type": "basic",
-          "from": {
-            "key_code": "h",
-            "modifiers": {
-              "mandatory": [
-                "left_shift",
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "mouse_key": {
-                "horizontal_wheel": 64
-              }
             }
           ]
         },
@@ -361,54 +509,6 @@
           ]
         },
         {
-          "description": "shift + j = command + tab (next application)",
-          "type": "basic",
-          "from": {
-            "key_code": "j",
-            "modifiers": {
-              "mandatory": [
-                "left_shift",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "tab",
-              "modifiers": [
-                "left_command"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "control + j = ctrl + down (focus application)",
-          "type": "basic",
-          "from": {
-            "key_code": "j",
-            "modifiers": {
-              "mandatory": [
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "down_arrow",
-              "modifiers": [
-                "left_control"
-              ]
-            }
-          ]
-        },
-        {
           "description": "option + j = move para down",
           "type": "basic",
           "from": {
@@ -432,30 +532,6 @@
             },
             {
               "key_code": "down_arrow"
-            }
-          ]
-        },
-        {
-          "description": "shift + control + j = mouse wheel down",
-          "type": "basic",
-          "from": {
-            "key_code": "j",
-            "modifiers": {
-              "mandatory": [
-                "left_shift",
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "mouse_key": {
-                "vertical_wheel": 64
-              }
             }
           ]
         },
@@ -541,55 +617,6 @@
           ]
         },
         {
-          "description": "shift + k = command + tab (prev application)",
-          "type": "basic",
-          "from": {
-            "key_code": "k",
-            "modifiers": {
-              "mandatory": [
-                "left_shift",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "tab",
-              "modifiers": [
-                "left_command",
-                "left_shift"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "control + k = ctrl + up (expose all)",
-          "type": "basic",
-          "from": {
-            "key_code": "k",
-            "modifiers": {
-              "mandatory": [
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "up_arrow",
-              "modifiers": [
-                "left_control"
-              ]
-            }
-          ]
-        },
-        {
           "description": "option + k = param up",
           "type": "basic",
           "from": {
@@ -613,30 +640,6 @@
             },
             {
               "key_code": "up_arrow"
-            }
-          ]
-        },
-        {
-          "description": "shift + control + k = mouse wheel up",
-          "type": "basic",
-          "from": {
-            "key_code": "k",
-            "modifiers": {
-              "mandatory": [
-                "left_shift",
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "mouse_key": {
-                "vertical_wheel": -64
-              }
             }
           ]
         },
@@ -711,54 +714,6 @@
           ]
         },
         {
-          "description": "shift + l = command + tab (next tab)",
-          "type": "basic",
-          "from": {
-            "key_code": "l",
-            "modifiers": {
-              "mandatory": [
-                "left_shift",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "tab",
-              "modifiers": [
-                "left_control"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "control + l = ctrl + right (next desktop)",
-          "type": "basic",
-          "from": {
-            "key_code": "l",
-            "modifiers": {
-              "mandatory": [
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "right_arrow",
-              "modifiers": [
-                "left_control"
-              ]
-            }
-          ]
-        },
-        {
           "description": "option + l = word move right",
           "type": "basic",
           "from": {
@@ -779,30 +734,6 @@
               "modifiers": [
                 "left_option"
               ]
-            }
-          ]
-        },
-        {
-          "description": "shift + control + l = mouse wheel right",
-          "type": "basic",
-          "from": {
-            "key_code": "l",
-            "modifiers": {
-              "mandatory": [
-                "left_shift",
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "mouse_key": {
-                "horizontal_wheel": -64
-              }
             }
           ]
         },
@@ -871,56 +802,6 @@
               "key_code": "page_up",
               "modifiers": [
                 "left_shift"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "shift + u = option + command + hyphen (zoom out)",
-          "type": "basic",
-          "from": {
-            "key_code": "u",
-            "modifiers": {
-              "mandatory": [
-                "left_shift",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "hyphen",
-              "modifiers": [
-                "left_command",
-                "left_option"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "control + u = ctrl + command + f (fullscreen)",
-          "type": "basic",
-          "from": {
-            "key_code": "u",
-            "modifiers": {
-              "mandatory": [
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "f",
-              "modifiers": [
-                "left_control",
-                "left_command"
               ]
             }
           ]
@@ -1029,98 +910,6 @@
           ]
         },
         {
-          "description": "shift + i = command + shift + ` (prev window within app)",
-          "type": "basic",
-          "from": {
-            "key_code": "i",
-            "modifiers": {
-              "mandatory": [
-                "left_shift",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "grave_accent_and_tilde",
-              "modifiers": [
-                "left_command",
-                "left_shift"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "control + i = command + h (hide current window)",
-          "type": "basic",
-          "from": {
-            "key_code": "i",
-            "modifiers": {
-              "mandatory": [
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "h",
-              "modifiers": [
-                "left_command"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "option + i = mouse back",
-          "type": "basic",
-          "from": {
-            "key_code": "i",
-            "modifiers": {
-              "mandatory": [
-                "left_option",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "pointing_button": "button4"
-            }
-          ]
-        },
-        {
-          "description": "shift + control + i = mouse back",
-          "type": "basic",
-          "from": {
-            "key_code": "i",
-            "modifiers": {
-              "mandatory": [
-                "left_option",
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "pointing_button": "button4"
-            }
-          ]
-        },
-        {
           "description": " i = cmd+left",
           "type": "basic",
           "from": {
@@ -1192,97 +981,6 @@
               "modifiers": [
                 "left_shift"
               ]
-            }
-          ]
-        },
-        {
-          "description": "shift + o = command ` (next window within app)",
-          "type": "basic",
-          "from": {
-            "key_code": "o",
-            "modifiers": {
-              "mandatory": [
-                "left_shift",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "grave_accent_and_tilde",
-              "modifiers": [
-                "left_command"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "control + o = option + command + h (expose all)",
-          "type": "basic",
-          "from": {
-            "key_code": "o",
-            "modifiers": {
-              "mandatory": [
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "up_arrow",
-              "modifiers": [
-                "left_control"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "option + o = mouse forward",
-          "type": "basic",
-          "from": {
-            "key_code": "o",
-            "modifiers": {
-              "mandatory": [
-                "left_option",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "pointing_button": "button5"
-            }
-          ]
-        },
-        {
-          "description": "shift + control + o = mouse forward",
-          "type": "basic",
-          "from": {
-            "key_code": "o",
-            "modifiers": {
-              "mandatory": [
-                "left_option",
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "pointing_button": "button5"
             }
           ]
         },
@@ -1359,52 +1057,6 @@
           ]
         },
         {
-          "description": "shift + p = option + command + equal_sign (zoom in)",
-          "type": "basic",
-          "from": {
-            "key_code": "p",
-            "modifiers": {
-              "mandatory": [
-                "left_shift",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "equal_sign",
-              "modifiers": [
-                "left_command",
-                "left_option"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "control + p = LaunchPad",
-          "type": "basic",
-          "from": {
-            "key_code": "p",
-            "modifiers": {
-              "mandatory": [
-                "left_control",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "shell_command": "open -a 'Launchpad'"
-            }
-          ]
-        },
-        {
           "description": "option + p = move line down",
           "type": "basic",
           "from": {
@@ -1452,16 +1104,16 @@
       ]
     },
     {
-      "description": "Hyper Deletion",
+      "description": "Hyper Window",
       "manipulators": [
         {
-          "description": "option + n = delete whole line",
+          "description": "shift + h = ctrl + shift + tab (prev tab)",
           "type": "basic",
           "from": {
-            "key_code": "n",
+            "key_code": "h",
             "modifiers": {
               "mandatory": [
-                "left_option",
+                "left_shift",
                 "right_command",
                 "right_control",
                 "right_shift",
@@ -1471,10 +1123,56 @@
           },
           "to": [
             {
-              "key_code": "end"
-            },
+              "key_code": "tab",
+              "modifiers": [
+                "left_control",
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + h = ctrl + left (prev desktop)",
+          "type": "basic",
+          "from": {
+            "key_code": "h",
+            "modifiers": {
+              "mandatory": [
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
             {
-              "key_code": "delete_or_backspace",
+              "key_code": "left_arrow",
+              "modifiers": [
+                "left_control"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "shift + j = command + tab (next application)",
+          "type": "basic",
+          "from": {
+            "key_code": "j",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "tab",
               "modifiers": [
                 "left_command"
               ]
@@ -1482,13 +1180,580 @@
           ]
         },
         {
-          "description": "option + . = delete whole line",
+          "description": "control + j = ctrl + down (focus application)",
           "type": "basic",
           "from": {
-            "key_code": "period",
+            "key_code": "j",
             "modifiers": {
               "mandatory": [
-                "left_option",
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "down_arrow",
+              "modifiers": [
+                "left_control"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "shift + k = command + tab (prev application)",
+          "type": "basic",
+          "from": {
+            "key_code": "k",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "tab",
+              "modifiers": [
+                "left_command",
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + k = ctrl + up (expose all)",
+          "type": "basic",
+          "from": {
+            "key_code": "k",
+            "modifiers": {
+              "mandatory": [
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_control"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "shift + l = command + tab (next tab)",
+          "type": "basic",
+          "from": {
+            "key_code": "l",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "tab",
+              "modifiers": [
+                "left_control"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + l = ctrl + right (next desktop)",
+          "type": "basic",
+          "from": {
+            "key_code": "l",
+            "modifiers": {
+              "mandatory": [
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": [
+                "left_control"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "shift + u = option + command + hyphen (zoom out)",
+          "type": "basic",
+          "from": {
+            "key_code": "u",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "hyphen",
+              "modifiers": [
+                "left_command",
+                "left_option"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + u = ctrl + command + f (fullscreen)",
+          "type": "basic",
+          "from": {
+            "key_code": "u",
+            "modifiers": {
+              "mandatory": [
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "f",
+              "modifiers": [
+                "left_control",
+                "left_command"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "shift + i = command + shift + ` (prev window within app)",
+          "type": "basic",
+          "from": {
+            "key_code": "i",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "grave_accent_and_tilde",
+              "modifiers": [
+                "left_command",
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + i = command + h (hide current window)",
+          "type": "basic",
+          "from": {
+            "key_code": "i",
+            "modifiers": {
+              "mandatory": [
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "h",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "shift + o = command ` (next window within app)",
+          "type": "basic",
+          "from": {
+            "key_code": "o",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "grave_accent_and_tilde",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + o = option + command + h (expose all)",
+          "type": "basic",
+          "from": {
+            "key_code": "o",
+            "modifiers": {
+              "mandatory": [
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_control"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "shift + p = option + command + equal_sign (zoom in)",
+          "type": "basic",
+          "from": {
+            "key_code": "p",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "equal_sign",
+              "modifiers": [
+                "left_command",
+                "left_option"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + p = LaunchPad",
+          "type": "basic",
+          "from": {
+            "key_code": "p",
+            "modifiers": {
+              "mandatory": [
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "open -a 'Launchpad'"
+            }
+          ]
+        },
+        {
+          "description": "control + shift + h = ctrl + shift + tab (prev tab)",
+          "type": "basic",
+          "from": {
+            "key_code": "h",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "tab",
+              "modifiers": [
+                "left_control",
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + shift + j = command + tab (next application)",
+          "type": "basic",
+          "from": {
+            "key_code": "j",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "tab",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + shift + k = command + tab (prev application)",
+          "type": "basic",
+          "from": {
+            "key_code": "k",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "tab",
+              "modifiers": [
+                "left_command",
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + shift + l = command + tab (next tab)",
+          "type": "basic",
+          "from": {
+            "key_code": "l",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "tab",
+              "modifiers": [
+                "left_control"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + shift + u = option + command + hyphen (zoom out)",
+          "type": "basic",
+          "from": {
+            "key_code": "u",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "hyphen",
+              "modifiers": [
+                "left_command",
+                "left_option"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + shift + i = command + shift + ` (prev window within app)",
+          "type": "basic",
+          "from": {
+            "key_code": "i",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "grave_accent_and_tilde",
+              "modifiers": [
+                "left_command",
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + shift + o = command ` (next window within app)",
+          "type": "basic",
+          "from": {
+            "key_code": "o",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "grave_accent_and_tilde",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "control + shift + p = option + command + equal_sign (zoom in)",
+          "type": "basic",
+          "from": {
+            "key_code": "p",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "left_control",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "equal_sign",
+              "modifiers": [
+                "left_command",
+                "left_option"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Hyper Deletion",
+      "manipulators": [
+        {
+          "description": "m = delete a char ahead",
+          "type": "basic",
+          "from": {
+            "key_code": "m",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "delete_or_backspace"
+            }
+          ]
+        },
+        {
+          "description": "n = delete a word ahead",
+          "type": "basic",
+          "from": {
+            "key_code": "n",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "delete_or_backspace",
+              "modifiers": [
+                "left_option"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "command + m = delete to line start",
+          "type": "basic",
+          "from": {
+            "key_code": "m",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
                 "right_command",
                 "right_control",
                 "right_shift",
@@ -1522,9 +1787,11 @@
           },
           "to": [
             {
-              "key_code": "left_arrow",
+              "key_code": "end"
+            },
+            {
+              "key_code": "delete_or_backspace",
               "modifiers": [
-                "left_shift",
                 "left_command"
               ]
             },
@@ -1534,131 +1801,13 @@
           ]
         },
         {
-          "description": "command + m = delete word ahead",
+          "description": "option + m = delete a char after",
           "type": "basic",
           "from": {
             "key_code": "m",
             "modifiers": {
               "mandatory": [
-                "left_command",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "delete_or_backspace",
-              "modifiers": [
-                "left_option"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "command + , = delete word after",
-          "type": "basic",
-          "from": {
-            "key_code": "comma",
-            "modifiers": {
-              "mandatory": [
-                "left_command",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "delete_forward",
-              "modifiers": [
-                "left_option"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "command + . = delete whole line",
-          "type": "basic",
-          "from": {
-            "key_code": "period",
-            "modifiers": {
-              "mandatory": [
-                "left_command",
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "right_arrow",
-              "modifiers": [
-                "left_shift",
-                "left_command"
-              ]
-            },
-            {
-              "key_code": "delete_or_backspace"
-            }
-          ]
-        },
-        {
-          "description": "n = delete a word ahead",
-          "type": "basic",
-          "from": {
-            "key_code": "n",
-            "modifiers": {
-              "mandatory": [
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "delete_or_backspace",
-              "modifiers": [
-                "left_option"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "m = delete a char ahead",
-          "type": "basic",
-          "from": {
-            "key_code": "m",
-            "modifiers": {
-              "mandatory": [
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "delete_or_backspace"
-            }
-          ]
-        },
-        {
-          "description": ", = delete a char after",
-          "type": "basic",
-          "from": {
-            "key_code": "comma",
-            "modifiers": {
-              "mandatory": [
+                "left_option",
                 "right_command",
                 "right_control",
                 "right_shift",
@@ -1673,12 +1822,13 @@
           ]
         },
         {
-          "description": ". = delete a word after",
+          "description": "option + n = delete a word after",
           "type": "basic",
           "from": {
-            "key_code": "period",
+            "key_code": "n",
             "modifiers": {
               "mandatory": [
+                "left_option",
                 "right_command",
                 "right_control",
                 "right_shift",
@@ -1888,13 +2038,13 @@
           ]
         },
         {
-          "description": "command + s = Espanso Search (toggle)",
+          "description": "option + s = Espanso Search (toggle)",
           "type": "basic",
           "from": {
             "key_code": "s",
             "modifiers": {
               "mandatory": [
-                "left_command",
+                "left_option",
                 "right_command",
                 "right_control",
                 "right_shift",
@@ -1931,6 +2081,27 @@
                 "right_shift",
                 "right_option"
               ]
+            }
+          ]
+        },
+        {
+          "description": "command + 1 = CCwork",
+          "type": "basic",
+          "from": {
+            "key_code": "1",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "~/.local/bin/toggle_app 'CCwork'"
             }
           ]
         }
@@ -2177,10 +2348,33 @@
       "description": "Hyper Shifter",
       "manipulators": [
         {
-          "description": "command + open_bracket [ = {",
+          "description": "comma , = (",
           "type": "basic",
           "from": {
-            "key_code": "open_bracket",
+            "key_code": "comma",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "9",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "command + comma , = {",
+          "type": "basic",
+          "from": {
+            "key_code": "comma",
             "modifiers": {
               "mandatory": [
                 "left_command",
@@ -2201,10 +2395,10 @@
           ]
         },
         {
-          "description": "option + open_bracket [ = <",
+          "description": "option + comma , = [",
           "type": "basic",
           "from": {
-            "key_code": "open_bracket",
+            "key_code": "comma",
             "modifiers": {
               "mandatory": [
                 "left_option",
@@ -2217,18 +2411,15 @@
           },
           "to": [
             {
-              "key_code": "comma",
-              "modifiers": [
-                "left_shift"
-              ]
+              "key_code": "open_bracket"
             }
           ]
         },
         {
-          "description": "open_bracket [ = (",
+          "description": "period . = )",
           "type": "basic",
           "from": {
-            "key_code": "open_bracket",
+            "key_code": "period",
             "modifiers": {
               "mandatory": [
                 "right_command",
@@ -2240,7 +2431,7 @@
           },
           "to": [
             {
-              "key_code": "9",
+              "key_code": "0",
               "modifiers": [
                 "left_shift"
               ]
@@ -2248,10 +2439,10 @@
           ]
         },
         {
-          "description": "command + close_bracket ] = }",
+          "description": "command + period . = }",
           "type": "basic",
           "from": {
-            "key_code": "close_bracket",
+            "key_code": "period",
             "modifiers": {
               "mandatory": [
                 "left_command",
@@ -2272,10 +2463,10 @@
           ]
         },
         {
-          "description": "option + close_bracket ] = }",
+          "description": "option + period . = ]",
           "type": "basic",
           "from": {
-            "key_code": "close_bracket",
+            "key_code": "period",
             "modifiers": {
               "mandatory": [
                 "left_option",
@@ -2288,33 +2479,7 @@
           },
           "to": [
             {
-              "key_code": "period",
-              "modifiers": [
-                "left_shift"
-              ]
-            }
-          ]
-        },
-        {
-          "description": "close_bracket ] = )",
-          "type": "basic",
-          "from": {
-            "key_code": "close_bracket",
-            "modifiers": {
-              "mandatory": [
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "key_code": "0",
-              "modifiers": [
-                "left_shift"
-              ]
+              "key_code": "close_bracket"
             }
           ]
         },
@@ -2453,12 +2618,119 @@
               ]
             }
           ]
+        },
+        {
+          "description": "slash / = backslash",
+          "type": "basic",
+          "from": {
+            "key_code": "slash",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "backslash"
+            }
+          ]
+        },
+        {
+          "description": "command + slash / = pipe",
+          "type": "basic",
+          "from": {
+            "key_code": "slash",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "backslash",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "option + slash / = backtick",
+          "type": "basic",
+          "from": {
+            "key_code": "slash",
+            "modifiers": {
+              "mandatory": [
+                "left_option",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "grave_accent_and_tilde"
+            }
+          ]
         }
       ]
     },
     {
       "description": "Hyper Mouse (Neru)",
       "manipulators": [
+        {
+          "description": "option + i = mouse back",
+          "type": "basic",
+          "from": {
+            "key_code": "i",
+            "modifiers": {
+              "mandatory": [
+                "left_option",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "pointing_button": "button4"
+            }
+          ]
+        },
+        {
+          "description": "option + o = mouse forward",
+          "type": "basic",
+          "from": {
+            "key_code": "o",
+            "modifiers": {
+              "mandatory": [
+                "left_option",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "pointing_button": "button5"
+            }
+          ]
+        },
         {
           "description": "f = neru hints",
           "type": "basic",
@@ -2558,6 +2830,1117 @@
           "to": [
             {
               "pointing_button": "button3"
+            }
+          ]
+        },
+        {
+          "description": "command + g = neru recursive grid",
+          "type": "basic",
+          "from": {
+            "key_code": "g",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option",
+                "left_command"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "/opt/homebrew/bin/neru recursive_grid"
+            }
+          ]
+        },
+        {
+          "description": "r = exit mouse mode",
+          "type": "basic",
+          "from": {
+            "key_code": "r",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "set_variable": {
+                "name": "mouse_mode",
+                "value": 0
+              }
+            },
+            {
+              "set_notification_message": {
+                "id": "mouse_mode",
+                "text": ""
+              }
+            }
+          ]
+        },
+        {
+          "description": "r = enter mouse mode",
+          "type": "basic",
+          "from": {
+            "key_code": "r",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "mouse_mode",
+                "value": 1
+              }
+            },
+            {
+              "set_notification_message": {
+                "id": "mouse_mode",
+                "text": "🖱 鼠标模式  hjkl 移动 · yuio 滚动 · ⌘ 加速 · ⌥ 减速 · 按住 Tab = 区域定位（右手主键区）· 按住 ` 或 ⌃ = 拖动 · n/⏎ 左键 · m 右键 · a/d 后退前进 · 123/qwe 跳屏 · space/esc 退出"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Hyper Mouse Mode",
+      "manipulators": [
+        {
+          "description": "mouse mode: zone y = zone 上左",
+          "type": "basic",
+          "from": {
+            "key_code": "y"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "10%",
+                  "y": "17%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone u = zone 上中左",
+          "type": "basic",
+          "from": {
+            "key_code": "u"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "30%",
+                  "y": "17%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone i = zone 上正",
+          "type": "basic",
+          "from": {
+            "key_code": "i"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "50%",
+                  "y": "17%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone o = zone 上中右",
+          "type": "basic",
+          "from": {
+            "key_code": "o"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "70%",
+                  "y": "17%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone p = zone 上右",
+          "type": "basic",
+          "from": {
+            "key_code": "p"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "90%",
+                  "y": "17%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone h = zone 中左",
+          "type": "basic",
+          "from": {
+            "key_code": "h"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "10%",
+                  "y": "50%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone j = zone 中中左",
+          "type": "basic",
+          "from": {
+            "key_code": "j"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "30%",
+                  "y": "50%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone k = zone 中正",
+          "type": "basic",
+          "from": {
+            "key_code": "k"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "50%",
+                  "y": "50%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone l = zone 中中右",
+          "type": "basic",
+          "from": {
+            "key_code": "l"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "70%",
+                  "y": "50%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone semicolon = zone 中右",
+          "type": "basic",
+          "from": {
+            "key_code": "semicolon"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "90%",
+                  "y": "50%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone n = zone 下左",
+          "type": "basic",
+          "from": {
+            "key_code": "n"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "10%",
+                  "y": "83%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone m = zone 下中左",
+          "type": "basic",
+          "from": {
+            "key_code": "m"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "30%",
+                  "y": "83%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone comma = zone 下正",
+          "type": "basic",
+          "from": {
+            "key_code": "comma"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "50%",
+                  "y": "83%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone period = zone 下中右",
+          "type": "basic",
+          "from": {
+            "key_code": "period"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "70%",
+                  "y": "83%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: zone slash = zone 下右",
+          "type": "basic",
+          "from": {
+            "key_code": "slash"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            },
+            {
+              "type": "variable_if",
+              "name": "zone",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "90%",
+                  "y": "83%"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: h = mouse move left",
+          "type": "basic",
+          "from": {
+            "key_code": "h"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "x": -1600
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: l = mouse move right",
+          "type": "basic",
+          "from": {
+            "key_code": "l"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "x": 1600
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: j = mouse move down",
+          "type": "basic",
+          "from": {
+            "key_code": "j"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "y": 1600
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: k = mouse move up",
+          "type": "basic",
+          "from": {
+            "key_code": "k"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "y": -1600
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: y = mouse wheel left",
+          "type": "basic",
+          "from": {
+            "key_code": "y"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "horizontal_wheel": 64
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: o = mouse wheel right",
+          "type": "basic",
+          "from": {
+            "key_code": "o"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "horizontal_wheel": -64
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: u = mouse wheel down",
+          "type": "basic",
+          "from": {
+            "key_code": "u"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "vertical_wheel": 64
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: i = mouse wheel up",
+          "type": "basic",
+          "from": {
+            "key_code": "i"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "vertical_wheel": -64
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: command = mouse fast",
+          "type": "basic",
+          "from": {
+            "key_code": "left_command"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "speed_multiplier": 2
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: option = mouse slow",
+          "type": "basic",
+          "from": {
+            "key_code": "left_option"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "speed_multiplier": 0.5
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: control = mouse select",
+          "type": "basic",
+          "from": {
+            "key_code": "left_control"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "pointing_button": "button1"
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: grave = mouse select",
+          "type": "basic",
+          "from": {
+            "key_code": "grave_accent_and_tilde"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "pointing_button": "button1"
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: tab = zone layer",
+          "type": "basic",
+          "from": {
+            "key_code": "tab"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "set_variable": {
+                "name": "zone",
+                "value": 1
+              }
+            }
+          ],
+          "to_after_key_up": [
+            {
+              "set_variable": {
+                "name": "zone",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: enter = mouse left click",
+          "type": "basic",
+          "from": {
+            "key_code": "return_or_enter"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "pointing_button": "button1"
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: n = mouse left click",
+          "type": "basic",
+          "from": {
+            "key_code": "n"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "pointing_button": "button1"
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: m = mouse right click",
+          "type": "basic",
+          "from": {
+            "key_code": "m"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "pointing_button": "button2"
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: a = mouse back",
+          "type": "basic",
+          "from": {
+            "key_code": "a"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "pointing_button": "button4"
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: d = mouse forward",
+          "type": "basic",
+          "from": {
+            "key_code": "d"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "pointing_button": "button5"
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: 1 = jump to screen 1",
+          "type": "basic",
+          "from": {
+            "key_code": "1"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "50%",
+                  "y": "50%",
+                  "screen": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: q = jump to screen 1",
+          "type": "basic",
+          "from": {
+            "key_code": "q"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "50%",
+                  "y": "50%",
+                  "screen": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: 2 = jump to screen 2",
+          "type": "basic",
+          "from": {
+            "key_code": "2"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "50%",
+                  "y": "50%",
+                  "screen": 0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: w = jump to screen 2",
+          "type": "basic",
+          "from": {
+            "key_code": "w"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "50%",
+                  "y": "50%",
+                  "screen": 0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: 3 = jump to screen 3",
+          "type": "basic",
+          "from": {
+            "key_code": "3"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "50%",
+                  "y": "50%",
+                  "screen": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: e = jump to screen 3",
+          "type": "basic",
+          "from": {
+            "key_code": "e"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "50%",
+                  "y": "50%",
+                  "screen": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: space = exit mouse mode",
+          "type": "basic",
+          "from": {
+            "key_code": "spacebar"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "set_variable": {
+                "name": "mouse_mode",
+                "value": 0
+              }
+            },
+            {
+              "set_variable": {
+                "name": "zone",
+                "value": 0
+              }
+            },
+            {
+              "set_notification_message": {
+                "id": "mouse_mode",
+                "text": ""
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: escape = exit mouse mode",
+          "type": "basic",
+          "from": {
+            "key_code": "escape"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "set_variable": {
+                "name": "mouse_mode",
+                "value": 0
+              }
+            },
+            {
+              "set_notification_message": {
+                "id": "mouse_mode",
+                "text": ""
+              }
             }
           ]
         }

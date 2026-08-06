@@ -7,27 +7,44 @@ repo: https://github.com/qbosen/Capslock
 rules:
 
   ################################################################
-  #              F13 to Fn (Keychron Q10 workaround)             #
-  ################################################################
-  - description: F13 to Fn (Keychron Q10)
-    manipulators:
-
-      - description: 'f13 = fn (with any modifier combo)'
-        type: basic
-        from: { key_code: f13, modifiers: { optional: [ any ] } }
-        to: [ { key_code: fn } ]
-
-  ################################################################
   #                    Capslock to Esc/Hyper                     #
   ################################################################
   - description: CapsLock to Hyper
     manipulators:
 
-      - description: 'capslock = esc(click) | hyper(hold)'
+      # 单击就出 Esc 误触率太高（伸手按 Hyper 又松开就会误发），改成双击。
+      # 两条规则必须按这个顺序：带条件的在前，它只在「刚刚单击过」的窗口期内命中。
+      # Karabiner 不会把自己发出的按键再喂回规则引擎，所以上面那个 escape 到不了
+      # 鼠标模式的退出规则里。双击在模式中时，直接在这里退出，不再发 Esc 给应用。
+      - description: 'capslock double tap = exit mouse mode'
+        type: basic
+        from: { key_code: caps_lock, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: variable_if, name: caps_tap, value: 1 }
+          - { type: variable_if, name: mouse_mode, value: 1 }
+        to: [ { key_code: right_shift, modifiers: [ right_command,right_control,right_option ] } ]
+        to_if_alone:
+          - set_variable: { name: caps_tap, value: 0 }
+          - set_variable: { name: mouse_mode, value: 0 }
+          - set_notification_message: { id: mouse_mode, text: "" }
+
+      - description: 'capslock double tap = escape'
+        type: basic
+        from: { key_code: caps_lock, modifiers: { optional: [ any ] } }
+        conditions: [ { type: variable_if, name: caps_tap, value: 1 } ]
+        to: [ { key_code: right_shift, modifiers: [ right_command,right_control,right_option ] } ]
+        to_if_alone: [ { key_code: escape }, { set_variable: { name: caps_tap, value: 0 } } ]
+
+      - description: 'capslock = hyper(hold)'
         type: basic
         from: { key_code: caps_lock ,modifiers: { optional: [ any ] } }
         to: [ { key_code: right_shift,modifiers: [ right_command,right_control,right_option ] } ]
-        # to_if_alone: [ { key_code: escape } ]  # disable capslock to esc mapping
+        # 单击只留个 300ms 的标记，期间再点一次才算数；超时或被打断自动清掉
+        to_if_alone: [ { set_variable: { name: caps_tap, value: 1 } } ]
+        to_delayed_action:
+          to_if_invoked: [ { set_variable: { name: caps_tap, value: 0 } } ]
+          to_if_canceled: [ { set_variable: { name: caps_tap, value: 0 } } ]
+        parameters: { basic.to_delayed_action_delay_milliseconds: 300 }
 
       - description: 'escape = capslock switch'
         type: basic
@@ -45,17 +62,64 @@ rules:
         to: [ { key_code: spacebar , modifiers: [ left_control,left_command ] } ]
 
 
+
+  ################################################################
+  #                        Q10 Macro Keys                        #
+  #  M1-M5 在 VIA 里统一发 F20-F24 裸键，语义全部在这里定义。     #
+  #  固件只管「发哪个键」，改用途不用重刷键盘，键位图也能读到。   #
+  ################################################################
+  - description: Q10 Macro Keys
+    manipulators:
+
+      # M1：原本固件里直接发 KC_MPLY，现在也走一遍软件层，保持一致
+      - description: 'M1 = play/pause'
+        type: basic
+        from: { key_code: f20, modifiers: { optional: [ any ] } }
+        to: [ { consumer_key_code: play_or_pause } ]
+
+      # M5：转成 fn，macOS 听写要的就是这个键
+      - description: 'M5 = fn (with any modifier combo)'
+        type: basic
+        from: { key_code: f24, modifiers: { optional: [ any ] } }
+        to: [ { key_code: fn } ]
+
+      # M2：一个键进出鼠标模式（条件严的排前面）
+      # M2 = 按住才是鼠标模式，松开立刻退出。临时点一下东西，不必付模式切换的成本。
+      #
+      # 这里刻意不弹通知：按住时手指就在键上，手指本身就是状态指示器。
+      # ⇪R 的常驻模式才需要通知——那种模式没有物理反馈，很容易忘了自己还在里面。
+      #
+      # 松开一律清零并清掉通知，所以在常驻模式里点一下 M2 同样等于退出，
+      # 一条规则兼顾两种用法。
+      - description: 'M2 = hold for mouse mode'
+        type: basic
+        from: { key_code: f21, modifiers: { optional: [ any ] } }
+        to:
+          - set_variable: { name: mouse_mode, value: 1 }
+        to_after_key_up:
+          - set_variable: { name: mouse_mode, value: 0 }
+          - set_notification_message: { id: mouse_mode, text: "" }
+
+      # M3 / M4：按住即等于 Hyper+⌃ 和 Hyper+⌃⇧，避开左手小指冲突。
+      # 输出一个修饰键并挂上其余修饰键，和 CapsLock→Hyper 是同一种写法。
+      - description: 'M3 = hyper + control'
+        type: basic
+        from: { key_code: f22, modifiers: { optional: [ any ] } }
+        to: [ { key_code: right_shift, modifiers: [ right_command,right_control,right_option, left_control ] } ]
+
+      - description: 'M4 = hyper + control + shift'
+        type: basic
+        from: { key_code: f23, modifiers: { optional: [ any ] } }
+        to: [ { key_code: right_shift, modifiers: [ right_command,right_control,right_option, left_control,left_shift ] } ]
+
   ################################################################
   #                       Hyper Navigation                       #
   ################################################################
   - description: Hyper Navigation
+    # 纯文本操作：⇪ 移动 · ⇪⌘ 选择 · ⇪⌘⌥ 按词/段选择 · ⇪⌥ 按词/段移动。
+    # 标签页/桌面切换已分到 Hyper Window；鼠标侧键前进后退归到 Hyper Mouse。
     manipulators:
 
-      #==========================================================#
-      # ( h ) + ( ⌘⌥⇧⌃ )  -> ( left )                            #
-      #==========================================================#
-
-      # command: selection
       - description: 'command + h = shift + left'
         type: basic
         from: { key_code: h, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
@@ -68,28 +132,11 @@ rules:
         to: [ { key_code: left_arrow , modifiers: [ left_option, left_shift ] } ]
 
       # shift: tab/win management
-      - description: 'shift + h = ctrl + shift + tab (prev tab)'
-        type: basic
-        from: { key_code: h, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: tab , modifiers: [ left_control , left_shift ] } ]
-
-      # control: desktop management
-      - description: 'control + h = ctrl + left (prev desktop)'
-        type: basic
-        from: { key_code: h, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: left_arrow , modifiers: [ left_control ] } ]
-
-      # option: word move
       - description: 'option + h = move word ahead'
         type: basic
         from: { key_code: h, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: left_arrow , modifiers: [ left_option ] } ]
 
-      # shift + control: mouse wheel
-      - description: 'shift + control + h = mouse wheel left'
-        type: basic
-        from: { key_code: h, modifiers: { mandatory: [ left_shift,left_control,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { mouse_key: { horizontal_wheel: 64 } } ]
 
       # normal: cursor move
       - description: ' h = left'
@@ -114,28 +161,11 @@ rules:
         to: [ { key_code: down_arrow , modifiers: [ left_shift ] }, { key_code: down_arrow , modifiers: [ left_shift ] },{ key_code: down_arrow , modifiers: [ left_shift ] } ]
 
       # shift: tab/win management
-      - description: 'shift + j = command + tab (next application)'
-        type: basic
-        from: { key_code: j, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: tab , modifiers: [ left_command ] } ]
-
-      # control: desktop management
-      - description: 'control + j = ctrl + down (focus application)'
-        type: basic
-        from: { key_code: j, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: down_arrow , modifiers: [ left_control ] } ]
-
-      # option: para move
       - description: 'option + j = move para down'
         type: basic
         from: { key_code: j, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: down_arrow }, { key_code: down_arrow },{ key_code: down_arrow }  ]
 
-      # shift + control: mouse wheel
-      - description: 'shift + control + j = mouse wheel down'
-        type: basic
-        from: { key_code: j, modifiers: { mandatory: [ left_shift,left_control,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { mouse_key: { vertical_wheel: 64 } } ]
 
       # normal: cursor move
       - description: ' j = down'
@@ -160,28 +190,11 @@ rules:
         to: [ { key_code: up_arrow , modifiers: [ left_shift ] }, { key_code: up_arrow , modifiers: [ left_shift ] },{ key_code: up_arrow , modifiers: [ left_shift ] } ]
 
       # shift: tab/win management
-      - description: 'shift + k = command + tab (prev application)'
-        type: basic
-        from: { key_code: k, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: tab , modifiers: [ left_command, left_shift ] } ]
-
-      # control: desktop management
-      - description: 'control + k = ctrl + up (expose all)'
-        type: basic
-        from: { key_code: k, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: up_arrow , modifiers: [ left_control ] } ]
-
-      # option: para move
       - description: 'option + k = param up'
         type: basic
         from: { key_code: k, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: up_arrow }, { key_code: up_arrow },{ key_code: up_arrow} ]
 
-      # shift + control: mouse wheel
-      - description: 'shift + control + k = mouse wheel up'
-        type: basic
-        from: { key_code: k, modifiers: { mandatory: [ left_shift,left_control,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { mouse_key: { vertical_wheel: -64 } } ]
 
       # normal: cursor move
       - description: ' k = up'
@@ -206,28 +219,11 @@ rules:
         to: [ { key_code: right_arrow , modifiers: [ left_shift,left_option ] } ]
 
       # shift: tab/win management
-      - description: 'shift + l = command + tab (next tab)'
-        type: basic
-        from: { key_code: l, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: tab , modifiers: [ left_control ] } ]
-
-      # control: desktop management
-      - description: 'control + l = ctrl + right (next desktop)'
-        type: basic
-        from: { key_code: l, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: right_arrow , modifiers: [ left_control ] } ]
-
-      # option: word move right
       - description: 'option + l = word move right'
         type: basic
         from: { key_code: l, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: right_arrow , modifiers: [ left_option ] } ]
 
-      # shift + control: mouse wheel
-      - description: 'shift + control + l = mouse wheel right'
-        type: basic
-        from: { key_code: l, modifiers: { mandatory: [ left_shift,left_control,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { mouse_key: { horizontal_wheel: -64 } } ]
 
       # normal: cursor move
       - description: ' l = right'
@@ -253,18 +249,6 @@ rules:
         to: [ { key_code: page_up , modifiers: [ left_shift ] } ]
 
       # shift: tab/win management (TODO: require manual setup)
-      - description: 'shift + u = option + command + hyphen (zoom out)'
-        type: basic
-        from: { key_code: u, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: hyphen , modifiers: [ left_command,left_option ] } ]
-
-      # control: desktop management
-      - description: 'control + u = ctrl + command + f (fullscreen)'
-        type: basic
-        from: { key_code: u , modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: f , modifiers: [ left_control,left_command ] } ]
-
-      # option: move line up
       - description: 'option + u = move line up'
         type: basic
         from: { key_code: u, modifiers: { mandatory: [ left_option,  right_command,right_control,right_shift,right_option ] } }
@@ -294,30 +278,6 @@ rules:
         to: [ { key_code: end },{ key_code: home , modifiers: [ left_shift ] },{ key_code: home , modifiers: [ left_shift ] } ]
 
       # shift: tab/win management (TODO: require manual setup)
-      - description: 'shift + i = command + shift + ` (prev window within app)'
-        type: basic
-        from: { key_code: i, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: grave_accent_and_tilde , modifiers: [ left_command,left_shift ] } ]
-
-      # control: desktop management
-      - description: 'control + i = command + h (hide current window)'
-        type: basic
-        from: { key_code: i, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: h , modifiers: [ left_command ] } ]
-
-      # option: mouse back
-      - description: 'option + i = mouse back'
-        type: basic
-        from: { key_code: i, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
-        to: [ { pointing_button: button4 } ]
-
-      # shift + control: mouse back
-      - description: 'shift + control + i = mouse back'
-        type: basic
-        from: { key_code: i, modifiers: { mandatory: [ left_option, left_control,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { pointing_button: button4 } ]
-
-      # normal: cursor move
       - description: ' i = cmd+left'
         type: basic
         from: { key_code: i, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
@@ -340,30 +300,6 @@ rules:
         to: [ { key_code: home },{ key_code: end , modifiers: [ left_shift ] } ]
 
       # shift: tab/win management (TODO: require manual setup)
-      - description: 'shift + o = command ` (next window within app)'
-        type: basic
-        from: { key_code: o, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: grave_accent_and_tilde , modifiers: [ left_command ] } ]
-
-      # control: desktop management
-      - description: 'control + o = option + command + h (expose all)'
-        type: basic
-        from: { key_code: o, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: up_arrow , modifiers: [ left_control ] } ]
-
-      # option: mouse forward
-      - description: 'option + o = mouse forward'
-        type: basic
-        from: { key_code: o, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
-        to: [ { pointing_button: button5 } ]
-
-      # shift + control: mouse forward
-      - description: 'shift + control + o = mouse forward'
-        type: basic
-        from: { key_code: o, modifiers: { mandatory: [ left_option, left_control,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { pointing_button: button5 } ]
-
-      # normal: cursor move
       - description: ' o = cmd+right'
         type: basic
         from: { key_code: o, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
@@ -386,6 +322,117 @@ rules:
         to: [ { key_code: page_down , modifiers: [ left_shift ] } ]
 
       # shift: tab/win management (TODO: require manual setup)
+      - description: 'option + p = move line down'
+        type: basic
+        from: { key_code: p, modifiers: { mandatory: [ left_option,  right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: down_arrow, modifiers: [ left_option, left_shift ] } ]
+
+      # normal: cursor move
+      - description: ' p = page_down'
+        type: basic
+        from: { key_code: p, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: page_down } ]
+
+
+      #==========================================================#
+      # ( control + shift ) --> 与 shift 层等价，供 M4 单键触发   #
+      #  shift 层要左手小指同时按住 CapsLock 和 Shift，冲突严重； #
+      #  M4 直接发出 Hyper+⌃⇧，一个键就能进这一层。              #
+      #  两套动作完全一致，键位图会自动合并成一行显示。           #
+      #==========================================================#
+
+  ################################################################
+  #                         Hyper Window                         #
+  ################################################################
+  - description: Hyper Window
+    # 切换标签页 / 应用 / 同应用窗口 / 桌面，和文本编辑无关，所以从导航组分出来。
+    # ⇧ 层要左小指同时按住 CapsLock 和 Shift，极难；⌃⇧ 层是它的副本，供 M4 单键触发。
+    manipulators:
+
+      - description: 'shift + h = ctrl + shift + tab (prev tab)'
+        type: basic
+        from: { key_code: h, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: tab , modifiers: [ left_control , left_shift ] } ]
+
+      # control: desktop management
+      - description: 'control + h = ctrl + left (prev desktop)'
+        type: basic
+        from: { key_code: h, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: left_arrow , modifiers: [ left_control ] } ]
+
+      # option: word move
+      - description: 'shift + j = command + tab (next application)'
+        type: basic
+        from: { key_code: j, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: tab , modifiers: [ left_command ] } ]
+
+      # control: desktop management
+      - description: 'control + j = ctrl + down (focus application)'
+        type: basic
+        from: { key_code: j, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: down_arrow , modifiers: [ left_control ] } ]
+
+      # option: para move
+      - description: 'shift + k = command + tab (prev application)'
+        type: basic
+        from: { key_code: k, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: tab , modifiers: [ left_command, left_shift ] } ]
+
+      # control: desktop management
+      - description: 'control + k = ctrl + up (expose all)'
+        type: basic
+        from: { key_code: k, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: up_arrow , modifiers: [ left_control ] } ]
+
+      # option: para move
+      - description: 'shift + l = command + tab (next tab)'
+        type: basic
+        from: { key_code: l, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: tab , modifiers: [ left_control ] } ]
+
+      # control: desktop management
+      - description: 'control + l = ctrl + right (next desktop)'
+        type: basic
+        from: { key_code: l, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: right_arrow , modifiers: [ left_control ] } ]
+
+      # option: word move right
+      - description: 'shift + u = option + command + hyphen (zoom out)'
+        type: basic
+        from: { key_code: u, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: hyphen , modifiers: [ left_command,left_option ] } ]
+
+      # control: desktop management
+      - description: 'control + u = ctrl + command + f (fullscreen)'
+        type: basic
+        from: { key_code: u , modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: f , modifiers: [ left_control,left_command ] } ]
+
+      # option: move line up
+      - description: 'shift + i = command + shift + ` (prev window within app)'
+        type: basic
+        from: { key_code: i, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: grave_accent_and_tilde , modifiers: [ left_command,left_shift ] } ]
+
+      # control: desktop management
+      - description: 'control + i = command + h (hide current window)'
+        type: basic
+        from: { key_code: i, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: h , modifiers: [ left_command ] } ]
+
+      # option: mouse back
+      - description: 'shift + o = command ` (next window within app)'
+        type: basic
+        from: { key_code: o, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: grave_accent_and_tilde , modifiers: [ left_command ] } ]
+
+      # control: desktop management
+      - description: 'control + o = option + command + h (expose all)'
+        type: basic
+        from: { key_code: o, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: up_arrow , modifiers: [ left_control ] } ]
+
+      # option: mouse forward
       - description: 'shift + p = option + command + equal_sign (zoom in)'
         type: basic
         from: { key_code: p, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
@@ -398,16 +445,46 @@ rules:
         to: [ { shell_command: open -a 'Launchpad' } ]
       
       # option: move line down
-      - description: 'option + p = move line down'
+      - description: 'control + shift + h = ctrl + shift + tab (prev tab)'
         type: basic
-        from: { key_code: p, modifiers: { mandatory: [ left_option,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: down_arrow, modifiers: [ left_option, left_shift ] } ]
+        from: { key_code: h, modifiers: { mandatory: [ left_shift,left_control, right_command,right_control,right_shift,right_option ] } }
+        to: [{key_code: tab, modifiers: [left_control, left_shift]}]
 
-      # normal: cursor move
-      - description: ' p = page_down'
+      - description: 'control + shift + j = command + tab (next application)'
         type: basic
-        from: { key_code: p, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: page_down } ]
+        from: { key_code: j, modifiers: { mandatory: [ left_shift,left_control, right_command,right_control,right_shift,right_option ] } }
+        to: [{key_code: tab, modifiers: [left_command]}]
+
+      - description: 'control + shift + k = command + tab (prev application)'
+        type: basic
+        from: { key_code: k, modifiers: { mandatory: [ left_shift,left_control, right_command,right_control,right_shift,right_option ] } }
+        to: [{key_code: tab, modifiers: [left_command, left_shift]}]
+
+      - description: 'control + shift + l = command + tab (next tab)'
+        type: basic
+        from: { key_code: l, modifiers: { mandatory: [ left_shift,left_control, right_command,right_control,right_shift,right_option ] } }
+        to: [{key_code: tab, modifiers: [left_control]}]
+
+      - description: 'control + shift + u = option + command + hyphen (zoom out)'
+        type: basic
+        from: { key_code: u, modifiers: { mandatory: [ left_shift,left_control, right_command,right_control,right_shift,right_option ] } }
+        to: [{key_code: hyphen, modifiers: [left_command, left_option]}]
+
+      - description: 'control + shift + i = command + shift + ` (prev window within app)'
+        type: basic
+        from: { key_code: i, modifiers: { mandatory: [ left_shift,left_control, right_command,right_control,right_shift,right_option ] } }
+        to: [{key_code: grave_accent_and_tilde, modifiers: [left_command, left_shift]}]
+
+      - description: 'control + shift + o = command ` (next window within app)'
+        type: basic
+        from: { key_code: o, modifiers: { mandatory: [ left_shift,left_control, right_command,right_control,right_shift,right_option ] } }
+        to: [{key_code: grave_accent_and_tilde, modifiers: [left_command]}]
+
+      - description: 'control + shift + p = option + command + equal_sign (zoom in)'
+        type: basic
+        from: { key_code: p, modifiers: { mandatory: [ left_shift,left_control, right_command,right_control,right_shift,right_option ] } }
+        to: [{key_code: equal_sign, modifiers: [left_command, left_option]}]
+
 
   ################################################################
   #                       Hyper Deletion                         #
@@ -415,57 +492,40 @@ rules:
   - description: Hyper Deletion
     manipulators:
 
-      # + option = delete whole line 
-      - description: 'option + n = delete whole line'
-        type: basic
-        from: { key_code: n, modifiers: { mandatory: [ left_option,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: end}, { key_code: delete_or_backspace, modifiers: [ left_command ] } ]
-
-      - description: 'option + . = delete whole line'
-        type: basic
-        from: { key_code: period, modifiers: { mandatory: [ left_option,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: delete_or_backspace, modifiers: [ left_command ] } ]
-
-      # + command = delete line
-      - description: 'command + n = delete whole line'
-        type: basic
-        from: { key_code: n, modifiers: { mandatory: [ left_command,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: left_arrow, modifiers: [ left_shift,left_command ] } , { key_code: delete_or_backspace } ]
-
-      - description: 'command + m = delete word ahead'
-        type: basic
-        from: { key_code: m, modifiers: { mandatory: [ left_command,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: delete_or_backspace, modifiers: [ left_option ] } ]
-
-      - description: 'command + , = delete word after'
-        type: basic
-        from: { key_code: comma, modifiers: { mandatory: [ left_command,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: delete_forward, modifiers: [ left_option ] } ]
-
-      - description: 'command + . = delete whole line'
-        type: basic
-        from: { key_code: period, modifiers: { mandatory: [ left_command,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: right_arrow, modifiers: [ left_shift,left_command ] } , { key_code: delete_or_backspace } ]
-
-      # delete char and word
-      - description: 'n = delete a word ahead'
-        type: basic
-        from: { key_code: n, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: delete_or_backspace, modifiers: [ left_option ] } ]
-
+      # 删除压缩在 N / M 两个键上，构成一个 2×3 矩阵：
+      #   行 = 单位大小（M 小 = 字符，N 大 = 词）
+      #   列 = 作用范围（⇪ 往回删，⇪⌘ 上升到行，⇪⌥ 往前删）
+      # 底排的 , . 让给括号了——它们是右手中指和无名指下移一排，全键盘最省力的位置之一。
+      # 丢掉的「删到行尾」和「撤销」都有好按的原生替代：⌃K 和 ⌘Z。
       - description: 'm = delete a char ahead'
         type: basic
         from: { key_code: m, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: delete_or_backspace } ]
 
-      - description: ', = delete a char after'
+      - description: 'n = delete a word ahead'
         type: basic
-        from: { key_code: comma, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        from: { key_code: n, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: delete_or_backspace, modifiers: [ left_option ] } ]
+
+      - description: 'command + m = delete to line start'
+        type: basic
+        from: { key_code: m, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: delete_or_backspace, modifiers: [ left_command ] } ]
+
+      # 到行尾 → 删到行首 → 再删一次换行符，整行连同换行一起消失
+      - description: 'command + n = delete whole line'
+        type: basic
+        from: { key_code: n, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: end }, { key_code: delete_or_backspace, modifiers: [ left_command ] }, { key_code: delete_or_backspace } ]
+
+      - description: 'option + m = delete a char after'
+        type: basic
+        from: { key_code: m, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: delete_forward } ]
 
-      - description: '. = delete a word after'
+      - description: 'option + n = delete a word after'
         type: basic
-        from: { key_code: period, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        from: { key_code: n, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: delete_forward, modifiers: [ left_option ] } ]
 
 
@@ -544,15 +604,23 @@ rules:
       #==========================================================#
       # ( s ) --> Context Search / Espanso Search                #
       #==========================================================#
-      - description: 'command + s = Espanso Search (toggle)'
+      - description: 'option + s = Espanso Search (toggle)'
         type: basic
-        from: { key_code: s, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        from: { key_code: s, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         to: [ { shell_command: "~/.local/bin/toggle_espanso_search" } ]
 
       - description: 's = Context Search'
         type: basic
         from: { key_code: s, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: s, modifiers: [ right_command,right_control,right_shift,right_option ] } ]
+
+      #==========================================================#
+      # ( 1 ) --> CCwork                                         #
+      #==========================================================#
+      - description: 'command + 1 = CCwork'
+        type: basic
+        from: { key_code: '1', modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        to: [ { shell_command: "~/.local/bin/toggle_app 'CCwork'" } ]
 
   ################################################################
   #                       Hyper Terminal                         #
@@ -693,39 +761,39 @@ rules:
       #==========================================================#
       # [] -> () command:{}  option:<>
       #==========================================================#
-      - description: 'command + open_bracket [ = {'
+      # 括号搬到底排的 , . ：右手中指 + 无名指各管一边，左键出左括号、右键出右括号，
+      # 空间关系和符号本身同构。⇧, = < 和 ⇧. = > 在标准布局里本来就是括号类，位置有先验联想。
+      # 只输出单个原生字符，成对补全交给编辑器自己处理，两层职责不重叠。
+      - description: 'comma , = ('
         type: basic
-        from: { key_code: open_bracket, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: open_bracket , modifiers: [ left_shift ] } ]
-
-      - description: 'option + open_bracket [ = <'
-        type: basic
-        from: { key_code: open_bracket, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: comma , modifiers: [ left_shift ] } ]
-
-      - description: 'open_bracket [ = ('
-        type: basic
-        from: { key_code: open_bracket, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        from: { key_code: comma, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: '9' , modifiers: [ left_shift ] } ]
 
-      - description: 'command + close_bracket ] = }'
+      - description: 'command + comma , = {'
         type: basic
-        from: { key_code: close_bracket, modifiers: { mandatory: [ left_command,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: close_bracket , modifiers: [ left_shift ] } ]
+        from: { key_code: comma, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: open_bracket , modifiers: [ left_shift ] } ]
 
-      - description: 'option + close_bracket ] = }'
+      - description: 'option + comma , = ['
         type: basic
-        from: { key_code: close_bracket, modifiers: { mandatory: [ left_option,  right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: period , modifiers: [ left_shift ] } ]
+        from: { key_code: comma, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: open_bracket } ]
 
-      - description: 'close_bracket ] = )'
+      - description: 'period . = )'
         type: basic
-        from: { key_code: close_bracket, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        from: { key_code: period, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: '0' , modifiers: [ left_shift ] } ]
 
-      #==========================================================#
-      # semicolon / quote -->  _=   (+command) -+  (option) $&
-      #==========================================================#
+      - description: 'command + period . = }'
+        type: basic
+        from: { key_code: period, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: close_bracket , modifiers: [ left_shift ] } ]
+
+      - description: 'option + period . = ]'
+        type: basic
+        from: { key_code: period, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: close_bracket } ]
+
       - description: 'semicolon = _'
         type: basic
         from: { key_code: semicolon, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
@@ -756,6 +824,23 @@ rules:
         from: { key_code: quote, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: '7' , modifiers: [ left_shift ] } ]
 
+      # 斜杠组：三个「手必须够到键盘角落」的符号。\ 和 | 本来就是同一个物理键的两态，
+      # 放同一个触发键上；` 在左上角最远处，Markdown 代码块和 shell 都离不开它。
+      - description: 'slash / = backslash'
+        type: basic
+        from: { key_code: slash, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: backslash } ]
+
+      - description: 'command + slash / = pipe'
+        type: basic
+        from: { key_code: slash, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: backslash , modifiers: [ left_shift ] } ]
+
+      - description: 'option + slash / = backtick'
+        type: basic
+        from: { key_code: slash, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        to: [ { key_code: grave_accent_and_tilde } ]
+
       #==========================================================#
       # / -> language switch; command: chinese
       #==========================================================#
@@ -773,6 +858,19 @@ rules:
   ################################################################
   - description: Hyper Mouse (Neru)
     manipulators:
+
+      - description: 'option + i = mouse back'
+        type: basic
+        from: { key_code: i, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        to: [ { pointing_button: button4 } ]
+
+      # normal: cursor move
+      - description: 'option + o = mouse forward'
+        type: basic
+        from: { key_code: o, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        to: [ { pointing_button: button5 } ]
+
+      # normal: cursor move
 
       - description: 'f = neru hints'
         type: basic
@@ -799,4 +897,337 @@ rules:
         from: { key_code: return_or_enter, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option,left_option ] } }
         to: [ { pointing_button: button3 } ]
 
-...
+      - description: 'command + g = neru recursive grid'
+        type: basic
+        from: { key_code: g, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option,left_command ] } }
+        to: [ { shell_command: '/opt/homebrew/bin/neru recursive_grid' } ]
+
+      - description: 'r = exit mouse mode'
+        type: basic
+        from: { key_code: r, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to:
+          - set_variable: { name: mouse_mode, value: 0 }
+          - set_notification_message: { id: mouse_mode, text: "" }
+
+      # 指针移动、滚轮、拖拽都搬进下面的「鼠标模式」，那里不用按住任何修饰键
+      - description: 'r = enter mouse mode'
+        type: basic
+        from: { key_code: r, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        to:
+          - set_variable: { name: mouse_mode, value: 1 }
+          - set_notification_message:
+              id: mouse_mode
+              text: "🖱 鼠标模式  hjkl 移动 · yuio 滚动 · ⌘ 加速 · ⌥ 减速 · 按住 Tab = 区域定位（右手主键区）· 按住 ` 或 ⌃ = 拖动 · n/⏎ 左键 · m 右键 · a/d 后退前进 · 123/qwe 跳屏 · space/esc 退出"
+
+  ################################################################
+  #                       Hyper Mouse Mode                       #
+  #  Hyper+R 进入，模式内不需要按住任何修饰键，esc 退出。         #
+  #  这样 a/s/d 和 hjkl 都能用最自然的姿势按，不再和 CapsLock    #
+  #  抢左手小指——这也是它取代 ⌃⇧ 滚轮层和 ⌃⌥ 指针层的原因。     #
+  ################################################################
+  - description: Hyper Mouse Mode
+    manipulators:
+
+      # ── 区域定位：按住 space，右手主键区就是屏幕的缩略图 ──────────────
+      # 3 排 × 5 列正好对上 yuiop / hjkl; / nm,./，K 落在屏幕正中心。
+      # 比 Neru 的网格快，因为不用看屏幕读标签——想去右上就按 O，眼睛始终盯着目标。
+      #
+      # 已实测：set_mouse_cursor_position 省略 screen 时，百分比是相对「光标当前所在的
+      # 那块屏幕」算的，不是主屏。所以这 15 条在三块屏上都对，不需要按屏各来一套。
+      # 要换屏幕用 123 / qwe（那几条显式带 screen 参数）。
+      #
+      # 这批必须排在 hjkl / yuio / nm 那些规则前面：Karabiner 取第一条匹配就停，
+      # 条件更严的（多一个 zone=1）放后面就永远轮不到。
+      - description: 'mouse mode: zone y = zone 上左'
+        type: basic
+        from: { key_code: y }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 10%, y: 17% } } } ]
+
+      - description: 'mouse mode: zone u = zone 上中左'
+        type: basic
+        from: { key_code: u }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 30%, y: 17% } } } ]
+
+      - description: 'mouse mode: zone i = zone 上正'
+        type: basic
+        from: { key_code: i }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 50%, y: 17% } } } ]
+
+      - description: 'mouse mode: zone o = zone 上中右'
+        type: basic
+        from: { key_code: o }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 70%, y: 17% } } } ]
+
+      - description: 'mouse mode: zone p = zone 上右'
+        type: basic
+        from: { key_code: p }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 90%, y: 17% } } } ]
+
+      - description: 'mouse mode: zone h = zone 中左'
+        type: basic
+        from: { key_code: h }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 10%, y: 50% } } } ]
+
+      - description: 'mouse mode: zone j = zone 中中左'
+        type: basic
+        from: { key_code: j }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 30%, y: 50% } } } ]
+
+      - description: 'mouse mode: zone k = zone 中正'
+        type: basic
+        from: { key_code: k }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 50%, y: 50% } } } ]
+
+      - description: 'mouse mode: zone l = zone 中中右'
+        type: basic
+        from: { key_code: l }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 70%, y: 50% } } } ]
+
+      - description: 'mouse mode: zone semicolon = zone 中右'
+        type: basic
+        from: { key_code: semicolon }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 90%, y: 50% } } } ]
+
+      - description: 'mouse mode: zone n = zone 下左'
+        type: basic
+        from: { key_code: n }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 10%, y: 83% } } } ]
+
+      - description: 'mouse mode: zone m = zone 下中左'
+        type: basic
+        from: { key_code: m }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 30%, y: 83% } } } ]
+
+      - description: 'mouse mode: zone comma = zone 下正'
+        type: basic
+        from: { key_code: comma }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 50%, y: 83% } } } ]
+
+      - description: 'mouse mode: zone period = zone 下中右'
+        type: basic
+        from: { key_code: period }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 70%, y: 83% } } } ]
+
+      - description: 'mouse mode: zone slash = zone 下右'
+        type: basic
+        from: { key_code: slash }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 }, { type: variable_if, name: zone, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 90%, y: 83% } } } ]
+
+      - description: 'mouse mode: h = mouse move left'
+        type: basic
+        from: { key_code: h }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { x: -1600 } } ]
+
+      - description: 'mouse mode: l = mouse move right'
+        type: basic
+        from: { key_code: l }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { x: 1600 } } ]
+
+      - description: 'mouse mode: j = mouse move down'
+        type: basic
+        from: { key_code: j }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { y: 1600 } } ]
+
+      - description: 'mouse mode: k = mouse move up'
+        type: basic
+        from: { key_code: k }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { y: -1600 } } ]
+
+      - description: 'mouse mode: y = mouse wheel left'
+        type: basic
+        from: { key_code: y }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { horizontal_wheel: 64 } } ]
+
+      - description: 'mouse mode: o = mouse wheel right'
+        type: basic
+        from: { key_code: o }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { horizontal_wheel: -64 } } ]
+
+      - description: 'mouse mode: u = mouse wheel down'
+        type: basic
+        from: { key_code: u }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { vertical_wheel: 64 } } ]
+
+      - description: 'mouse mode: i = mouse wheel up'
+        type: basic
+        from: { key_code: i }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { vertical_wheel: -64 } } ]
+
+      #==========================================================#
+      # ( 修饰键 ) 变速与拖拽                                    #
+      #  模式内没有按住 CapsLock，⌥⌘⇧ 三个修饰键全是空的。        #
+      #  ⌥ 加速：和文本导航里 ⌥「按词跳」的加速语义保持一致。      #
+      #  按住只置一个变量，具体快多少由上面每条移动规则自己决定。  #
+      #  ⇧ 拖拽可以和 ⌥/⌘ 叠加，用于精细框选。                    #
+      #==========================================================#
+
+      # 加减速用 speed_multiplier，不用变量：变量条件只在按键按下那一刻求值，
+      # 已经在移动中的 hjkl 不会因为变量变了就重新选规则——这是「移动中调速无效」的根因。
+      # speed_multiplier 是持续生效的乘数，对正在进行的移动实时起作用，
+      # 所以可以按住 hjkl 不松手，中途再按 ⌘/⌥ 变速。
+      #
+      # 数值沿用上游 Vonng/Capslock 的设计：三档是严格对称的 0.5 / 1 / 2，
+      # 指针和滚轮共用同一套比例。这一点很关键——正因为两边同比例，
+      # speed_multiplier 全局生效才不成问题：
+      #   指针  800 / 1600 / 3200
+      #   滚轮   32 /   64 /  128
+      # 想改倍率的话记住它同时作用于两者，别只盯着指针调。
+      #
+      # 已知偏差：同时按 hjkl 里的两个键斜着走，合速度是 √2 倍（约快 41%）。
+      # 上游是给对角线单独分配按键并除以 √2 来解决的，我们用组合键就没这个余地。
+      #
+      # ⌘ 放加速：拇指自然落点离 ⌘ 最近，而加速比减速用得多。
+      - description: 'mouse mode: command = mouse fast'
+        type: basic
+        from: { key_code: left_command }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { speed_multiplier: 2 } } ]
+
+      - description: 'mouse mode: option = mouse slow'
+        type: basic
+        from: { key_code: left_option }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { speed_multiplier: 0.5 } } ]
+
+      # ⌃ 拖动主要给 ⇪R 常驻模式用——那时左手完全空闲，拇指按 ⌃ 最省事。
+      # 按住 M2 的临时模式下用不上（拇指要留给 ⌘/⌥ 变速），那边走 ` 键。
+      # ⇧ 已删：按住 M2 时左小指钉在最左列，和 ⇧ 是同一根手指，够不着。
+      - description: 'mouse mode: control = mouse select'
+        type: basic
+        from: { key_code: left_control }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { pointing_button: button1 } ]
+
+      # ` 在 Tab 正上方，同一根无名指上下一格：下面定位，上面拖动。
+      # 和 ⇧ / ⌃ / F / N 一样都是 button1——按住即拖，松开即放。
+      - description: 'mouse mode: grave = mouse select'
+        type: basic
+        from: { key_code: grave_accent_and_tilde }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { pointing_button: button1 } ]
+
+      # Tab 按住 = 进区域定位层。M2 就在 Tab 左边，小指按 M2、无名指按 Tab，
+      # 两个相邻键。连续拖拽仍然可以按住 ⇧ / ⌃ / F / N（都是同一个 button1）。
+      - description: 'mouse mode: tab = zone layer'
+        type: basic
+        from: { key_code: tab }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { set_variable: { name: zone, value: 1 } } ]
+        to_after_key_up: [ { set_variable: { name: zone, value: 0 } } ]
+
+      - description: 'mouse mode: enter = mouse left click'
+        type: basic
+        from: { key_code: return_or_enter }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { pointing_button: button1 } ]
+
+      # 点击全部收在右手：n/m 就在 j/k 正下方，移动指针的手指顺势下落就能点。
+      # 左手的 f/g 已删——按住 M2 时左手在最左列，那两个键本来就不顺手。
+      - description: 'mouse mode: n = mouse left click'
+        type: basic
+        from: { key_code: n }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { pointing_button: button1 } ]
+
+      - description: 'mouse mode: m = mouse right click'
+        type: basic
+        from: { key_code: m }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { pointing_button: button2 } ]
+
+      - description: 'mouse mode: a = mouse back'
+        type: basic
+        from: { key_code: a }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { pointing_button: button4 } ]
+
+      - description: 'mouse mode: d = mouse forward'
+        type: basic
+        from: { key_code: d }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { pointing_button: button5 } ]
+
+      #==========================================================#
+      # ( 123 / qwe ) 指针跳到第 N 块屏幕正中                     #
+      #==========================================================#
+
+      - description: 'mouse mode: 1 = jump to screen 1'
+        type: basic
+        from: { key_code: '1' }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 50%, y: 50%, screen: 1 } } } ]
+
+      - description: 'mouse mode: q = jump to screen 1'
+        type: basic
+        from: { key_code: q }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 50%, y: 50%, screen: 1 } } } ]
+
+      - description: 'mouse mode: 2 = jump to screen 2'
+        type: basic
+        from: { key_code: '2' }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 50%, y: 50%, screen: 0 } } } ]
+
+      - description: 'mouse mode: w = jump to screen 2'
+        type: basic
+        from: { key_code: w }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 50%, y: 50%, screen: 0 } } } ]
+
+      - description: 'mouse mode: 3 = jump to screen 3'
+        type: basic
+        from: { key_code: '3' }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 50%, y: 50%, screen: 2 } } } ]
+
+      - description: 'mouse mode: e = jump to screen 3'
+        type: basic
+        from: { key_code: e }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { software_function: { set_mouse_cursor_position: { x: 50%, y: 50%, screen: 2 } } } ]
+
+      #==========================================================#
+      # ( space / esc ) 退出                                     #
+      #==========================================================#
+
+      - description: 'mouse mode: space = exit mouse mode'
+        type: basic
+        from: { key_code: spacebar }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to:
+          - set_variable: { name: mouse_mode, value: 0 }
+          - set_variable: { name: zone, value: 0 }
+          - set_notification_message: { id: mouse_mode, text: "" }
+
+      - description: 'mouse mode: escape = exit mouse mode'
+        type: basic
+        from: { key_code: escape }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to:
+          - set_variable: { name: mouse_mode, value: 0 }
+          - set_notification_message: { id: mouse_mode, text: "" }

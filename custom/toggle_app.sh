@@ -4,6 +4,10 @@
 # Process Name is optional, defaults to App Name
 APP="$1"
 PROCESS="${2:-$APP}"
+
+# 应用切换类规则只发 shell_command、不产生按键事件，keystatd 看不见，这里自己记一笔
+KSDIR="$HOME/.local/share/keystat"
+[ -d "$KSDIR" ] && printf '{"t":%s,"cmd":"%s"}\n' "$(date +%s)" "$APP" >> "$KSDIR/shell.jsonl"
 osascript -e "
 tell application \"System Events\"
     set frontApp to name of first application process whose frontmost is true
