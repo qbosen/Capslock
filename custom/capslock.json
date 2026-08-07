@@ -354,6 +354,890 @@
       "description": "Hyper Navigation",
       "manipulators": [
         {
+          "description": "hyper + tab = wide select layer",
+          "type": "basic",
+          "from": {
+            "key_code": "tab",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ],
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "wide",
+                "value": 1
+              }
+            }
+          ],
+          "to_after_key_up": [
+            {
+              "set_variable": {
+                "name": "wide",
+                "value": 0
+              }
+            }
+          ]
+        },
+        {
+          "description": "wide + h = option + shift + left (select word ahead)",
+          "type": "basic",
+          "from": {
+            "key_code": "h",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": [
+                "left_option",
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + l = option + shift + right (select word after)",
+          "type": "basic",
+          "from": {
+            "key_code": "l",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": [
+                "left_shift",
+                "left_option"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + j = option + shift + down (select para ahead)",
+          "type": "basic",
+          "from": {
+            "key_code": "j",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "down_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "down_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "down_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + k = option + shift + up (select line above)",
+          "type": "basic",
+          "from": {
+            "key_code": "k",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + u = shift + page_up",
+          "type": "basic",
+          "from": {
+            "key_code": "u",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "page_up",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + i = select whole line to head",
+          "type": "basic",
+          "from": {
+            "key_code": "i",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "end"
+            },
+            {
+              "key_code": "home",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "home",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + o = select whole",
+          "type": "basic",
+          "from": {
+            "key_code": "o",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "home"
+            },
+            {
+              "key_code": "end",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + p = shift + page_down",
+          "type": "basic",
+          "from": {
+            "key_code": "p",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "page_down",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + cmd + h = option + shift + left (select word ahead)",
+          "type": "basic",
+          "from": {
+            "key_code": "h",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": [
+                "left_option",
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + opt + h = option + shift + left (select word ahead)",
+          "type": "basic",
+          "from": {
+            "key_code": "h",
+            "modifiers": {
+              "mandatory": [
+                "left_option",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": [
+                "left_option",
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + cmd + l = option + shift + right (select word after)",
+          "type": "basic",
+          "from": {
+            "key_code": "l",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": [
+                "left_shift",
+                "left_option"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + opt + l = option + shift + right (select word after)",
+          "type": "basic",
+          "from": {
+            "key_code": "l",
+            "modifiers": {
+              "mandatory": [
+                "left_option",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": [
+                "left_shift",
+                "left_option"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + cmd + j = option + shift + down (select para ahead)",
+          "type": "basic",
+          "from": {
+            "key_code": "j",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "down_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "down_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "down_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + opt + j = option + shift + down (select para ahead)",
+          "type": "basic",
+          "from": {
+            "key_code": "j",
+            "modifiers": {
+              "mandatory": [
+                "left_option",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "down_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "down_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "down_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + cmd + k = option + shift + up (select line above)",
+          "type": "basic",
+          "from": {
+            "key_code": "k",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + opt + k = option + shift + up (select line above)",
+          "type": "basic",
+          "from": {
+            "key_code": "k",
+            "modifiers": {
+              "mandatory": [
+                "left_option",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + cmd + u = shift + page_up",
+          "type": "basic",
+          "from": {
+            "key_code": "u",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "page_up",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + opt + u = shift + page_up",
+          "type": "basic",
+          "from": {
+            "key_code": "u",
+            "modifiers": {
+              "mandatory": [
+                "left_option",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "page_up",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + cmd + i = select whole line to head",
+          "type": "basic",
+          "from": {
+            "key_code": "i",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "end"
+            },
+            {
+              "key_code": "home",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "home",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + opt + i = select whole line to head",
+          "type": "basic",
+          "from": {
+            "key_code": "i",
+            "modifiers": {
+              "mandatory": [
+                "left_option",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "end"
+            },
+            {
+              "key_code": "home",
+              "modifiers": [
+                "left_shift"
+              ]
+            },
+            {
+              "key_code": "home",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + cmd + o = select whole",
+          "type": "basic",
+          "from": {
+            "key_code": "o",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "home"
+            },
+            {
+              "key_code": "end",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + opt + o = select whole",
+          "type": "basic",
+          "from": {
+            "key_code": "o",
+            "modifiers": {
+              "mandatory": [
+                "left_option",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "home"
+            },
+            {
+              "key_code": "end",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + cmd + p = shift + page_down",
+          "type": "basic",
+          "from": {
+            "key_code": "p",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "page_down",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "wide + opt + p = shift + page_down",
+          "type": "basic",
+          "from": {
+            "key_code": "p",
+            "modifiers": {
+              "mandatory": [
+                "left_option",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "wide",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "page_down",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
           "description": "command + h = shift + left",
           "type": "basic",
           "from": {
@@ -3447,10 +4331,10 @@
           ]
         },
         {
-          "description": "mouse mode: y = mouse wheel left",
+          "description": "mouse mode: i = mouse wheel up",
           "type": "basic",
           "from": {
-            "key_code": "y"
+            "key_code": "i"
           },
           "conditions": [
             {
@@ -3462,37 +4346,16 @@
           "to": [
             {
               "mouse_key": {
-                "horizontal_wheel": 64
+                "vertical_wheel": -64
               }
             }
           ]
         },
         {
-          "description": "mouse mode: o = mouse wheel right",
+          "description": "mouse mode: o = mouse wheel down",
           "type": "basic",
           "from": {
             "key_code": "o"
-          },
-          "conditions": [
-            {
-              "type": "variable_if",
-              "name": "mouse_mode",
-              "value": 1
-            }
-          ],
-          "to": [
-            {
-              "mouse_key": {
-                "horizontal_wheel": -64
-              }
-            }
-          ]
-        },
-        {
-          "description": "mouse mode: u = mouse wheel down",
-          "type": "basic",
-          "from": {
-            "key_code": "u"
           },
           "conditions": [
             {
@@ -3510,10 +4373,10 @@
           ]
         },
         {
-          "description": "mouse mode: i = mouse wheel up",
+          "description": "mouse mode: u = mouse wheel left",
           "type": "basic",
           "from": {
-            "key_code": "i"
+            "key_code": "u"
           },
           "conditions": [
             {
@@ -3525,7 +4388,28 @@
           "to": [
             {
               "mouse_key": {
-                "vertical_wheel": -64
+                "horizontal_wheel": 64
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: p = mouse wheel right",
+          "type": "basic",
+          "from": {
+            "key_code": "p"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "horizontal_wheel": -64
               }
             }
           ]

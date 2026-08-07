@@ -120,6 +120,179 @@ rules:
     # 标签页/桌面切换已分到 Hyper Window；鼠标侧键前进后退归到 Hyper Mouse。
     manipulators:
 
+      #==========================================================#
+      # ⇪ + 按住 Tab —— ⇪⌘⌥ 的替身，内容完全一致                 #
+      #==========================================================#
+      # 为什么要这一层：⇪⌘⌥ 得左小指压 CapsLock、左拇指同时压住 ⌘ 和 ⌥，三根手指
+      # 挤在一块。keystat 显示这层八个键有七个从未用过——需求不是不存在（⇧← 每天
+      # 按 90 次，走的还是物理键），是这个位面把它掐死了。Tab 交给无名指，左手就
+      # 变成「小指 + 无名指」两根互不干扰的手指，和鼠标模式里 M2 + Tab 同一个手型。
+      #
+      # 和鼠标模式的 Tab 不会打架：那条写的是 `from: { key_code: tab }`，没有
+      # modifiers 字段——在 Karabiner 里这等于「一个修饰键都不许有」。而这里必须
+      # 带满 4 个 hyper 修饰键，两者的 from 天然互斥，同时按住 M2 和 CapsLock 也不会串。
+      #
+      # ⚠️ 下面 8 条的 from 和本组后面那些无条件的 ⇪H / ⇪J / … 一模一样，只多一个
+      # variable_if。Karabiner 取第一条匹配就停，所以**必须排在它们前面**，否则永不命中。
+      #
+      # 暂时和 ⇪⌘⌥ 并存而不是替换：键位图会按标签自动合并成一行（和 ⇧ / ⌃⇧ 那对
+      # 一样），跑一段时间看 keystat，哪个没人用再删哪个。
+      - description: 'hyper + tab = wide select layer'
+        type: basic
+        from: { key_code: tab, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ], optional: [ any ] } }
+        to: [ { set_variable: { name: wide, value: 1 } } ]
+        to_after_key_up: [ { set_variable: { name: wide, value: 0 } } ]
+
+      - description: 'wide + h = option + shift + left (select word ahead)'
+        type: basic
+        from: { key_code: h, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: left_arrow , modifiers: [ left_option, left_shift ] } ]
+
+      - description: 'wide + l = option + shift + right (select word after)'
+        type: basic
+        from: { key_code: l, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: right_arrow , modifiers: [ left_shift,left_option ] } ]
+
+      - description: 'wide + j = option + shift + down (select para ahead)'
+        type: basic
+        from: { key_code: j, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: down_arrow , modifiers: [ left_shift ] }, { key_code: down_arrow , modifiers: [ left_shift ] },{ key_code: down_arrow , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + k = option + shift + up (select line above)'
+        type: basic
+        from: { key_code: k, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: up_arrow , modifiers: [ left_shift ] }, { key_code: up_arrow , modifiers: [ left_shift ] },{ key_code: up_arrow , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + u = shift + page_up'
+        type: basic
+        from: { key_code: u, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: page_up , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + i = select whole line to head'
+        type: basic
+        from: { key_code: i, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: end },{ key_code: home , modifiers: [ left_shift ] },{ key_code: home , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + o = select whole'
+        type: basic
+        from: { key_code: o, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: home },{ key_code: end , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + p = shift + page_down'
+        type: basic
+        from: { key_code: p, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: page_down , modifiers: [ left_shift ] } ]
+
+      # 上面 8 条只在「⇪ + Tab」时命中。但真实用法是先按着 ⇪⌘ 选着选着，中途
+      # 加一下 Tab 换成按词——此时 ⌘ 还按着，from 就对不上了。所以每个键要按
+      # 修饰键组合各来一份，且组合必须写进 **mandatory**：Karabiner 只移除
+      # mandatory 里的修饰键，写 optional 的话 ⌘ 会漏进输出，⌥⇧← 变成 ⌘⌥⇧←。
+      # 效果是「只要 Tab 按着，就按大粒度选择结算」，⌘ / ⌥ 都被吞掉。
+
+      - description: 'wide + cmd + h = option + shift + left (select word ahead)'
+        type: basic
+        from: { key_code: h, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: left_arrow , modifiers: [ left_option, left_shift ] } ]
+
+      - description: 'wide + opt + h = option + shift + left (select word ahead)'
+        type: basic
+        from: { key_code: h, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: left_arrow , modifiers: [ left_option, left_shift ] } ]
+
+      - description: 'wide + cmd + l = option + shift + right (select word after)'
+        type: basic
+        from: { key_code: l, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: right_arrow , modifiers: [ left_shift,left_option ] } ]
+
+      - description: 'wide + opt + l = option + shift + right (select word after)'
+        type: basic
+        from: { key_code: l, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: right_arrow , modifiers: [ left_shift,left_option ] } ]
+
+      - description: 'wide + cmd + j = option + shift + down (select para ahead)'
+        type: basic
+        from: { key_code: j, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: down_arrow , modifiers: [ left_shift ] }, { key_code: down_arrow , modifiers: [ left_shift ] },{ key_code: down_arrow , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + opt + j = option + shift + down (select para ahead)'
+        type: basic
+        from: { key_code: j, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: down_arrow , modifiers: [ left_shift ] }, { key_code: down_arrow , modifiers: [ left_shift ] },{ key_code: down_arrow , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + cmd + k = option + shift + up (select line above)'
+        type: basic
+        from: { key_code: k, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: up_arrow , modifiers: [ left_shift ] }, { key_code: up_arrow , modifiers: [ left_shift ] },{ key_code: up_arrow , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + opt + k = option + shift + up (select line above)'
+        type: basic
+        from: { key_code: k, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: up_arrow , modifiers: [ left_shift ] }, { key_code: up_arrow , modifiers: [ left_shift ] },{ key_code: up_arrow , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + cmd + u = shift + page_up'
+        type: basic
+        from: { key_code: u, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: page_up , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + opt + u = shift + page_up'
+        type: basic
+        from: { key_code: u, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: page_up , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + cmd + i = select whole line to head'
+        type: basic
+        from: { key_code: i, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: end },{ key_code: home , modifiers: [ left_shift ] },{ key_code: home , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + opt + i = select whole line to head'
+        type: basic
+        from: { key_code: i, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: end },{ key_code: home , modifiers: [ left_shift ] },{ key_code: home , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + cmd + o = select whole'
+        type: basic
+        from: { key_code: o, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: home },{ key_code: end , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + opt + o = select whole'
+        type: basic
+        from: { key_code: o, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: home },{ key_code: end , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + cmd + p = shift + page_down'
+        type: basic
+        from: { key_code: p, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: page_down , modifiers: [ left_shift ] } ]
+
+      - description: 'wide + opt + p = shift + page_down'
+        type: basic
+        from: { key_code: p, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        conditions: [ { type: variable_if, name: wide, value: 1 } ]
+        to: [ { key_code: page_down , modifiers: [ left_shift ] } ]
+
       - description: 'command + h = shift + left'
         type: basic
         from: { key_code: h, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
@@ -1056,29 +1229,53 @@ rules:
         conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
         to: [ { mouse_key: { y: -1600 } } ]
 
-      - description: 'mouse mode: y = mouse wheel left'
-        type: basic
-        from: { key_code: y }
-        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
-        to: [ { mouse_key: { horizontal_wheel: 64 } } ]
-
-      - description: 'mouse mode: o = mouse wheel right'
-        type: basic
-        from: { key_code: o }
-        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
-        to: [ { mouse_key: { horizontal_wheel: -64 } } ]
-
-      - description: 'mouse mode: u = mouse wheel down'
-        type: basic
-        from: { key_code: u }
-        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
-        to: [ { mouse_key: { vertical_wheel: 64 } } ]
-
+      #==========================================================#
+      # ( u i o p ) 滚轮 —— 内侧一对管垂直，外侧一对管水平        #
+      #==========================================================#
+      # 排布依据是**频率 × 难度**，不是方向对称：
+      #   · 垂直滚动比水平滚动至少高一个数量级（网页、代码、聊天全是竖着滚）
+      #   · i / o 是中指和无名指，正上方直达、毫无负担，是这排最好按的一对
+      #   · u 虽然是食指，但食指在 hjkl 里已经要管 h 和 j 两个键，是最忙的一根
+      #   · p 是小指，最弱
+      # 所以高频的垂直给 i/o，低频的水平给 u/p。
+      #
+      # 这也正是导航层 uiop 的真实规律——它遵循的不是「外侧垂直」，而是
+      # 「内侧高频、外侧低频」：i=Home 行首、o=End 行尾都是编辑时的高频操作，
+      # u/p 的翻页是低频。两个位面因此共用同一条原则。
+      #
+      # i / o 谁上谁下，借导航层现成的隐喻：i=Home 是「开头」→ 往上滚，
+      # o=End 是「结尾」→ 往下滚。u/p 取位置顺序，u 最左、p 最右。
+      #
+      # 不跟上游：上游滚轮的 uiop 是 hjkl 的逆序镜像（右上下左），拿来白送一套
+      # 「自然滚动/反向」，代价是和它自己的导航层对不上。
+      #
+      # 另：物理上位于 hjkl 正上方的其实是 yuio（偏移仅 0.25 键宽，用本仓库
+      # keymap.yml 的布局数据量过）。选 uiop 是取「手指读法」——右手实际按在
+      # jkl; 上、食指左伸够 h，四指上抬正好落在 uiop。y 因此在鼠标模式里空出来了
+      # （区域定位层仍在用它）。
       - description: 'mouse mode: i = mouse wheel up'
         type: basic
         from: { key_code: i }
         conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
         to: [ { mouse_key: { vertical_wheel: -64 } } ]
+
+      - description: 'mouse mode: o = mouse wheel down'
+        type: basic
+        from: { key_code: o }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { vertical_wheel: 64 } } ]
+
+      - description: 'mouse mode: u = mouse wheel left'
+        type: basic
+        from: { key_code: u }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { horizontal_wheel: 64 } } ]
+
+      - description: 'mouse mode: p = mouse wheel right'
+        type: basic
+        from: { key_code: p }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { horizontal_wheel: -64 } } ]
 
       #==========================================================#
       # ( 修饰键 ) 变速与拖拽                                    #

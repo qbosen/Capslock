@@ -154,6 +154,9 @@ layers:
   modes:
     mouse_mode: 鼠标模式
     zone: 按住 Tab
+    # ⇪⌘⌥ 的替身：左小指按 CapsLock、无名指按 Tab，避开双拇指压 ⌘⌥。
+    # 和 zone 用的是同一个 Tab，但那条要求 mouse_mode=1 且不带任何修饰键，撞不上。
+    wide: 按住 Tab
   mode_sep: " · "
   # 同一个键的快慢变体不单独列出。鼠标加减速已改用 speed_multiplier（实时生效），
   # 不再靠变量分档，所以这里暂时是空的——以后有别的变体变量再往里加。
@@ -270,6 +273,7 @@ actions:
   delete to line end: 删到行尾
   undo: 撤销
   zone layer: 区域定位层（按住）
+  wide select layer: 大粒度选择层（按住）
   # 区域定位：右手主键区当屏幕缩略图，3 排 × 5 列
   zone 上左: 区域 左上
   zone 上中左: 区域 中左上
