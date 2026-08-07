@@ -158,6 +158,9 @@ layers:
     # 和 zone 用的是同一个 Tab，但那条要求 mouse_mode=1 且不带任何修饰键，撞不上。
     wide: 按住 Tab
   mode_sep: " · "
+  # ⇪+Tab 的每个键在 capslock.yml 里要写三份（裸 / 带 ⌘ / 带 ⌥），好让 Tab 压过
+  # 中途没松开的 ⌘⌥。三份输出一样，页面上只显示裸的那份。改成 false 可以全看到。
+  collapse_absorbed_modifiers: true
   # 同一个键的快慢变体不单独列出。鼠标加减速已改用 speed_multiplier（实时生效），
   # 不再靠变量分档，所以这里暂时是空的——以后有别的变体变量再往里加。
   variant_conditions: []

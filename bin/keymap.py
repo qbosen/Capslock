@@ -11,6 +11,7 @@
 
 import json
 import sys
+from collections import Counter
 from pathlib import Path
 
 import yaml
@@ -307,6 +308,31 @@ def collect_keyboard():
     return entries, groups
 
 
+def collapse_absorbed_modifiers(entries):
+    """模式层里为「吞掉修饰键」而复制出来的规则，不单独占一行。
+
+    ⇪+Tab 的每个键都要写三份（裸 / 带 ⌘ / 带 ⌥）。原因是实际用法是先按着 ⇪⌘
+    选着选着、中途再加按 Tab——这时 ⌘ 还按着，只写裸的那份就匹配不上。三份的
+    输出完全一样，纯属实现细节，页面上只留没带修饰键的那份。
+
+    判据是**输出一模一样**，不是名字像：只有当同模式同键的基础那份确实存在、
+    且 to 完全相同时才丢。所以真正不同的映射（比如「已在鼠标模式时再按 ⇪R 退出」）
+    不会被误删。
+    """
+    if not LAYERS.get("collapse_absorbed_modifiers", True):
+        return entries
+    base = {(e["layer"], e["key"]): e["to"] for e in entries
+            if e["layer"].startswith("mode:") and "+left_" not in e["layer"]}
+    kept = []
+    for e in entries:
+        lid = e["layer"]
+        if lid.startswith("mode:") and "+left_" in lid:
+            if base.get((lid.split("+left_")[0], e["key"])) == e["to"]:
+                continue
+        kept.append(e)
+    return kept
+
+
 def collect(name, rel):
     path = ROOT / rel
     if not path.exists():
@@ -342,6 +368,11 @@ def collect(name, rel):
             items += 1
         if items:
             groups.append({"id": group, "zh": group_zh, "note": group_note, "n": items})
+
+    # 折叠要放在分组计数之后重算，否则组里的条数会把已隐藏的那些也算进去
+    entries = collapse_absorbed_modifiers(entries)
+    left = Counter(e["group"] for e in entries)
+    groups = [{**g, "n": left[g["id"]]} for g in groups if left[g["id"]]]
     return {
         "title": cfg.get("title", name),
         "source": rel,
