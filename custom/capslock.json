@@ -4558,6 +4558,54 @@
           ]
         },
         {
+          "description": "mouse mode: command + n = mouse back",
+          "type": "basic",
+          "from": {
+            "key_code": "n",
+            "modifiers": {
+              "mandatory": [
+                "left_command"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "pointing_button": "button4"
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: command + m = mouse forward",
+          "type": "basic",
+          "from": {
+            "key_code": "m",
+            "modifiers": {
+              "mandatory": [
+                "left_command"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "pointing_button": "button5"
+            }
+          ]
+        },
+        {
           "description": "mouse mode: a = mouse back",
           "type": "basic",
           "from": {

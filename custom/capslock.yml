@@ -1427,6 +1427,25 @@ rules:
         conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
         to: [ { pointing_button: button2 } ]
 
+      # ⌘ + n/m 也发前进后退，让五个鼠标键全落在 n/m 这一对上：
+      #   裸 n/m = 左键 / 右键      ⌘ + n/m = 后退 / 前进
+      # 方向和 ⇪⌥I / ⇪⌥O 一致——左边那个键是后退。
+      #
+      # 不用担心和上面裸 n/m 抢：那两条的 from 里根本没写 modifiers 字段，
+      # 在 Karabiner 里这表示「一个修饰键都不许带」，所以按住 ⌘ 时它们压根不匹配，
+      # 两组天然互斥，先后顺序无所谓。
+      - description: 'mouse mode: command + n = mouse back'
+        type: basic
+        from: { key_code: n, modifiers: { mandatory: [ left_command ] } }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { pointing_button: button4 } ]
+
+      - description: 'mouse mode: command + m = mouse forward'
+        type: basic
+        from: { key_code: m, modifiers: { mandatory: [ left_command ] } }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { pointing_button: button5 } ]
+
       - description: 'mouse mode: a = mouse back'
         type: basic
         from: { key_code: a }
