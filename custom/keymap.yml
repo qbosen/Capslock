@@ -205,7 +205,8 @@ groups:
     note: CapsLock 本身的双重身份，以及系统级切换
   Hyper Navigation:
     zh: 光标移动与选择
-    note: hjkl 四向 + uiop 翻页行首尾；⌘ 变选择，⌥ 按词/段跳
+    note: hjkl 四向 + uiop 翻页行首尾；⌘ 变选择，⌥ 放大粒度（按词 / 三行 / 移动行）；
+      ⌘⌥（＝按住 Tab）是大粒度选择，U/P 上放的是扩展 / 收缩选择
   Hyper Window:
     zh: 窗口与桌面
     note: 标签页、应用、同应用窗口、桌面切换；⌃⇧ 层是 ⇧ 层的副本，供 M4 单键触发
@@ -259,6 +260,8 @@ actions:
   shift + page_down: 选到下页
   option + shift + left (select word ahead): 选中前一词
   option + shift + right (select word after): 选中后一词
+  shift + up x3: 选中上三行
+  shift + down x3: 选中下三行
   option + up (expand selection): 扩展选择
   option + down (shrink selection): 收缩选择
   select whole line to head: 选到行首
@@ -295,7 +298,6 @@ actions:
   ctrl + right (next desktop): 下个桌面
   ctrl + down (focus application): 当前应用窗口
   ctrl + up (expose all): 调度中心
-  option + command + h (hide others): 隐藏其他窗口
   command + h (hide current window): 隐藏当前窗口
   ctrl + command + f (fullscreen): 全屏切换
   LaunchPad: 启动台

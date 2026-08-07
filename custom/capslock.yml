@@ -155,35 +155,45 @@ rules:
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
         to: [ { key_code: right_arrow , modifiers: [ left_shift,left_option ] } ]
 
-      # K/J 发 ⌥↑ / ⌥↓ —— 扩展 / 收缩选择。
-      # 这两个键原先发 ⇧↑×3 / ⇧↓×3，描述却写着「选中上行 / 选中下段」，两头都不对：
-      # ×3 是个魔数，而 ⇪⌘K 连按三下完全等价，等于白占一格。
-      #
-      # 为什么是 ⌥↑↓ 而不是 macOS 原生的「段落跳转」：
-      # 原生规则是「⌥ = 把单位放大一级」，水平上 字符→词，垂直上 行→段。水平那条在
-      # 代码里照样成立（词是真结构），垂直那条不成立——代码里空行分隔的东西不带语法
-      # 意义，**段落只在散文里是真结构**。所以 IntelliJ(Extend Selection)、
-      # Zed(SelectLargerSyntaxNode)、VS Code(smartSelect.grow) 三家互不抄袭地把
-      # ⌥↑↓ 改成了「扩大/缩小一级语法节点」。原则没变，变的是垂直轴上什么算一级。
-      #
-      # 方向也对得上：K=上=扩大，J=下=缩小。段落跳转没丢，⇪⌥K/J 的 ↑↓×3 仍在。
-      - description: 'wide + j = option + down (shrink selection)'
+      # K/J 是垂直方向的「大粒度选择移动」：一下选三行。
+      # 描述以前写「选中上行 / 选中下段」，两个都不是实情——发的就是 ⇧↑ / ⇧↓ 各三次。
+      # 之所以不换成真段落（⌥⇧↑↓），是因为那个输出在各家里含义打架：
+      # 你的 VS Code 和 IntelliJ 上是「移动行」，Zed 出厂是「复制行」。方向键 ×3
+      # 胜在语义封闭——任何软件里都只可能是「多选几行」，猜错了顶多多选一行。
+      - description: 'wide + j = shift + down x3'
         type: basic
         from: { key_code: j, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
-        to: [ { key_code: down_arrow , modifiers: [ left_option ] } ]
+        to: [ { key_code: down_arrow , modifiers: [ left_shift ] }, { key_code: down_arrow , modifiers: [ left_shift ] },{ key_code: down_arrow , modifiers: [ left_shift ] } ]
 
-      - description: 'wide + k = option + up (expand selection)'
+      - description: 'wide + k = shift + up x3'
         type: basic
         from: { key_code: k, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
-        to: [ { key_code: up_arrow , modifiers: [ left_option ] } ]
+        to: [ { key_code: up_arrow , modifiers: [ left_shift ] }, { key_code: up_arrow , modifiers: [ left_shift ] },{ key_code: up_arrow , modifiers: [ left_shift ] } ]
 
-      - description: 'wide + u = shift + page_up'
+      # U/P 发 ⌥↑ / ⌥↓ —— 扩展 / 收缩选择。
+      # 这两格原先是 ⇧PgUp / ⇧PgDn，和 ⇪⌘U / ⇪⌘P 逐字相同，纯属白占：
+      # uiop 本身已经是「大粒度」了（页 / 行首尾），⌥ 这一维再无级可加，
+      # 所以这一层在 uiop 上必然退化成上一层的复读。三处重复同一个成因。
+      #
+      # 为什么扩展/收缩是 ⌥↑↓：macOS 原生规则是「⌥ = 把单位放大一级」，水平上
+      # 字符→词，垂直上 行→段。水平那条在代码里照样成立（词是真结构），垂直那条
+      # 不成立——空行分隔的东西不带语法意义，**段落只在散文里是真结构**。所以
+      # IntelliJ(Extend Selection)、Zed(SelectLargerSyntaxNode)、
+      # VS Code(smartSelect.grow) 三家互不抄袭地把 ⌥↑↓ 改成了「扩大/缩小一级
+      # 语法节点」。原则没变，变的是垂直轴上什么算「一级」。
+      #
+      # 放 U/P 而不是 K/J：U 在上、P 在下，方向感和 PgUp/PgDn 一致；而 K/J 的
+      # 「一下选三行」是有用的大粒度选择，不该被挤掉。
+      #
+      # ⚠️ 这是个**语义开放**的输出——含义由前台 app 决定，不像 ⇧↑×3 那样封闭。
+      # Obsidian 默认 ⌥↑↓ 是「移动行」，在那里按下去会改文本而不是扩选。
+      - description: 'wide + u = option + up (expand selection)'
         type: basic
         from: { key_code: u, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
-        to: [ { key_code: page_up , modifiers: [ left_shift ] } ]
+        to: [ { key_code: up_arrow , modifiers: [ left_option ] } ]
 
       - description: 'wide + i = select whole line to head'
         type: basic
@@ -197,11 +207,11 @@ rules:
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
         to: [ { key_code: home },{ key_code: end , modifiers: [ left_shift ] } ]
 
-      - description: 'wide + p = shift + page_down'
+      - description: 'wide + p = option + down (shrink selection)'
         type: basic
         from: { key_code: p, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
-        to: [ { key_code: page_down , modifiers: [ left_shift ] } ]
+        to: [ { key_code: down_arrow , modifiers: [ left_option ] } ]
 
       # 上面 8 条只在「⇪ + Tab」时命中。但真实用法是先按着 ⇪⌘ 选着选着，中途
       # 加一下 Tab 换成按词——此时 ⌘ 还按着，from 就对不上了。所以每个键要按
@@ -233,41 +243,41 @@ rules:
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
         to: [ { key_code: right_arrow , modifiers: [ left_shift,left_option ] } ]
 
-      - description: 'wide + cmd + j = option + down (shrink selection)'
+      - description: 'wide + cmd + j = shift + down x3'
         type: basic
         from: { key_code: j, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
-        to: [ { key_code: down_arrow , modifiers: [ left_option ] } ]
+        to: [ { key_code: down_arrow , modifiers: [ left_shift ] }, { key_code: down_arrow , modifiers: [ left_shift ] },{ key_code: down_arrow , modifiers: [ left_shift ] } ]
 
-      - description: 'wide + opt + j = option + down (shrink selection)'
+      - description: 'wide + opt + j = shift + down x3'
         type: basic
         from: { key_code: j, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
-        to: [ { key_code: down_arrow , modifiers: [ left_option ] } ]
+        to: [ { key_code: down_arrow , modifiers: [ left_shift ] }, { key_code: down_arrow , modifiers: [ left_shift ] },{ key_code: down_arrow , modifiers: [ left_shift ] } ]
 
-      - description: 'wide + cmd + k = option + up (expand selection)'
+      - description: 'wide + cmd + k = shift + up x3'
         type: basic
         from: { key_code: k, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
-        to: [ { key_code: up_arrow , modifiers: [ left_option ] } ]
+        to: [ { key_code: up_arrow , modifiers: [ left_shift ] }, { key_code: up_arrow , modifiers: [ left_shift ] },{ key_code: up_arrow , modifiers: [ left_shift ] } ]
 
-      - description: 'wide + opt + k = option + up (expand selection)'
+      - description: 'wide + opt + k = shift + up x3'
         type: basic
         from: { key_code: k, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
-        to: [ { key_code: up_arrow , modifiers: [ left_option ] } ]
+        to: [ { key_code: up_arrow , modifiers: [ left_shift ] }, { key_code: up_arrow , modifiers: [ left_shift ] },{ key_code: up_arrow , modifiers: [ left_shift ] } ]
 
-      - description: 'wide + cmd + u = shift + page_up'
+      - description: 'wide + cmd + u = option + up (expand selection)'
         type: basic
         from: { key_code: u, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
-        to: [ { key_code: page_up , modifiers: [ left_shift ] } ]
+        to: [ { key_code: up_arrow , modifiers: [ left_option ] } ]
 
-      - description: 'wide + opt + u = shift + page_up'
+      - description: 'wide + opt + u = option + up (expand selection)'
         type: basic
         from: { key_code: u, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
-        to: [ { key_code: page_up , modifiers: [ left_shift ] } ]
+        to: [ { key_code: up_arrow , modifiers: [ left_option ] } ]
 
       - description: 'wide + cmd + i = select whole line to head'
         type: basic
@@ -293,17 +303,17 @@ rules:
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
         to: [ { key_code: home },{ key_code: end , modifiers: [ left_shift ] } ]
 
-      - description: 'wide + cmd + p = shift + page_down'
+      - description: 'wide + cmd + p = option + down (shrink selection)'
         type: basic
         from: { key_code: p, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
-        to: [ { key_code: page_down , modifiers: [ left_shift ] } ]
+        to: [ { key_code: down_arrow , modifiers: [ left_option ] } ]
 
-      - description: 'wide + opt + p = shift + page_down'
+      - description: 'wide + opt + p = option + down (shrink selection)'
         type: basic
         from: { key_code: p, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
         conditions: [ { type: variable_if, name: wide, value: 1 } ]
-        to: [ { key_code: page_down , modifiers: [ left_shift ] } ]
+        to: [ { key_code: down_arrow , modifiers: [ left_option ] } ]
 
       - description: 'command + h = shift + left'
         type: basic
@@ -339,14 +349,14 @@ rules:
         from: { key_code: j, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: down_arrow , modifiers: [ left_shift ] } ]
 
-      # option + command: 收缩选择（详见 wide 层同名规则上方的说明）
-      - description: 'option + command + j = option + down (shrink selection)'
+      # option + command: 一下选三行（详见 wide 层同名规则上方的说明）
+      - description: 'option + command + j = shift + down x3'
         type: basic
         from: { key_code: j, modifiers: { mandatory: [ left_option,left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: down_arrow , modifiers: [ left_option ] } ]
+        to: [ { key_code: down_arrow , modifiers: [ left_shift ] }, { key_code: down_arrow , modifiers: [ left_shift ] },{ key_code: down_arrow , modifiers: [ left_shift ] } ]
 
-      # option: 往下跳三行。描述原先写「移一段」——是假的，⌥↓ 才是真段落，
-      # 但那个键位现在归收缩选择了。方向键 ×3 胜在任何软件里都成立、不依赖配置。
+      # option: 往下跳三行。描述原先写「移一段」——是假的，真段落是 ⌥↓，
+      # 但那个输出在各家含义不一，这里宁可要语义封闭的方向键 ×3。
       - description: 'option + j = down x3'
         type: basic
         from: { key_code: j, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
@@ -369,11 +379,11 @@ rules:
         from: { key_code: k, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: up_arrow , modifiers: [ left_shift ] } ]
 
-      # option + command: 扩展选择（详见 wide 层同名规则上方的说明）
-      - description: 'option + command + k = option + up (expand selection)'
+      # option + command: 一下选三行（详见 wide 层同名规则上方的说明）
+      - description: 'option + command + k = shift + up x3'
         type: basic
         from: { key_code: k, modifiers: { mandatory: [ left_option,left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: up_arrow , modifiers: [ left_option ] } ]
+        to: [ { key_code: up_arrow , modifiers: [ left_shift ] }, { key_code: up_arrow , modifiers: [ left_shift ] },{ key_code: up_arrow , modifiers: [ left_shift ] } ]
 
       # option: 往上跳三行。同 J，描述原先写「移一段」是假的。
       - description: 'option + k = up x3'
@@ -429,10 +439,10 @@ rules:
         to: [ { key_code: page_up , modifiers: [ left_shift ] } ]
 
       # option + command: page selection
-      - description: 'option + command + u = shift + page_up'
+      - description: 'option + command + u = option + up (expand selection)'
         type: basic
         from: { key_code: u, modifiers: { mandatory: [ left_option,left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: page_up , modifiers: [ left_shift ] } ]
+        to: [ { key_code: up_arrow , modifiers: [ left_option ] } ]
 
       # shift: tab/win management (TODO: require manual setup)
       - description: 'option + u = move line up'
@@ -502,10 +512,10 @@ rules:
         to: [ { key_code: page_down , modifiers: [ left_shift ] } ]
 
       # option + command: word/para selection
-      - description: 'option + command + p = shift + page_down'
+      - description: 'option + command + p = option + down (shrink selection)'
         type: basic
         from: { key_code: p, modifiers: { mandatory: [ left_option,left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: page_down , modifiers: [ left_shift ] } ]
+        to: [ { key_code: down_arrow , modifiers: [ left_option ] } ]
 
       # shift: tab/win management (TODO: require manual setup)
       - description: 'option + p = move line down'
@@ -612,13 +622,9 @@ rules:
         from: { key_code: o, modifiers: { mandatory: [ left_shift ,right_command,right_control,right_shift,right_option ] } }
         to: [ { key_code: grave_accent_and_tilde , modifiers: [ left_command ] } ]
 
-      # control: desktop management
-      # 这条曾经发的是 ⌃↑，和上面 ⇪⌃K（调度中心）完全一样，等于白占一个键位。
-      # 描述一直写着「隐藏其他窗口」，说明本意就是 ⌥⌘H —— 和 ⇪⌃I 的 ⌘H（隐藏当前）配成一对。
-      - description: 'control + o = option + command + h (hide others)'
-        type: basic
-        from: { key_code: o, modifiers: { mandatory: [ left_control ,right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: h , modifiers: [ left_command, left_option ] } ]
+      # ⇪⌃O 空着。原先发 ⌃↑，和上面 ⇪⌃K（调度中心）完全一样，白占一格；
+      # 描述写的是「隐藏其他窗口」（⌥⌘H），说明本意如此，但那个功能低频，
+      # 不值得占一个三修饰键位。先腾空，等有更值当的功能再放。
 
       # option: mouse forward
       - description: 'shift + p = option + command + equal_sign (zoom in)'
