@@ -4346,7 +4346,7 @@
           "to": [
             {
               "mouse_key": {
-                "vertical_wheel": -64
+                "vertical_wheel": -32
               }
             }
           ]
@@ -4367,7 +4367,7 @@
           "to": [
             {
               "mouse_key": {
-                "vertical_wheel": 64
+                "vertical_wheel": 32
               }
             }
           ]
@@ -4388,7 +4388,7 @@
           "to": [
             {
               "mouse_key": {
-                "horizontal_wheel": 64
+                "horizontal_wheel": 32
               }
             }
           ]
@@ -4409,7 +4409,7 @@
           "to": [
             {
               "mouse_key": {
-                "horizontal_wheel": -64
+                "horizontal_wheel": -32
               }
             }
           ]

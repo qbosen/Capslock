@@ -1246,6 +1246,30 @@ rules:
       # i / o 谁上谁下，借导航层现成的隐喻：i=Home 是「开头」→ 往上滚，
       # o=End 是「结尾」→ 往下滚。u/p 取位置顺序，u 最左、p 最右。
       #
+      # 速度基准回到 64，而且**不要再靠它调手感**。
+      #
+      # 原因：mouse_key 是按整格累积后才发事件的，值调低到一定程度，一次点按
+      # （按住 30~80ms）根本凑不满一整格，于是一个事件都不发——实测 20 时点按
+      # 完全没反应，而连按因为时间够长能累积得起来。「点按能触发」和「连按不过快」
+      # 在单一数值上是矛盾的。
+      #
+      # 所以拆成两层：这里只负责**有没有事件**（64 保证点按稳稳越过阈值），
+      # **每个事件滚多远**交给 ScrollGuard 的平滑模式（~/workspace/personal/ScrollGuard）——
+      # 它把整格事件改写成像素级连续事件，像素没有量化下限，要多慢有多慢。
+      # 调手感请改那边的 pixelsPerLine，不要回来动这个数。
+      # 值取 128 而不是 64，是为了让**减速档**也过得了阈值：⌥ 砍半后是 64，
+      # 一次 50ms 的点按能累积 3 行，稳稳发得出事件；64 的话减速档只剩 32，
+      # 点按又会凑不满一格（实测如此）。
+      # 速度靠 ScrollGuard 那边等比降下来：128 行/秒 × 6 px/行 ≈ 770 px/s，不变。
+      #
+      # 实测（playground/mouse-diag/scrollrate）：Karabiner 的事件率只有 ~15Hz，
+      # 触控板是 ~61Hz。所以提高这个值买不到密度，只会让每个事件裹更多行
+      # （实测单事件 delta 已经到 1~7）。要真正顺滑得靠 ScrollGuard 做插值。
+      #
+      # 注意 speed_multiplier 是全局的，同时作用于指针和滚轮，所以要拉开滚轮的
+      # 快慢差距**不能**去动那两个倍率——只能改这里的基准值。
+      # 想精确校准跑 playground/mouse-diag/scrollrate，它会直接报「几秒一屏」。
+      #
       # 不跟上游：上游滚轮的 uiop 是 hjkl 的逆序镜像（右上下左），拿来白送一套
       # 「自然滚动/反向」，代价是和它自己的导航层对不上。
       #
@@ -1257,25 +1281,25 @@ rules:
         type: basic
         from: { key_code: i }
         conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
-        to: [ { mouse_key: { vertical_wheel: -64 } } ]
+        to: [ { mouse_key: { vertical_wheel: -32 } } ]
 
       - description: 'mouse mode: o = mouse wheel down'
         type: basic
         from: { key_code: o }
         conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
-        to: [ { mouse_key: { vertical_wheel: 64 } } ]
+        to: [ { mouse_key: { vertical_wheel: 32 } } ]
 
       - description: 'mouse mode: u = mouse wheel left'
         type: basic
         from: { key_code: u }
         conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
-        to: [ { mouse_key: { horizontal_wheel: 64 } } ]
+        to: [ { mouse_key: { horizontal_wheel: 32 } } ]
 
       - description: 'mouse mode: p = mouse wheel right'
         type: basic
         from: { key_code: p }
         conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
-        to: [ { mouse_key: { horizontal_wheel: -64 } } ]
+        to: [ { mouse_key: { horizontal_wheel: -32 } } ]
 
       #==========================================================#
       # ( 修饰键 ) 变速与拖拽                                    #
