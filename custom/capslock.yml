@@ -1331,6 +1331,29 @@ rules:
         conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
         to: [ { mouse_key: { speed_multiplier: 2 } } ]
 
+      # ⚠️ 已知缺陷：滚轮的减速档在当前基准值（32）下工作在**量化底部**，不可用。
+      # 实测（playground/mouse-diag/scrollrate，探针挂 HID 层）：
+      #
+      #                标准档(base 64)   减速档(base 32 × 0.5 = 期望 16)
+      #   事件率          15 Hz              6 Hz        ← 变稀，不只是变小
+      #   行/秒           66 (≈base ✓)       6           ← 期望 16，少 62%
+      #   每事件行数      1~7                恒为 1
+      #   像素/秒         710                6           ← 227 秒一屏，等于不动
+      #
+      # 更要紧的是**三个字段在低速下互相矛盾，差 10 倍**：
+      #   DeltaAxis1   = 1       整数行，向上取整的结果
+      #   FixedPtDelta = 6554    = 0.1 行，Karabiner 内部算出的真实位移
+      #   PointDelta1  = 1       = 1 像素
+      # 读哪个字段就得到完全不同的速度。应用大概率读 PointDelta，于是几乎不动。
+      #
+      # 根因是 speed_multiplier 把工作点推到了 mouse_key 的整格量化阈值以下，
+      # 在那里它的行为已经不自洽。**不是 macOS 的滚动加速曲线**——探针在 HID 层，
+      # 事件还没进渲染就已经这样了。
+      #
+      # 修法（未做，因为减速档用得不多）：把工作点抬离底部——
+      #   基准值 32 → 128，同时 ScrollGuard 的 pixelsPerLine 20 → 5（积不变，
+      #   标准档速度一样），减速档就变成 64 行/秒，远离阈值。
+      # 指针不受影响：它的基准是 1600，减速后 800，离量化底部很远。
       - description: 'mouse mode: option = mouse slow'
         type: basic
         from: { key_code: left_option }
