@@ -4558,15 +4558,10 @@
           ]
         },
         {
-          "description": "mouse mode: command + n = mouse back",
+          "description": "mouse mode: semicolon = mouse back",
           "type": "basic",
           "from": {
-            "key_code": "n",
-            "modifiers": {
-              "mandatory": [
-                "left_command"
-              ]
-            }
+            "key_code": "semicolon"
           },
           "conditions": [
             {
@@ -4582,15 +4577,10 @@
           ]
         },
         {
-          "description": "mouse mode: command + m = mouse forward",
+          "description": "mouse mode: quote = mouse forward",
           "type": "basic",
           "from": {
-            "key_code": "m",
-            "modifiers": {
-              "mandatory": [
-                "left_command"
-              ]
-            }
+            "key_code": "quote"
           },
           "conditions": [
             {

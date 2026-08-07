@@ -1427,22 +1427,22 @@ rules:
         conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
         to: [ { pointing_button: button2 } ]
 
-      # ⌘ + n/m 也发前进后退，让五个鼠标键全落在 n/m 这一对上：
-      #   裸 n/m = 左键 / 右键      ⌘ + n/m = 后退 / 前进
-      # 方向和 ⇪⌥I / ⇪⌥O 一致——左边那个键是后退。
+      # ; 后退 · ' 前进。方向沿用 ⇪⌥I / ⇪⌥O 的约定——左边那个键是后退。
       #
-      # 不用担心和上面裸 n/m 抢：那两条的 from 里根本没写 modifiers 字段，
-      # 在 Karabiner 里这表示「一个修饰键都不许带」，所以按住 ⌘ 时它们压根不匹配，
-      # 两组天然互斥，先后顺序无所谓。
-      - description: 'mouse mode: command + n = mouse back'
+      # 挑这一对是因为它们紧挨着 l 的右边，**和 hjkl 同一排**：鼠标模式里右手锚在
+      # hjkl 上移动指针，要点前进后退时手不用换行，小指往右平移即可。
+      # 代价是一根小指管两个键，但换来的是不离开锚定行。
+      #
+      # 和 zone 层的 ; （区域「正右」）不冲突：那条要求同时按住 Tab。
+      - description: 'mouse mode: semicolon = mouse back'
         type: basic
-        from: { key_code: n, modifiers: { mandatory: [ left_command ] } }
+        from: { key_code: semicolon }
         conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
         to: [ { pointing_button: button4 } ]
 
-      - description: 'mouse mode: command + m = mouse forward'
+      - description: "mouse mode: quote = mouse forward"
         type: basic
-        from: { key_code: m, modifiers: { mandatory: [ left_command ] } }
+        from: { key_code: quote }
         conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
         to: [ { pointing_button: button5 } ]
 
