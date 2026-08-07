@@ -1787,7 +1787,10 @@
           },
           "to": [
             {
-              "key_code": "end"
+              "key_code": "right_arrow",
+              "modifiers": [
+                "left_command"
+              ]
             },
             {
               "key_code": "delete_or_backspace",

@@ -513,10 +513,13 @@ rules:
         to: [ { key_code: delete_or_backspace, modifiers: [ left_command ] } ]
 
       # 到行尾 → 删到行首 → 再删一次换行符，整行连同换行一起消失
+      # 第一步用 ⌘→ 而不是 End 键：Ghostty 把 ⌘→ 译成 \x05（Ctrl-E），那是 ASCII 里就有的
+      # 行尾符，任何 readline 都认，ssh 到 Linux 也一样。End 发的是 \e[F 这种 xterm 扩展
+      # 序列，各家 terminfo 不一致，zsh 默认压根没绑，到了终端里第一步就哑火。
       - description: 'command + n = delete whole line'
         type: basic
         from: { key_code: n, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { key_code: end }, { key_code: delete_or_backspace, modifiers: [ left_command ] }, { key_code: delete_or_backspace } ]
+        to: [ { key_code: right_arrow, modifiers: [ left_command ] }, { key_code: delete_or_backspace, modifiers: [ left_command ] }, { key_code: delete_or_backspace } ]
 
       - description: 'option + m = delete a char after'
         type: basic

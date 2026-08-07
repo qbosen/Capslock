@@ -36,6 +36,29 @@ apps:
           - { keys: cmd+r, label: 重载配置, action: reload_config }
           - { keys: control+shift+up, label: 跳到上一个提示符, action: "jump_to_prompt:-1" }
           - { keys: control+shift+down, label: 跳到下一个提示符, action: "jump_to_prompt:1" }
+      - name: 终端行编辑
+        note: 把 macOS 的组合键译成 readline 控制字符——翻译发生在字节层，跨 ssh 一样有效
+        items:
+          - { keys: cmd+left,  label: 行首（Ctrl-A）,   action: "text:\\x01（Ghostty 默认）" }
+          - { keys: cmd+right, label: 行尾（Ctrl-E）,   action: "text:\\x05（Ghostty 默认）" }
+          - { keys: cmd+backspace, label: 删到行首（Ctrl-U）, action: "text:\\x15（Ghostty 默认）" }
+          - { keys: alt+left,  label: 前移一词（ESC-b）, action: "text:\\x1bb" }
+          - { keys: alt+right, label: 后移一词（ESC-f）, action: "text:\\x1bf" }
+          - { keys: alt+delete_forward, label: 删后一词（ESC-d）, action: "text:\\x1bd" }
+
+      - name: 放行给 ZLE
+        note: Ghostty 默认把这些绑成 adjust_selection，而那个动作只在已有选区时才做事，
+              于是键被吃掉、shell 永远收不到。改成显式发 CSI 序列，交给 zsh 的
+              shift-select widget（rc.d/07-keybindings.zsh）。
+        hidden: true   # 只做记录——用户按的是 Hyper 的 ⇪⌘HJKL，这里是底下的管道
+        items:
+          - { keys: shift+left,  label: 放行 ⇧←，交给 ZLE 选择, action: "text:\\x1b[1;2D" }
+          - { keys: shift+right, label: 放行 ⇧→，交给 ZLE 选择, action: "text:\\x1b[1;2C" }
+          - { keys: shift+up,    label: 放行 ⇧↑，交给 ZLE 选择, action: "text:\\x1b[1;2A" }
+          - { keys: shift+down,  label: 放行 ⇧↓，交给 ZLE 选择, action: "text:\\x1b[1;2B" }
+          - { keys: shift+home,  label: 放行 ⇧Home，交给 ZLE 选择, action: "text:\\x1b[1;2H" }
+          - { keys: shift+end,   label: 放行 ⇧End，交给 ZLE 选择, action: "text:\\x1b[1;2F" }
+
       - name: 已解绑
         note: 刻意解除的默认键，避免误关窗口
         hidden: true   # 只做记录，不进键位图——这些键按下去什么都不会发生
