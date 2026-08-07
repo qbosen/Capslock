@@ -4596,44 +4596,6 @@
           ]
         },
         {
-          "description": "mouse mode: a = mouse back",
-          "type": "basic",
-          "from": {
-            "key_code": "a"
-          },
-          "conditions": [
-            {
-              "type": "variable_if",
-              "name": "mouse_mode",
-              "value": 1
-            }
-          ],
-          "to": [
-            {
-              "pointing_button": "button4"
-            }
-          ]
-        },
-        {
-          "description": "mouse mode: d = mouse forward",
-          "type": "basic",
-          "from": {
-            "key_code": "d"
-          },
-          "conditions": [
-            {
-              "type": "variable_if",
-              "name": "mouse_mode",
-              "value": 1
-            }
-          ],
-          "to": [
-            {
-              "pointing_button": "button5"
-            }
-          ]
-        },
-        {
           "description": "mouse mode: 1 = jump to screen 1",
           "type": "basic",
           "from": {

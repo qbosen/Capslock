@@ -1446,17 +1446,9 @@ rules:
         conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
         to: [ { pointing_button: button5 } ]
 
-      - description: 'mouse mode: a = mouse back'
-        type: basic
-        from: { key_code: a }
-        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
-        to: [ { pointing_button: button4 } ]
-
-      - description: 'mouse mode: d = mouse forward'
-        type: basic
-        from: { key_code: d }
-        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
-        to: [ { pointing_button: button5 } ]
+      # a / d 原先也是后退 / 前进，已删：它们在左手，而鼠标模式下左手多半压着 M2。
+      # 功能移到了上面的 ; / '——跟 hjkl 同排，右手不用离开锚定位置。
+      # 现在鼠标模式下的 a 和 d 是空的。
 
       #==========================================================#
       # ( 123 / qwe ) 指针跳到第 N 块屏幕正中                     #
