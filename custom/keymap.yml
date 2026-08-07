@@ -244,8 +244,9 @@ actions:
   page_down: 下一页
   move word ahead: 前移一词
   word move right: 后移一词
-  move para down: 下移一段
-  param up: 上移一段
+  # 这两条以前叫「上/下移一段」，但实际发的是方向键 ×3，不是段落
+  down x3: 下移三行
+  up x3: 上移三行
   move line up: 上移一行
   move line down: 下移一行
   shift + left: 选中左字符
@@ -258,8 +259,8 @@ actions:
   shift + page_down: 选到下页
   option + shift + left (select word ahead): 选中前一词
   option + shift + right (select word after): 选中后一词
-  option + shift + down (select para ahead): 选中下段
-  option + shift + up (select line above): 选中上行
+  option + up (expand selection): 扩展选择
+  option + down (shrink selection): 收缩选择
   select whole line to head: 选到行首
   select whole: 选中整行
   delete a char ahead: 删前一字符
@@ -294,7 +295,7 @@ actions:
   ctrl + right (next desktop): 下个桌面
   ctrl + down (focus application): 当前应用窗口
   ctrl + up (expose all): 调度中心
-  option + command + h (expose all): 隐藏其他窗口
+  option + command + h (hide others): 隐藏其他窗口
   command + h (hide current window): 隐藏当前窗口
   ctrl + command + f (fullscreen): 全屏切换
   LaunchPad: 启动台

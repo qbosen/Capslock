@@ -450,7 +450,7 @@
           ]
         },
         {
-          "description": "wide + j = option + shift + down (select para ahead)",
+          "description": "wide + j = option + down (shrink selection)",
           "type": "basic",
           "from": {
             "key_code": "j",
@@ -474,25 +474,13 @@
             {
               "key_code": "down_arrow",
               "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "down_arrow",
-              "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "down_arrow",
-              "modifiers": [
-                "left_shift"
+                "left_option"
               ]
             }
           ]
         },
         {
-          "description": "wide + k = option + shift + up (select line above)",
+          "description": "wide + k = option + up (expand selection)",
           "type": "basic",
           "from": {
             "key_code": "k",
@@ -516,19 +504,7 @@
             {
               "key_code": "up_arrow",
               "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "up_arrow",
-              "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "up_arrow",
-              "modifiers": [
-                "left_shift"
+                "left_option"
               ]
             }
           ]
@@ -794,7 +770,7 @@
           ]
         },
         {
-          "description": "wide + cmd + j = option + shift + down (select para ahead)",
+          "description": "wide + cmd + j = option + down (shrink selection)",
           "type": "basic",
           "from": {
             "key_code": "j",
@@ -819,25 +795,13 @@
             {
               "key_code": "down_arrow",
               "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "down_arrow",
-              "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "down_arrow",
-              "modifiers": [
-                "left_shift"
+                "left_option"
               ]
             }
           ]
         },
         {
-          "description": "wide + opt + j = option + shift + down (select para ahead)",
+          "description": "wide + opt + j = option + down (shrink selection)",
           "type": "basic",
           "from": {
             "key_code": "j",
@@ -862,25 +826,13 @@
             {
               "key_code": "down_arrow",
               "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "down_arrow",
-              "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "down_arrow",
-              "modifiers": [
-                "left_shift"
+                "left_option"
               ]
             }
           ]
         },
         {
-          "description": "wide + cmd + k = option + shift + up (select line above)",
+          "description": "wide + cmd + k = option + up (expand selection)",
           "type": "basic",
           "from": {
             "key_code": "k",
@@ -905,25 +857,13 @@
             {
               "key_code": "up_arrow",
               "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "up_arrow",
-              "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "up_arrow",
-              "modifiers": [
-                "left_shift"
+                "left_option"
               ]
             }
           ]
         },
         {
-          "description": "wide + opt + k = option + shift + up (select line above)",
+          "description": "wide + opt + k = option + up (expand selection)",
           "type": "basic",
           "from": {
             "key_code": "k",
@@ -948,19 +888,7 @@
             {
               "key_code": "up_arrow",
               "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "up_arrow",
-              "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "up_arrow",
-              "modifiers": [
-                "left_shift"
+                "left_option"
               ]
             }
           ]
@@ -1356,7 +1284,7 @@
           ]
         },
         {
-          "description": "option + command + j = option + shift + down (select para ahead)",
+          "description": "option + command + j = option + down (shrink selection)",
           "type": "basic",
           "from": {
             "key_code": "j",
@@ -1375,25 +1303,13 @@
             {
               "key_code": "down_arrow",
               "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "down_arrow",
-              "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "down_arrow",
-              "modifiers": [
-                "left_shift"
+                "left_option"
               ]
             }
           ]
         },
         {
-          "description": "option + j = move para down",
+          "description": "option + j = down x3",
           "type": "basic",
           "from": {
             "key_code": "j",
@@ -1464,7 +1380,7 @@
           ]
         },
         {
-          "description": "option + command + k = option + shift + up (select line above)",
+          "description": "option + command + k = option + up (expand selection)",
           "type": "basic",
           "from": {
             "key_code": "k",
@@ -1483,25 +1399,13 @@
             {
               "key_code": "up_arrow",
               "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "up_arrow",
-              "modifiers": [
-                "left_shift"
-              ]
-            },
-            {
-              "key_code": "up_arrow",
-              "modifiers": [
-                "left_shift"
+                "left_option"
               ]
             }
           ]
         },
         {
-          "description": "option + k = param up",
+          "description": "option + k = up x3",
           "type": "basic",
           "from": {
             "key_code": "k",
@@ -2308,7 +2212,7 @@
           ]
         },
         {
-          "description": "control + o = option + command + h (expose all)",
+          "description": "control + o = option + command + h (hide others)",
           "type": "basic",
           "from": {
             "key_code": "o",
@@ -2324,9 +2228,10 @@
           },
           "to": [
             {
-              "key_code": "up_arrow",
+              "key_code": "h",
               "modifiers": [
-                "left_control"
+                "left_command",
+                "left_option"
               ]
             }
           ]
