@@ -207,10 +207,19 @@ def main():
             else:
                 unknown += 1
         else:
-            # 不经 Hyper 的组合：可能是全局热键，也可能是这个应用自己的快捷键
+            # 不经 Hyper 的组合：可能是 external.yml 里登记的全局热键，
+            # 也可能只是这个应用自己的快捷键。
+            #
+            # 先查 external.yml。以前直接全丢进 native，后果是**所有非 Hyper 的
+            # 全局热键永远显示「从未用过」**——⌘space 的 Alfred、⌥A 的 Bob、
+            # ⌘⇧4 的截图都在这份名单上，而它们天天在按。同样是「测不到」被当成
+            # 「没人用」，和鼠标模式那批是一个毛病。
             mods = frozenset(v for bit, v in GEN.items() if f & bit)
             if mods:
-                native[(apps.get(e["a"], "?"), mods, key)] += 1
+                if (False, mods, key) in by_combo:
+                    hits[(False, mods, key)] += 1
+                else:
+                    native[(apps.get(e["a"], "?"), mods, key)] += 1
 
     for s in shell:
         for k, items in by_combo.items():
