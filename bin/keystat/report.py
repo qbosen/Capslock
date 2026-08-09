@@ -76,6 +76,16 @@ def load_rules():
                 "hyper": HYPER <= mods,
                 "extra": frozenset(base_mod(x) for x in mods - HYPER),
                 "key": key,
+                # 带 variable_if 的规则（⇪+Tab 的 wide 层、鼠标模式）和无条件规则会落进
+                # 同一个 by_combo 桶里——因为**采集端只看得见物理按键**，看不出 Tab 或
+                # 鼠标模式当时开没开。所以标签得挑无条件那条，那才是常态。
+                # 不这么做的话，⇪H 会被报成「选中前一词」（wide 层的动作），
+                # 而它实际上是最高频的裸「左移」。
+                "conds": len(m.get("conditions") or []),
+                # 只有会产生键盘事件或跑 shell 的规则才可能被采集到；
+                # pointing_button / mouse_key / software_function / set_variable 一律看不见
+                "measurable": any("key_code" in t or "shell_command" in t
+                                  for t in (m.get("to") or m.get("to_if_alone") or [])),
                 "shell": next((t["shell_command"] for t in (m.get("to") or [])
                                if "shell_command" in t), None),
             }
@@ -187,7 +197,12 @@ def main():
             mods = frozenset(v for bit, v in GEN.items() if f & bit)
             found = by_output.get((key, mods))
             if found:
-                it = found[0]
+                # 多条规则可能发出**一模一样**的输出（⇪⌘⌥H 和 ⇪+Tab 的三份变体都发 ⌥⇧←），
+                # 反查时根本分不开。取无条件那条当代表：它是这个动作的"正牌"键位，
+                # 条件规则只是它的替身。取 found[0] 会把账全记到写在文件最前面的
+                # wide 变体上——那条的 combo 是裸 ⇪H，于是「⇪⌘⌥ 整层没人用」是假象，
+                # 而 ⇪H 的次数被灌了水。
+                it = min(found, key=lambda i: i.get("conds", 0))
                 hits[(it["hyper"], it["extra"], it["key"])] += 1
             else:
                 unknown += 1
@@ -205,11 +220,20 @@ def main():
 
     rows = []
     for k, items in by_combo.items():
-        it = items[0]
+        # 无条件的那条优先当标签；同为无条件时保持文件里的先后
+        it = min(items, key=lambda i: i.get("conds", 0))
+        # 同一物理组合下还有别的解释（wide 层 / 鼠标模式）时标一下：
+        # 计数是合并的，采集端分不开，看的人得知道这一点
+        alt = len({i["desc"] for i in items if i["desc"] != it["desc"]})
         c = hits.get(k, 0)
         rows.append({
-            "combo": combo_text(*k), "desc": it["desc"] or it.get("app", ""),
+            "combo": combo_text(*k),
+            "desc": (it["desc"] or it.get("app", "")) + (f" (+{alt})" if alt else ""),
             "group": it["group"], "count": c, "per_day": c / days,
+            # 跟标签取同一条代表规则，别用 any()：⇪⌥I 的常态是「鼠标后退」（测不到），
+            # 只有按住 Tab 才是「选到行首」（测得到）。用 any() 会判成"可测且没人用"，
+            # 正好把一个天天在用的键推进待删名单。
+            "measurable": it.get("measurable", True),
             "hyper": k[0], "extra": k[1],
         })
     used = sorted((r for r in rows if r["count"]), key=lambda r: -r["count"])
@@ -237,12 +261,26 @@ def main():
     for r in used[:args.top]:
         print(f"  {r['combo']:<14} {r['desc'][:22]:<24} {r['count']:>5} 次   {r['per_day']:.1f}/天")
 
-    print(f"\n── 从未用过（{len(unused)} 个） " + "─" * 30)
-    by_group = defaultdict(list)
-    for r in unused:
-        by_group[r["group"]].append(r["combo"])
-    for g, cs in sorted(by_group.items(), key=lambda x: -len(x[1])):
-        print(f"  {g}：{'  '.join(cs)}")
+    # 「从未用过」是删键决策的输入，所以必须先把**测不到的**摘出去。
+    # 采集器挂的是键盘事件，靠输出信号反查。发鼠标键 / 光标定位 / 只设变量的规则
+    # 压根不产生键盘事件，永远是 0 次——那不是"没人用"，是"看不见"。
+    # 鼠标模式整组 41 条都属于这一类，混在一起会诱导人删掉天天在用的键。
+    blind = [r for r in unused if not r.get("measurable", True)]
+    dead = [r for r in unused if r.get("measurable", True)]
+
+    def dump(title, rows):
+        by_group = defaultdict(list)
+        for r in rows:
+            by_group[r["group"]].append(r["combo"])
+        for g, cs in sorted(by_group.items(), key=lambda x: -len(x[1])):
+            print(f"  {g}：{'  '.join(cs)}")
+
+    print(f"\n── 从未用过（{len(dead)} 个，这些才是可以考虑腾掉的） " + "─" * 12)
+    dump(None, dead)
+    if blind:
+        print(f"\n── 测不到（{len(blind)} 个，不代表没用） " + "─" * 22)
+        print("  发的是鼠标键 / 光标定位 / 只设变量，不产生键盘事件，采集器看不见。")
+        dump(None, blind)
 
     print(f"\n── 快捷键用得最多的应用 " + "─" * 30)
     for app, c in per_app.most_common(8):
