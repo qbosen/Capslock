@@ -67,3 +67,61 @@ apps:
           - { keys: cmd+option+w, label: 已解绑（原关闭标签）, action: unbind }
           - { keys: cmd+control+w, label: 已解绑, action: unbind }
           - { keys: cmd+shift+option+w, label: 已解绑, action: unbind }
+
+  # ── Zed ────────────────────────────────────────────────────────────────
+  # 收录依据：《程序员修炼之道》Topic 18「Power Editing」点名了 12 类不该靠鼠标的
+  # 编辑能力。它们大多不经过 Karabiner，但同样属于「这台机器的键位」，理应在这里有据
+  # 可查——键位图和练习页都会带上。
+  #
+  # 键位来源：Zed 不落地默认 keymap，取自官方仓库 assets/keymaps/
+  #   default-macos.json  ← 绝大多数
+  #   macos/vscode.json   ← settings.json 里 base_keymap: VSCode 叠加的一薄层（约 20 条）
+  #   ~/.config/zed/keymap.json ← 我自己改的，标注「自定义」
+  # 注意 VSCode 那层很薄，它没碰 ⌘D、复制行、移动行这些——所以基本可以当 macOS 默认看。
+  - app: Zed
+    bundle: dev.zed.Zed
+    source: https://github.com/zed-industries/zed/tree/main/assets/keymaps
+    groups:
+      - name: 行编辑
+        note: 这一组被我改过，对齐 IntelliJ 与 VS Code：⌥⇧↑↓ 移动行、⌥↑↓ 扩展收缩
+        items:
+          - { keys: alt+shift+up,    label: 上移一行（自定义）, action: "editor::MoveLineUp" }
+          - { keys: alt+shift+down,  label: 下移一行（自定义）, action: "editor::MoveLineDown" }
+          - { keys: cmd+shift+d,     label: 向下复制行（自定义）, action: "editor::DuplicateLineDown" }
+          - { keys: cmd+shift+k,     label: 删除整行, action: "editor::DeleteLine" }
+          - { keys: cmd+backspace,   label: 删到行首（自定义钉死）, action: "editor::DeleteToBeginningOfLine" }
+          - { keys: ctrl+j,          label: 合并行, action: "editor::JoinLines" }
+          - { keys: "cmd+]",         label: 缩进, action: "editor::Indent" }
+          - { keys: "cmd+[",         label: 反缩进, action: "editor::Outdent" }
+          - { keys: cmd+shift+i,     label: 格式化整个文件, action: "editor::Format" }
+      - name: 选择与语法
+        note: 书里 #1 #2 —— 按字符/词/行选择，以及按语法单位移动
+        items:
+          - { keys: alt+up,          label: 扩展选择（自定义）, action: "editor::SelectLargerSyntaxNode" }
+          - { keys: alt+down,        label: 收缩选择（自定义）, action: "editor::SelectSmallerSyntaxNode" }
+          - { keys: alt+shift+left,  label: 选中前一词（自定义钉死）, action: "editor::SelectToPreviousWordStart" }
+          - { keys: alt+shift+right, label: 选中后一词（自定义钉死）, action: "editor::SelectToNextWordEnd" }
+          - { keys: ctrl+m,          label: 跳到匹配括号, action: "editor::MoveToEnclosingBracket" }
+          - { keys: cmd+up,          label: 跳到文档头, action: "editor::MoveToBeginning" }
+          - { keys: cmd+down,        label: 跳到文档尾, action: "editor::MoveToEnd" }
+      - name: 多光标
+        note: 书里 #10 —— 基于选区或模式匹配开多光标并行编辑
+        items:
+          - { keys: cmd+alt+up,      label: 上方加光标, action: "editor::AddSelectionAbove" }
+          - { keys: cmd+alt+down,    label: 下方加光标, action: "editor::AddSelectionBelow" }
+          - { keys: cmd+d,           label: 选中下一个相同, action: "editor::SelectNext" }
+          - { keys: cmd+shift+l,     label: 选中全部相同, action: "editor::SelectAllMatches" }
+          - { keys: shift+alt+i,     label: 选区每行末尾加光标, action: "editor::SplitSelectionIntoLines" }
+      - name: 导航与工具链
+        note: 书里 #4 #6 #7 #9 #11 #12 —— 注释、分屏、跳行号、搜索、诊断、跑测试
+        items:
+          - { keys: "cmd+/",         label: 注释 / 取消注释, action: "editor::ToggleComments" }
+          - { keys: ctrl+g,          label: 跳到行号, action: "go_to_line::Toggle" }
+          - { keys: cmd+shift+o,     label: 文件内符号大纲, action: "outline::Toggle" }
+          - { keys: "cmd+\\",        label: 右侧分屏, action: "pane::SplitRight" }
+          - { keys: f8,              label: 下一个诊断, action: "editor::GoToDiagnostic" }
+          - { keys: f2,              label: 重命名符号, action: "editor::Rename" }
+          - { keys: "cmd+.",         label: 代码动作, action: "editor::ToggleCodeActions" }
+          - { keys: cmd+shift+r,     label: 跑任务 / 测试, action: "task::Spawn" }
+          - { keys: cmd+alt+r,       label: 重跑上次任务, action: "task::Rerun" }
+          - { keys: cmd+k cmd+l,     label: 折叠 / 展开, action: "editor::ToggleFold" }
