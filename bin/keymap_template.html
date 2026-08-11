@@ -774,7 +774,7 @@ const BLOCK = new Set(PR.block_signals || []);
 const KALIAS = PR.key_aliases || {};
 const SKEY = "capslock-drill-stats";
 let dMode = "free", dPick = new Set(), dQ = null, dExam = null, dVerdict = null;
-let dHits = 0, dStats = {};
+let dHits = 0, dStats = {}, dLit = new Set();
 
 /** 组的练法：pointer / text 由配置声明，其余一律闪卡 */
 function kindOfGroup(gid) {
@@ -923,7 +923,7 @@ function renderDrill() {
   if (!p.length) { $("dstage").innerHTML = `<div class="none">${esc(PUI.empty)}</div>`; $("dside").innerHTML = ""; return; }
 
   $("dstage").innerHTML = dMode === "free" ? freeStage(p) : examStage(p);
-  $("dside").innerHTML = dMode === "free" ? hintsPanel(p) : progressPanel(p);
+  $("dside").innerHTML = dMode === "free" ? checklistPanel(p) : progressPanel(p);
   const range = $("drange");
   if (range) { dHits = 0; range.appendChild(target(range)); }
   const pad = $("dpad");
@@ -932,8 +932,11 @@ function renderDrill() {
 
 function freeStage(p) {
   const hasPointer = p.some(q => q.kind === "pointer");
-  return `<div class="qnote">${esc(PUI.tip)}</div>
-    <textarea id="dpad" spellcheck="false"></textarea>
+  const hasText = p.some(q => q.kind === "text");
+  if (!hasText && !hasPointer) return `<div class="none">${esc(PUI.free_only_cards)}</div>`;
+  return `<div class="qnote">${esc(PUI.tip_free)}</div>
+    ${hasText ? `<textarea id="dpad" spellcheck="false"></textarea>` : ""}
+    <div class="live" id="dlive">${esc(PUI.live_none)}</div>
     ${hasPointer ? `<div class="qnote" style="margin:12px 0 0">${esc((PUI.kind_note || {}).pointer)}</div>
       <div class="drange" id="drange"><span class="rt">${esc(fmt(PUI.range_hint, { hit: 0 }))}</span></div>` : ""}`;
 }
@@ -975,16 +978,27 @@ function report() {
     <div class="drow"><button class="btn primary" id="dgo">${esc(PUI.restart)}</button></div>`;
 }
 
-function hintsPanel(p) {
+/** 闯关清单:text 类条目按对点亮计入进度;闪卡/鼠标类灰显挂标签,不计数 */
+function checklistPanel(p) {
+  const text = p.filter(q => q.kind === "text");
+  const done = text.filter(q => dLit.has(q.id)).length;
   let last = null;
-  return `<h4>${esc(PUI.live_title)}</h4>
-    <div class="live" id="dlive">${esc(PUI.live_none)}</div>
-    <h4 style="margin-top:12px">${esc(PUI.hints_title)}</h4>`
-    + p.map(q => {
-      const head = q.group_zh === last ? "" : `<div class="hsub">${esc(q.group_zh)}</div>`;
-      last = q.group_zh;
-      return head + `<div class="hrow"><b>${esc(q.combo)}</b><span>${esc(q.label)}</span></div>`;
-    }).join("");
+  const rows = p.map(q => {
+    const head = q.group_zh === last ? "" : `<div class="hsub">${esc(q.group_zh)}</div>`;
+    last = q.group_zh;
+    const lock = q.kind !== "text";
+    return head + `<div class="citem ${lock ? "lock" : dLit.has(q.id) ? "lit" : ""}" data-cid="${esc(q.id)}">
+        <span class="cdot"></span>${kbdCombo(q.combo)}<span class="clabel">${esc(q.label)}</span>
+        ${lock ? `<span class="ctag">${esc(KTAG[q.kind] || "")}</span>` : "<span></span>"}
+      </div>`;
+  }).join("");
+  const doneBlock = text.length && done === text.length
+    ? `<div class="cdone">${esc(PUI.checklist_done)}
+         <button class="btn tiny" id="dround">${esc(PUI.another_round)}</button></div>` : "";
+  return `<h4>${esc(PUI.checklist_title)}</h4>
+    <div class="prog">${esc(fmt(PUI.checklist_progress, { done, total: text.length }))}
+      <div class="bar"><i style="width:${text.length ? Math.round(done / text.length * 100) : 0}%"></i></div></div>
+    ${doneBlock}${rows}`;
 }
 
 function progressPanel() {
@@ -1009,16 +1023,36 @@ function dLive(sig) {
 
 document.addEventListener("keydown", e => {
   if (view !== "drill") return;
+  if (dMode === "free") { freeKey(e); return; }
+  examKey(e);
+});
+
+/** 自由模式:实时解码 + 点亮清单。重画侧栏不动主舞台,textarea 焦点和光标不丢 */
+function freeKey(e) {
   const sig = sigOfEvent(e);
   if (!sig) return;
-  if (dMode === "free") { dLive(sig); return; }
+  dLive(sig);
+  const pool = dPool();
+  const fresh = pool.filter(q => q.kind === "text" && q.signal === sig && !dLit.has(q.id));
+  if (!fresh.length) return;
+  fresh.forEach(q => dLit.add(q.id));
+  $("dside").innerHTML = checklistPanel(pool);
+  fresh.forEach(q => {
+    const el = document.querySelector(`.citem[data-cid="${CSS.escape(q.id)}"]`);
+    if (el) el.classList.add("just");
+  });
+}
+
+function examKey(e) {
   if (!dQ || dQ.kind !== "text") return;
+  const sig = sigOfEvent(e);
+  if (!sig) return;
   if (sig === dQ.signal) {
     const pad = $("dpad");
     if (pad) pad.className = "ok";
-    setTimeout(() => dAnswer(true), 260);   // 让光标动完那一下看得见
+    setTimeout(() => dAnswer(true), 260);
   }
-});
+}
 
 $("dmode").onclick = e => {
   const b = e.target.closest("b");
@@ -1040,7 +1074,7 @@ $("dfilter").onclick = e => {
     const id = c.dataset.dg;
     dPick.has(id) ? dPick.delete(id) : dPick.add(id);
   }
-  dQ = null; dExam = null;
+  dQ = null; dExam = null; dLit = new Set();
   renderDrill();
 };
 
@@ -1052,6 +1086,10 @@ $("dstage").onclick = e => {
     dVerdict = { ok: false, msg: fmt(PUI.revealed, { combo: dQ.combo }) };
     renderDrill();
   }
+};
+
+$("dside").onclick = e => {
+  if (e.target.closest("#dround")) { dLit = new Set(); renderDrill(); }
 };
 
 $("dstage").addEventListener("keydown", e => {
@@ -1109,7 +1147,7 @@ $("config").onchange = e => {
   cfgName = e.target.value; selKey = null;
   hideG = new Set(store.get(hideKey(), []));
   dPick = new Set(cfg().groups.map(g => g.id).filter(id => (PR.focus || []).includes(id)));
-  dQ = null; dExam = null;
+  dQ = null; dExam = null; dLit = new Set();
   refresh();
 };
 $("search").oninput = () => {
