@@ -105,12 +105,16 @@ practice:
     # 三种练法在题面上的说明
     kind_text: 在输入框里真按一次
     kind_pointer: 进鼠标模式打靶
-    kind_card: 闪卡自测 · 打出这个组合键
+    kind_card: 闪卡自测 · 心里默想按法
     kind_tag: { text: 真练, pointer: 打靶, card: 闪卡 }
     kind_note:
       text: 光标已经放好，直接按。判的是 Karabiner 发出的信号，不是你按了哪几个键。
       pointer: 先按 ⇪R 或 M2 进鼠标模式，再用 hjkl 把指针挪到靶心点一下（f 或 ⏎ 左键）。
-      card: 这条会把浏览器切走，没法真按——把组合键打出来就行，⌘ / cmd / command 都认。
+      card: 这条会把浏览器切走,没法真按——先默想怎么按,翻面对答案,自己评记得没记得。
+    flip: 翻面看答案（空格）
+    remember: 记得（1）
+    forgot: 忘了（2）
+    card_output: "实际输出 {sig}"
     prompt: 怎么做到
     reveal: 看答案
     skip: 跳过

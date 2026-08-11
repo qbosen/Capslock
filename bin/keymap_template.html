@@ -971,7 +971,15 @@ function bodyOf(q) {
   }
   if (q.kind === "pointer")
     return `<div class="drange" id="drange"><span class="rt">${esc(fmt(PUI.range_hint, { hit: 0 }))}</span></div>`;
-  return `<div class="ansbox">${kbdCombo(q.combo)}</div>`;
+  if (!dFlipped) return `<div class="drow" style="justify-content:center">
+      <button class="btn primary" id="dflip">${esc(PUI.flip)}</button></div>`;
+  return `<div class="ansbox">${kbdCombo(q.combo)}
+      ${q.signal ? `<div class="qmeta">${esc(fmt(PUI.card_output, { sig: q.signal }))}</div>` : ""}
+    </div>
+    <div class="drow" style="justify-content:center">
+      <button class="btn primary" id="dremember">${esc(PUI.remember)}</button>
+      <button class="btn" id="dforgot">${esc(PUI.forgot)}</button>
+    </div>`;
 }
 
 function report() {
@@ -1061,7 +1069,14 @@ function examKey(e) {
   const goBtn = $("dgo");
   if (goBtn && (e.key === " " || e.key === "Enter")) { e.preventDefault(); dStart(); return; }
   if (!dExam || !dQ) return;
-  if (dQ.kind !== "text") return;   // 闪卡键位在下一任务;鼠标题用点击
+  if (dQ.kind === "card") {
+    if (!dFlipped) {
+      if (e.key === " ") { e.preventDefault(); dFlipped = true; renderDrill(); }
+    } else if (e.key === "1") dAnswer(true);
+    else if (e.key === "2") dAnswer(false);
+    return;
+  }
+  if (dQ.kind !== "text") return;
   if (dRevealed) {
     if (e.key === " " || e.key === "Enter") { e.preventDefault(); dAnswer(false); }
     return;
@@ -1120,6 +1135,9 @@ $("dstage").onclick = e => {
   if (e.target.closest("#dgo")) return dStart();
   if (e.target.closest("#dskip")) return dAnswer(false);
   if (e.target.closest("#dreveal")) { dRevealed = true; renderDrill(); }
+  if (e.target.closest("#dflip")) { dFlipped = true; renderDrill(); return; }
+  if (e.target.closest("#dremember")) return dAnswer(true);
+  if (e.target.closest("#dforgot")) return dAnswer(false);
 };
 
 $("dside").onclick = e => {
