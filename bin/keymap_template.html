@@ -773,8 +773,9 @@ const PR = DATA.practice || {}, PUI = PR.ui || {}, KTAG = PUI.kind_tag || {};
 const BLOCK = new Set(PR.block_signals || []);
 const KALIAS = PR.key_aliases || {};
 const SKEY = "capslock-drill-stats";
-let dMode = "free", dPick = new Set(), dQ = null, dExam = null, dVerdict = null;
+let dMode = "free", dPick = new Set(), dQ = null, dExam = null;
 let dHits = 0, dStats = {}, dLit = new Set();
+let dRevealed = false, dFlipped = false, dAdvancing = false;
 
 /** 组的练法：pointer / text 由配置声明，其余一律闪卡 */
 function kindOfGroup(gid) {
@@ -866,14 +867,14 @@ function dStart() {
 }
 
 function dNext() {
-  dVerdict = null;
+  dRevealed = dFlipped = dAdvancing = false;
   dQ = dExam.i < dExam.n ? pickNext(dExam.pool, dExam.asked) : null;
   if (!dQ) { dExam.n = dExam.i; renderDrill(); return; }
   dExam.asked.add(dQ.id);
   dExam.t0 = performance.now();
   renderDrill();
-  const box = $(dQ.kind === "text" ? "dpad" : "dans");
-  if (box) { box.focus(); if (dQ.kind === "text") seedPad(box); }
+  const box = $("dpad");
+  if (box) { box.focus(); seedPad(box); }
 }
 
 function dAnswer(ok) {
@@ -945,23 +946,32 @@ function examStage(p) {
   if (!dExam) return `<div class="qnote">${esc(PUI.tip)}</div>
     <div class="drow"><button class="btn primary" id="dgo">${esc(PUI.start)}</button></div>`;
   if (!dQ) return report();
-
   const note = (PUI.kind_note || {})[dQ.kind] || "";
-  const body = dQ.kind === "text"
-    ? `<textarea id="dpad" spellcheck="false"></textarea>`
-    : `<input id="dans" autocomplete="off" spellcheck="false" placeholder="${esc(PUI.answer_placeholder)}">
-       <div class="drow"><button class="btn primary" id="dcheck">${esc(PUI.check)}</button></div>`;
-  return `<span class="qkind ${dQ.kind === "card" ? "card" : ""}">${esc(PUI["kind_" + dQ.kind])}</span>
-    <div class="qask">${esc(dQ.label)}</div>
-    <div class="qmeta">${esc(dQ.group_zh)}　·　${esc(PUI.prompt)}？</div>
+  return `<div class="qwrap">
+      <span class="qkind ${dQ.kind === "card" ? "card" : ""}">${esc(PUI["kind_" + dQ.kind])}</span>
+      <div class="qask">${esc(dQ.label)}</div>
+      <div class="qmeta">${esc(dQ.group_zh)}　·　${esc(PUI.prompt)}？</div>
+    </div>
     <div class="qnote">${esc(note)}</div>
-    ${body}
+    ${bodyOf(dQ)}
+    <div class="live" id="qfb"></div>
     <div class="drow">
-      <span class="verdict ${dVerdict ? dVerdict.ok ? "ok" : "bad" : ""}">${esc(dVerdict ? dVerdict.msg : "")}</span>
       <span class="spacer"></span>
-      <button class="btn tiny" id="dreveal">${esc(PUI.reveal)}</button>
+      ${dQ.kind === "text" && !dRevealed ? `<button class="btn tiny" id="dreveal">${esc(PUI.reveal)}</button>` : ""}
       <button class="btn tiny" id="dskip">${esc(PUI.skip)}</button>
     </div>`;
+}
+
+/** 题型主体。闪卡分支在下一任务补 Anki 流,本任务先渲染答案盒占位 */
+function bodyOf(q) {
+  if (q.kind === "text") {
+    if (dRevealed) return `<div class="ansbox">${esc(PUI.answer_title)}　${kbdCombo(q.combo)}
+      <div class="qmeta">${esc(PUI.continue_hint)}</div></div>`;
+    return `<textarea id="dpad" spellcheck="false"></textarea>`;
+  }
+  if (q.kind === "pointer")
+    return `<div class="drange" id="drange"><span class="rt">${esc(fmt(PUI.range_hint, { hit: 0 }))}</span></div>`;
+  return `<div class="ansbox">${kbdCombo(q.combo)}</div>`;
 }
 
 function report() {
@@ -973,7 +983,7 @@ function report() {
     <div class="rpt">${esc(fmt(PUI.report_line, {
       rate: Math.round(ok / Math.max(1, log.length) * 100), ms: avg.toFixed(1) }))}</div>
     ${weak.length ? `<div class="hsub">${esc(PUI.report_weak)}</div>`
-      + weak.map(x => `<div class="hrow"><b>${esc(x.q.combo)}</b><span>${esc(x.q.label)}</span></div>`).join("")
+      + weak.map(x => `<div class="hrow"><span>${kbdCombo(x.q.combo)}</span><span>${esc(x.q.label)}</span></div>`).join("")
       : `<div class="rpt" style="margin-top:8px">${esc(PUI.report_perfect)}</div>`}
     <div class="drow"><button class="btn primary" id="dgo">${esc(PUI.restart)}</button></div>`;
 }
@@ -1005,9 +1015,13 @@ function progressPanel() {
   const title = esc((PUI.modes || {}).exam || "");
   if (!dExam) return `<h4>${title}</h4><div class="rpt">${esc(PUI.tip)}</div>`;
   const ok = dExam.log.filter(x => x.ok).length;
+  const dots = Array.from({ length: dExam.n }, (_, i) => {
+    const a = dExam.log[i];
+    return `<i class="${a ? (a.ok ? "ok" : "bad") : i === dExam.i ? "cur" : ""}"></i>`;
+  }).join("");
   return `<h4>${title}</h4>
-    <div class="prog">${esc(fmt(PUI.progress, { i: Math.min(dExam.i + 1, dExam.n), n: dExam.n, ok }))}
-      <div class="bar"><i style="width:${Math.round(dExam.i / dExam.n * 100)}%"></i></div></div>
+    <div class="prog">${esc(fmt(PUI.progress, { i: Math.min(dExam.i + 1, dExam.n), n: dExam.n, ok }))}</div>
+    <div class="dots">${dots}</div>
     <div class="rpt">${esc(PUI.stats_note)}</div>`;
 }
 
@@ -1044,14 +1058,38 @@ function freeKey(e) {
 }
 
 function examKey(e) {
-  if (!dQ || dQ.kind !== "text") return;
-  const sig = sigOfEvent(e);
-  if (!sig) return;
-  if (sig === dQ.signal) {
-    const pad = $("dpad");
-    if (pad) pad.className = "ok";
-    setTimeout(() => dAnswer(true), 260);
+  const goBtn = $("dgo");
+  if (goBtn && (e.key === " " || e.key === "Enter")) { e.preventDefault(); dStart(); return; }
+  if (!dExam || !dQ) return;
+  if (dQ.kind !== "text") return;   // 闪卡键位在下一任务;鼠标题用点击
+  if (dRevealed) {
+    if (e.key === " " || e.key === "Enter") { e.preventDefault(); dAnswer(false); }
+    return;
   }
+  const sig = sigOfEvent(e);
+  if (!sig || dAdvancing) return;
+  if (sig === dQ.signal) {
+    dAdvancing = true;
+    const pad = $("dpad");
+    if (pad) pad.classList.add("ok", "flash-ok");
+    setTimeout(() => dAnswer(true), 260);
+    return;
+  }
+  if (/(?:cmd|ctrl|opt|shift)\+/.test(sig)) wrongFlash(sig);
+}
+
+/** 按出了带修饰键但不匹配的信号:红闪 + 告诉你实际触发了什么。纯打字不惩罚 */
+function wrongFlash(sig) {
+  const pad = $("dpad"), fb = $("qfb");
+  if (pad) {
+    pad.classList.remove("flash-bad"); void pad.offsetWidth;
+    pad.classList.add("bad", "flash-bad");
+    setTimeout(() => pad.classList.remove("bad"), 500);
+  }
+  if (!fb) return;
+  const hit = cfg().entries.find(en => en.signal === sig);
+  fb.innerHTML = hit ? esc(fmt(PUI.pressed_other, { combo: hit.combo, label: hit.label }))
+    : esc(fmt(PUI.live_unknown, { sig }));
 }
 
 $("dmode").onclick = e => {
@@ -1080,32 +1118,13 @@ $("dfilter").onclick = e => {
 
 $("dstage").onclick = e => {
   if (e.target.closest("#dgo")) return dStart();
-  if (e.target.closest("#dcheck")) return dCheck();
   if (e.target.closest("#dskip")) return dAnswer(false);
-  if (e.target.closest("#dreveal")) {
-    dVerdict = { ok: false, msg: fmt(PUI.revealed, { combo: dQ.combo }) };
-    renderDrill();
-  }
+  if (e.target.closest("#dreveal")) { dRevealed = true; renderDrill(); }
 };
 
 $("dside").onclick = e => {
   if (e.target.closest("#dround")) { dLit = new Set(); renderDrill(); }
 };
-
-$("dstage").addEventListener("keydown", e => {
-  if (e.key === "Enter" && e.target.id === "dans") { e.preventDefault(); dCheck(); }
-});
-
-function dCheck() {
-  const box = $("dans");
-  if (!box || !dQ) return;
-  const ok = dAnswers(dQ).has(normCombo(box.value));
-  if (ok) { box.className = "ok"; setTimeout(() => dAnswer(true), 220); return; }
-  box.className = "bad";
-  dVerdict = { ok: false, msg: PUI.wrong };
-  const v = $("dstage").querySelector(".verdict");
-  if (v) { v.textContent = PUI.wrong; v.className = "verdict bad"; }
-}
 
 $("dreset").onclick = () => { dStats = {}; store.set(SKEY, {}); renderDrill(); };
 

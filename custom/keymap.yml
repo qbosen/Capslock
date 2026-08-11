@@ -112,16 +112,14 @@ practice:
       pointer: 先按 ⇪R 或 M2 进鼠标模式，再用 hjkl 把指针挪到靶心点一下（f 或 ⏎ 左键）。
       card: 这条会把浏览器切走，没法真按——把组合键打出来就行，⌘ / cmd / command 都认。
     prompt: 怎么做到
-    answer_placeholder: 打出组合键，如 cmd shift l
-    check: 判定
     reveal: 看答案
     skip: 跳过
-    right: 对了
-    wrong: 不对，再试一次
-    revealed: 答案是 {combo}
+    answer_title: 答案
+    continue_hint: 空格 / 回车 继续
     live_none: 按点什么试试
     live_unknown: "{sig} —— 没有对应的快捷键"
     live_hit: "{combo} · {label}"
+    pressed_other: "你按出的是 {combo} · {label}"
     progress: "{i}/{n} · 对 {ok}"
     report_title: 这轮结果
     report_line: "正确率 {rate}% · 平均 {ms} 秒 / 题"
