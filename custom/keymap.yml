@@ -119,6 +119,9 @@ practice:
     right: 对了
     wrong: 不对，再试一次
     revealed: 答案是 {combo}
+    live_none: 按点什么试试
+    live_unknown: "{sig} —— 没有对应的快捷键"
+    live_hit: "{combo} · {label}"
     progress: "{i}/{n} · 对 {ok}"
     report_title: 这轮结果
     report_line: "正确率 {rate}% · 平均 {ms} 秒 / 题"
