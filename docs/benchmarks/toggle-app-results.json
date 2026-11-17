@@ -1,0 +1,1599 @@
+{
+  "samples": [
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 231.037,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 54.93,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 137.956,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 53.944,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 123.462,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 60.012,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 57.667,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 198.206,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 264.142,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 79.236,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 198.351,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 53.574,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 118.083,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 51.133,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 195.363,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 159.68,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 54.341,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 194.464,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 94.744,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 109.624,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 53.858,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 112.141,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 52.427,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 91.009,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 116.412,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 53.951,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 58.634,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 62.904,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 195.489,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 97.236,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 116.977,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 280.964,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 191.033,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 58.528,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 407.109,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 239.293,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 67.187,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 209.318,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 61.7,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 60.172,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 192.935,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 58.999,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 137.65,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 122.572,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 73.601,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 76.475,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 133.405,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 63.413,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 71.309,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 109.648,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 51.477,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 128.673,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 81.706,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 98.644,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 131.97,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 59.374,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 135.373,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 62.037,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 228.46,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 62.434,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 86.797,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 187.763,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 163.235,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 125.653,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 174.4,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 68.1,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 257.981,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 250.165,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 228.244,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 186.029,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 199.806,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 117.272,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 217.837,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 101.806,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 66.072,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 59.523,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 196.434,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 107.091,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 78.326,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 69.162,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 182.624,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 59.411,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 239.253,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 175.525,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 196.56,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 181.356,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 112.556,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 125.833,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 128.923,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 63.332,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 59.903,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 193.642,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 67.609,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 61.567,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 132.07,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 211.69,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 159.047,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 203.45,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 126.127,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 136.204,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 88.502,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 61.234,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 198.352,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 157.883,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 113.933,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 105.41,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 104.038,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 138.436,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 214.822,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 107.674,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 180.811,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 116.977,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 84.584,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 162.536,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 174.809,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 63.469,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 71.203,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 208.491,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 115.616,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 143.814,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 58.499,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 198.626,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 67.73,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 224.093,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 176.276,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 192.696,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 93.575,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 60.328,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 142.178,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 136.743,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 120.77,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 170.901,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 55.257,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 60.51,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 84.811,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 236.784,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 125.435,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 66.302,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 189.609,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 114.1,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 54.369,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 241.666,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 195.683,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 96.066,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 197.382,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 147.581,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 132.855,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 123.824,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 272.392,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 123.749,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 77.394,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 120.644,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 55.296,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 116.4,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 61.356,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 111.758,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 203.663,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 150.271,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 102.746,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 52.512,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 104.578,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 161.186,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 58.647,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 61.758,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 218.073,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 77.323,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 128.778,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 57.244,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 64.884,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 63.809,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 222.374,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 122.787,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 146.685,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 197.282,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 105.597,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 180.159,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 211.886,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 111.708,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 119.472,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 115.049,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 82.184,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 100.258,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 64.114,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 99.489,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 99.918,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 101.81,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 53.221,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 196.08,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 158.104,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 214.7,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 90.177,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 122.523,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 146.554,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 176.048,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 63.808,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 57.054,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 58.308,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 133.984,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 70.042,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 61.963,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 58.399,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 90.614,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 54.403,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 99.612,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 55.774,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 71.614,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 71.334,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 218.466,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 224.206,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 68.969,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 130.09,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 107.062,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 204.232,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 85.032,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 61.731,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 98.264,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 234.065,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 52.789,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 89.042,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 53.702,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 113.893,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 61.152,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 186.115,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 197.972,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 194.37,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 64.594,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "command_ms": 56.101,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 140.556,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 208.069,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 55.315,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "command_ms": 145.911,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 208.754,
+      "success": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "command_ms": 125.478,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "command_ms": 210.741,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 61.042,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 92.484,
+      "success": true
+    },
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "command_ms": 263.091,
+      "success": true
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "command_ms": 76.5,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "command_ms": 64.994,
+      "success": true
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "command_ms": 117.723,
+      "success": true
+    }
+  ],
+  "overheads": {
+    "bash_empty": {
+      "n": 30,
+      "median_ms": 6.28,
+      "p95_ms": 7.43,
+      "min_ms": 5.69,
+      "max_ms": 7.45
+    },
+    "bash_date": {
+      "n": 30,
+      "median_ms": 9.35,
+      "p95_ms": 12.95,
+      "min_ms": 8.29,
+      "max_ms": 15.0
+    },
+    "applescript_empty": {
+      "n": 30,
+      "median_ms": 36.78,
+      "p95_ms": 58.49,
+      "min_ms": 35.14,
+      "max_ms": 67.42
+    },
+    "jxa_empty": {
+      "n": 30,
+      "median_ms": 27.58,
+      "p95_ms": 32.71,
+      "min_ms": 26.74,
+      "max_ms": 32.85
+    },
+    "jxa_appkit_import": {
+      "n": 30,
+      "median_ms": 43.92,
+      "p95_ms": 53.03,
+      "min_ms": 42.57,
+      "max_ms": 61.41
+    },
+    "jxa_front_read": {
+      "n": 30,
+      "median_ms": 46.28,
+      "p95_ms": 51.73,
+      "min_ms": 42.9,
+      "max_ms": 54.46
+    }
+  },
+  "metadata": {
+    "timestamp": "2026-10-21T18:52:28-0700",
+    "os": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434",
+    "cpu": "Apple M5 Pro",
+    "samples_per_case": 30,
+    "note": "Warm filesystem caches; fresh process per sample; seeded interleaving; observer outside command timing.",
+    "chrome_pid": 98399,
+    "chrome_instance_count": 2
+  },
+  "same_name_regression": [
+    {
+      "variant": "old_applescript",
+      "hidden": false
+    },
+    {
+      "variant": "current_shell_jxa",
+      "hidden": true
+    },
+    {
+      "variant": "all_jxa",
+      "hidden": true
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "hidden": true
+    }
+  ],
+  "log_entries": 260,
+  "logs_valid": true,
+  "summary": [
+    {
+      "variant": "old_applescript",
+      "action": "hide",
+      "n": 30,
+      "median_ms": 201.63,
+      "p95_ms": 257.98,
+      "min_ms": 174.4,
+      "max_ms": 263.09,
+      "successes": 30
+    },
+    {
+      "variant": "old_applescript",
+      "action": "activate",
+      "n": 30,
+      "median_ms": 201.01,
+      "p95_ms": 280.96,
+      "min_ms": 170.9,
+      "max_ms": 407.11,
+      "successes": 30
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "hide",
+      "n": 30,
+      "median_ms": 65.21,
+      "p95_ms": 91.01,
+      "min_ms": 58.53,
+      "max_ms": 92.48,
+      "successes": 30
+    },
+    {
+      "variant": "current_shell_jxa",
+      "action": "activate",
+      "n": 30,
+      "median_ms": 135.79,
+      "p95_ms": 176.28,
+      "min_ms": 102.75,
+      "max_ms": 208.07,
+      "successes": 30
+    },
+    {
+      "variant": "all_jxa",
+      "action": "hide",
+      "n": 30,
+      "median_ms": 57.99,
+      "p95_ms": 77.32,
+      "min_ms": 51.13,
+      "max_ms": 86.8,
+      "successes": 30
+    },
+    {
+      "variant": "all_jxa",
+      "action": "activate",
+      "n": 30,
+      "median_ms": 121.78,
+      "p95_ms": 175.53,
+      "min_ms": 94.74,
+      "max_ms": 196.43,
+      "successes": 30
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "hide",
+      "n": 30,
+      "median_ms": 61.04,
+      "p95_ms": 93.58,
+      "min_ms": 52.79,
+      "max_ms": 107.09,
+      "successes": 30
+    },
+    {
+      "variant": "all_jxa_native_activate",
+      "action": "activate",
+      "n": 30,
+      "median_ms": 112.16,
+      "p95_ms": 209.32,
+      "min_ms": 88.5,
+      "max_ms": 239.29,
+      "successes": 30
+    }
+  ]
+}

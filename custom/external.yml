@@ -42,18 +42,10 @@ groups:
       - { keys: option+control+right, label: 右半屏,   app: Magnet, verified: expandWindowEast }
       - { keys: option+control+up,    label: 上半屏,   app: Magnet, verified: expandWindowNorth }
       - { keys: option+control+down,  label: 下半屏,   app: Magnet, verified: expandWindowSouth }
-      - { keys: option+control+u,     label: 左上角,   app: Magnet, verified: expandWindowNorthWest }
-      - { keys: option+control+i,     label: 右上角,   app: Magnet, verified: expandWindowNorthEast }
-      - { keys: option+control+j,     label: 左下角,   app: Magnet, verified: expandWindowSouthWest }
-      - { keys: option+control+k,     label: 右下角,   app: Magnet, verified: expandWindowSouthEast }
-      - { keys: option+control+d,     label: 左 1/3,   app: Magnet, verified: expandWindowLeftThird }
-      - { keys: option+control+f,     label: 中 1/3,   app: Magnet, verified: expandWindowCenterThird }
-      - { keys: option+control+g,     label: 右 1/3,   app: Magnet, verified: expandWindowRightThird }
-      - { keys: option+control+e,     label: 左 2/3,   app: Magnet, verified: expandWindowLeftTwoThirds }
-      - { keys: option+control+r,     label: 中 2/3,   app: Magnet, verified: centerTwoThirds }
-      - { keys: option+control+t,     label: 右 2/3,   app: Magnet, verified: expandWindowRightTwoThirds }
+      # 2026-08-17 为 herdr 直达层让位，已在 Magnet 偏好里禁用四角（⌃⌥uijk）、
+      # 三分屏（⌃⌥dfg）、三分之二屏（⌃⌥ert）——共十个 ⌃⌥ 键释放（已解码偏好 blob 核实）。
+      # herdr 只用了 jku，其余 idfgert 当前空闲。
       - { keys: option+control+enter, label: 最大化,   app: Magnet, verified: maximizeWindow }
-      - { keys: option+control+c,     label: 居中,     app: Magnet, verified: centerWindow }
       - { keys: option+control+delete, label: 还原,    app: Magnet, verified: restoreWindow }
       - { keys: cmd+option+control+right, label: 移到下个显示器, app: Magnet, verified: moveWindowToNextDisplay }
       - { keys: cmd+option+control+left,  label: 移到上个显示器, app: Magnet, verified: moveWindowToPreviousDisplay }

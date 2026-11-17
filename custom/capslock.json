@@ -2714,7 +2714,7 @@
       "description": "Cmd + Esc Toggle",
       "manipulators": [
         {
-          "description": "cmd + esc = toggle Ghostty",
+          "description": "cmd + esc = toggle Herdr",
           "type": "basic",
           "from": {
             "key_code": "escape",
@@ -2726,7 +2726,7 @@
           },
           "to": [
             {
-              "shell_command": "~/.local/bin/toggle_app Ghostty"
+              "shell_command": "~/.local/bin/toggle_app Herdr"
             }
           ]
         }
@@ -2736,7 +2736,7 @@
       "description": "Hyper Application",
       "manipulators": [
         {
-          "description": "command + q = play/pause",
+          "description": "command + q = Multica",
           "type": "basic",
           "from": {
             "key_code": "q",
@@ -2752,7 +2752,7 @@
           },
           "to": [
             {
-              "consumer_key_code": "play_or_pause"
+              "shell_command": "~/.local/bin/toggle_app 'Multica'"
             }
           ]
         },
@@ -2773,6 +2773,26 @@
           "to": [
             {
               "shell_command": "~/.local/bin/toggle_app 'Claude'"
+            }
+          ]
+        },
+        {
+          "description": "g = Rakazo",
+          "type": "basic",
+          "from": {
+            "key_code": "g",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "~/.local/bin/toggle_app 'Rakazo'"
             }
           ]
         },
@@ -2881,7 +2901,7 @@
           ]
         },
         {
-          "description": "option + w = zed",
+          "description": "option + w = logseq",
           "type": "basic",
           "from": {
             "key_code": "w",
@@ -2897,12 +2917,12 @@
           },
           "to": [
             {
-              "shell_command": "~/.local/bin/toggle_app 'Zed'"
+              "shell_command": "~/.local/bin/toggle_app 'Logseq'"
             }
           ]
         },
         {
-          "description": "w = logseq",
+          "description": "w = zed",
           "type": "basic",
           "from": {
             "key_code": "w",
@@ -2917,7 +2937,7 @@
           },
           "to": [
             {
-              "shell_command": "~/.local/bin/toggle_app 'Logseq'"
+              "shell_command": "~/.local/bin/toggle_app 'Zed'"
             }
           ]
         },
@@ -2986,6 +3006,176 @@
           "to": [
             {
               "shell_command": "~/.local/bin/toggle_app 'CCwork'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Herdr Prefix IME",
+      "manipulators": [
+        {
+          "description": "shift tap = back to wetype (ghostty, abc)",
+          "type": "basic",
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            },
+            {
+              "type": "input_source_if",
+              "input_sources": [
+                {
+                  "input_source_id": "^com\\.apple\\.keylayout\\.ABC$"
+                }
+              ]
+            }
+          ],
+          "from": {
+            "key_code": "left_shift",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_shift"
+            }
+          ],
+          "to_if_alone": [
+            {
+              "select_input_source": {
+                "input_source_id": "^com\\.tencent\\.inputmethod\\.wetype\\.pinyin$"
+              }
+            }
+          ]
+        },
+        {
+          "description": "shift tap = back to wetype (ghostty, abc)",
+          "type": "basic",
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            },
+            {
+              "type": "input_source_if",
+              "input_sources": [
+                {
+                  "input_source_id": "^com\\.apple\\.keylayout\\.ABC$"
+                }
+              ]
+            }
+          ],
+          "from": {
+            "key_code": "right_shift",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "right_shift"
+            }
+          ],
+          "to_if_alone": [
+            {
+              "select_input_source": {
+                "input_source_id": "^com\\.tencent\\.inputmethod\\.wetype\\.pinyin$"
+              }
+            }
+          ]
+        },
+        {
+          "description": "ctrl + b = herdr prefix + abc (ghostty)",
+          "type": "basic",
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            },
+            {
+              "type": "input_source_if",
+              "input_sources": [
+                {
+                  "language": "^zh"
+                }
+              ]
+            }
+          ],
+          "from": {
+            "key_code": "b",
+            "modifiers": {
+              "mandatory": [
+                "control"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "b",
+              "modifiers": [
+                "left_control"
+              ]
+            },
+            {
+              "select_input_source": {
+                "input_source_id": "^com\\.apple\\.keylayout\\.ABC$"
+              }
+            }
+          ]
+        },
+        {
+          "description": "b = ctrl-b + abc (ghostty)",
+          "type": "basic",
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            },
+            {
+              "type": "input_source_if",
+              "input_sources": [
+                {
+                  "language": "^zh"
+                }
+              ]
+            }
+          ],
+          "from": {
+            "key_code": "b",
+            "modifiers": {
+              "mandatory": [
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "b",
+              "modifiers": [
+                "left_control"
+              ]
+            },
+            {
+              "select_input_source": {
+                "input_source_id": "^com\\.apple\\.keylayout\\.ABC$"
+              }
             }
           ]
         }
@@ -3177,6 +3367,27 @@
               "modifiers": [
                 "left_control"
               ]
+            }
+          ]
+        },
+        {
+          "description": "option + v = toggle mic (built-in <-> MiRemoteV 2ch)",
+          "type": "basic",
+          "from": {
+            "key_code": "v",
+            "modifiers": {
+              "mandatory": [
+                "left_option",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "~/.local/bin/toggle_mic"
             }
           ]
         },
@@ -3571,7 +3782,7 @@
       ]
     },
     {
-      "description": "Hyper Mouse (Neru)",
+      "description": "Hyper Mouse",
       "manipulators": [
         {
           "description": "option + i = mouse back",
@@ -3612,46 +3823,6 @@
           "to": [
             {
               "pointing_button": "button5"
-            }
-          ]
-        },
-        {
-          "description": "f = neru hints",
-          "type": "basic",
-          "from": {
-            "key_code": "f",
-            "modifiers": {
-              "mandatory": [
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "shell_command": "/opt/homebrew/bin/neru hints"
-            }
-          ]
-        },
-        {
-          "description": "g = neru grid",
-          "type": "basic",
-          "from": {
-            "key_code": "g",
-            "modifiers": {
-              "mandatory": [
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option"
-              ]
-            }
-          },
-          "to": [
-            {
-              "shell_command": "/opt/homebrew/bin/neru grid"
             }
           ]
         },
@@ -3714,27 +3885,6 @@
           "to": [
             {
               "pointing_button": "button3"
-            }
-          ]
-        },
-        {
-          "description": "command + g = neru recursive grid",
-          "type": "basic",
-          "from": {
-            "key_code": "g",
-            "modifiers": {
-              "mandatory": [
-                "right_command",
-                "right_control",
-                "right_shift",
-                "right_option",
-                "left_command"
-              ]
-            }
-          },
-          "to": [
-            {
-              "shell_command": "/opt/homebrew/bin/neru recursive_grid"
             }
           ]
         },
@@ -4328,6 +4478,157 @@
           ]
         },
         {
+          "description": "mouse mode: left = mouse move left",
+          "type": "basic",
+          "from": {
+            "key_code": "left_arrow"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "x": -1600
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: right = mouse move right",
+          "type": "basic",
+          "from": {
+            "key_code": "right_arrow"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "x": 1600
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: down = mouse move down",
+          "type": "basic",
+          "from": {
+            "key_code": "down_arrow"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "y": 1600
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: up = mouse move up",
+          "type": "basic",
+          "from": {
+            "key_code": "up_arrow"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "y": -1600
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: page_up = mouse wheel up",
+          "type": "basic",
+          "from": {
+            "key_code": "page_up"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "vertical_wheel": -32
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: page_down = mouse wheel down",
+          "type": "basic",
+          "from": {
+            "key_code": "page_down"
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "vertical_wheel": 32
+              }
+            }
+          ]
+        },
+        {
+          "description": "mouse mode: control + option + m = mouse right click",
+          "type": "basic",
+          "from": {
+            "key_code": "m",
+            "modifiers": {
+              "mandatory": [
+                "left_control",
+                "left_option"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "pointing_button": "button2"
+            }
+          ]
+        },
+        {
           "description": "mouse mode: i = mouse wheel up",
           "type": "basic",
           "from": {
@@ -4825,6 +5126,658 @@
                 "id": "mouse_mode",
                 "text": ""
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Xiaomi RC003 Remote",
+      "manipulators": [
+        {
+          "description": "rc003 mouse mode: power = exit mouse mode",
+          "type": "basic",
+          "from": {
+            "key_code": "power",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            },
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "set_variable": {
+                "name": "mouse_mode",
+                "value": 0
+              }
+            },
+            {
+              "set_variable": {
+                "name": "zone",
+                "value": 0
+              }
+            },
+            {
+              "set_notification_message": {
+                "id": "mouse_mode",
+                "text": ""
+              }
+            }
+          ]
+        },
+        {
+          "description": "rc003 mouse mode: tv long press = exit mouse mode",
+          "type": "basic",
+          "from": {
+            "key_code": "grave_accent_and_tilde",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            },
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to_if_alone": [
+            {
+              "key_code": "o",
+              "modifiers": [
+                "left_control"
+              ]
+            }
+          ],
+          "to_if_held_down": [
+            {
+              "set_variable": {
+                "name": "mouse_mode",
+                "value": 0
+              }
+            },
+            {
+              "set_variable": {
+                "name": "zone",
+                "value": 0
+              }
+            },
+            {
+              "set_notification_message": {
+                "id": "mouse_mode",
+                "text": ""
+              }
+            }
+          ],
+          "parameters": {
+            "basic.to_if_held_down_threshold_milliseconds": 550
+          }
+        },
+        {
+          "description": "rc003 mouse mode: menu = mouse right click",
+          "type": "basic",
+          "from": {
+            "key_code": "application",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            },
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "pointing_button": "button2"
+            }
+          ]
+        },
+        {
+          "description": "rc003 mouse mode: volume up = mouse wheel up",
+          "type": "basic",
+          "from": {
+            "key_code": "volume_up",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            },
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "vertical_wheel": -32
+              }
+            }
+          ]
+        },
+        {
+          "description": "rc003 mouse mode: volume down = mouse wheel down",
+          "type": "basic",
+          "from": {
+            "key_code": "volume_down",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            },
+            {
+              "type": "variable_if",
+              "name": "mouse_mode",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "mouse_key": {
+                "vertical_wheel": 32
+              }
+            }
+          ]
+        },
+        {
+          "description": "rc003: power = escape",
+          "type": "basic",
+          "from": {
+            "key_code": "power",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            }
+          ],
+          "to": [
+            {
+              "key_code": "escape"
+            }
+          ]
+        },
+        {
+          "description": "rc003: menu = ctrl+opt+m (herdr last pane) / hold = ctrl+opt+/ (goto)",
+          "type": "basic",
+          "from": {
+            "key_code": "application",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            }
+          ],
+          "to_if_alone": [
+            {
+              "key_code": "m",
+              "modifiers": [
+                "left_control",
+                "left_option"
+              ]
+            }
+          ],
+          "to_if_held_down": [
+            {
+              "key_code": "slash",
+              "modifiers": [
+                "left_control",
+                "left_option"
+              ],
+              "repeat": false
+            }
+          ],
+          "parameters": {
+            "basic.to_if_held_down_threshold_milliseconds": 550
+          }
+        },
+        {
+          "description": "rc003: voice key f5 = fn (hold to talk)",
+          "type": "basic",
+          "from": {
+            "key_code": "f5",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            }
+          ],
+          "to": [
+            {
+              "key_code": "fn"
+            }
+          ]
+        },
+        {
+          "description": "rc003: tv = ctrl+o (cc transcript) / hold = mouse mode",
+          "type": "basic",
+          "from": {
+            "key_code": "grave_accent_and_tilde",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            }
+          ],
+          "to_if_alone": [
+            {
+              "key_code": "o",
+              "modifiers": [
+                "left_control"
+              ]
+            }
+          ],
+          "to_if_held_down": [
+            {
+              "set_variable": {
+                "name": "mouse_mode",
+                "value": 1
+              }
+            },
+            {
+              "set_notification_message": {
+                "id": "mouse_mode",
+                "text": "遥控器键鼠模式：方向=指针 OK=左键 菜单=右键 音量=滚轮 电源=退出"
+              }
+            }
+          ],
+          "parameters": {
+            "basic.to_if_held_down_threshold_milliseconds": 550
+          }
+        },
+        {
+          "description": "rc003: home = toggle Ghostty / hold = show desktop",
+          "type": "basic",
+          "from": {
+            "key_code": "home",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            }
+          ],
+          "to_if_alone": [
+            {
+              "shell_command": "~/.local/bin/toggle_app Ghostty"
+            }
+          ],
+          "to_if_held_down": [
+            {
+              "apple_vendor_keyboard_key_code": "expose_desktop",
+              "repeat": false
+            }
+          ],
+          "parameters": {
+            "basic.to_if_held_down_threshold_milliseconds": 550
+          }
+        },
+        {
+          "description": "rc003: volume up = page up / hold = ctrl+opt+n (new tab)",
+          "type": "basic",
+          "from": {
+            "key_code": "volume_up",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            }
+          ],
+          "to_if_alone": [
+            {
+              "key_code": "page_up"
+            }
+          ],
+          "to_if_held_down": [
+            {
+              "key_code": "n",
+              "modifiers": [
+                "left_control",
+                "left_option"
+              ],
+              "repeat": false
+            }
+          ],
+          "parameters": {
+            "basic.to_if_held_down_threshold_milliseconds": 550
+          }
+        },
+        {
+          "description": "rc003: volume down = page down / hold = ctrl+opt+shift+n (close tab)",
+          "type": "basic",
+          "from": {
+            "key_code": "volume_down",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            }
+          ],
+          "to_if_alone": [
+            {
+              "key_code": "page_down"
+            }
+          ],
+          "to_if_held_down": [
+            {
+              "key_code": "n",
+              "modifiers": [
+                "left_control",
+                "left_option",
+                "left_shift"
+              ],
+              "repeat": false
+            }
+          ],
+          "parameters": {
+            "basic.to_if_held_down_threshold_milliseconds": 550
+          }
+        },
+        {
+          "description": "rc003: passthrough arrows and ok",
+          "type": "basic",
+          "from": {
+            "key_code": "up_arrow",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            }
+          ],
+          "to": [
+            {
+              "key_code": "up_arrow"
+            }
+          ]
+        },
+        {
+          "description": "rc003: passthrough down",
+          "type": "basic",
+          "from": {
+            "key_code": "down_arrow",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            }
+          ],
+          "to": [
+            {
+              "key_code": "down_arrow"
+            }
+          ]
+        },
+        {
+          "description": "rc003: passthrough left",
+          "type": "basic",
+          "from": {
+            "key_code": "left_arrow",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            }
+          ],
+          "to": [
+            {
+              "key_code": "left_arrow"
+            }
+          ]
+        },
+        {
+          "description": "rc003: passthrough right",
+          "type": "basic",
+          "from": {
+            "key_code": "right_arrow",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            }
+          ],
+          "to": [
+            {
+              "key_code": "right_arrow"
+            }
+          ]
+        },
+        {
+          "description": "rc003: passthrough ok",
+          "type": "basic",
+          "from": {
+            "key_code": "return_or_enter",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            }
+          ],
+          "to": [
+            {
+              "key_code": "return_or_enter"
+            }
+          ]
+        },
+        {
+          "description": "rc003: back (unnamed keycode) = delete via catch-all",
+          "type": "basic",
+          "from": {
+            "any": "key_code",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 10007,
+                  "product_id": 12984
+                }
+              ]
+            }
+          ],
+          "to": [
+            {
+              "key_code": "delete_or_backspace"
             }
           ]
         }

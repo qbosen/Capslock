@@ -146,6 +146,8 @@
   #gnav {
     flex: 0 0 190px; position: sticky; top: 84px;
     background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 6px;
+    /* sticky 盒子高过视口时自身必须可滚，否则超出部分永远看不到（同 #dside） */
+    max-height: 78vh; overflow-y: auto;
   }
   .gitem {
     display: flex; justify-content: space-between; gap: 8px; align-items: baseline;
@@ -336,9 +338,64 @@
   /* 组选择条降噪:未选中的 chip 收掉边框 */
   #dfilter .chip:not(.on) { border-color: transparent; background: var(--bg); }
 
+  /* ── 遥控器视图（小米 RC003）────────────── */
+  #view-remote { margin-top: 16px; }
+  .rhead { text-align: center; margin-bottom: 16px; }
+  .rhead .rtitle { font-size: 15px; font-weight: 650; }
+  .rhead .rsub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .rlegend { display: flex; gap: 16px; justify-content: center; margin-top: 8px; font-size: 12px; color: var(--muted); }
+  .rlegend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  .rlegend .lv i { background: var(--hit-soft); border: 1px solid var(--hit); }
+  .rlegend .lk i { background: var(--match-soft); border: 1px solid var(--match); }
+  #remote-wrap { position: relative; display: flex; gap: 36px; justify-content: center; align-items: stretch; max-width: 1080px; margin: 0 auto; }
+  #rlinks { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  #rlinks line { stroke: var(--key-line); stroke-width: 1.2; }
+  #rlinks circle { fill: var(--hit); }
+  .rcol { flex: 1 1 300px; max-width: 340px; min-width: 240px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; padding: 4px 0; }
+  .rcard { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px 10px; }
+  .rcard h5 { margin: 0 0 5px; font-size: 13px; font-weight: 650; }
+  .rrow { display: flex; gap: 8px; align-items: baseline; padding: 2px 0; font-size: 12.5px; }
+  .rrow .rtag {
+    flex: 0 0 auto; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 4px;
+    background: var(--hit-soft); color: var(--hit-fg);
+  }
+  .rrow.kbm .rtag { background: var(--match-soft); color: var(--match); }
+  /* 遥控器本体：风格化线条画，位置按 id 固定 */
+  #rbody {
+    flex: 0 0 172px; position: relative; height: 440px; align-self: center;
+    background: var(--card); border: 1.5px solid var(--key-line); border-radius: 36px;
+  }
+  .rbtn {
+    position: absolute; display: flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--bg); border: 1.5px solid var(--key-line);
+    color: var(--muted); font-size: 13px; font-weight: 600;
+  }
+  .rpad {
+    position: absolute; left: 21px; top: 84px; width: 128px; height: 128px; border-radius: 50%;
+    background: var(--bg); border: 1.5px solid var(--key-line);
+  }
+  .rpad span { position: absolute; font-size: 11px; color: var(--muted); }
+  .rbtn.rok {
+    left: 59px; top: 122px; width: 52px; height: 52px; font-size: 12px;
+    background: var(--hit-soft); border-color: var(--hit); color: var(--hit-fg);
+  }
+  .rvol {
+    position: absolute; left: 106px; top: 244px; width: 38px; height: 94px;
+    border: 1.5px solid var(--key-line); border-radius: 19px; overflow: hidden;
+    display: flex; flex-direction: column; background: var(--bg);
+  }
+  .rvh { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--muted); }
+  .rvh:first-child { border-bottom: 1px solid var(--key-line); }
+  /* 窄屏放不下三栏时卡片折行，连线失去意义，收掉 */
+  @media (max-width: 900px) {
+    #remote-wrap { flex-wrap: wrap; }
+    #rlinks { display: none; }
+  }
+
   @media print {
     body { padding: 0; }
-    header, nav, #view-board, #view-groups, #view-overview, #view-drill,
+    header, nav, #view-board, #view-groups, #view-overview, #view-drill, #view-remote,
     footer, .sheetbar, #sheet-filter { display: none !important; }
     #view-sheet { display: block !important; }
     #sheet { border: none; padding: 0; }
@@ -364,6 +421,7 @@
     <b data-view="board"></b>
     <b data-view="groups"></b>
     <b data-view="drill"></b>
+    <b data-view="remote"></b>
   </div>
   <span class="sub" id="meta"></span>
   <span class="spacer"></span>
@@ -411,6 +469,16 @@
   <div id="dmain">
     <div id="dstage"></div>
     <aside id="dside"></aside>
+  </div>
+</div>
+
+<div id="view-remote" style="display:none">
+  <div class="rhead" id="rhead"></div>
+  <div id="remote-wrap">
+    <svg id="rlinks"></svg>
+    <div class="rcol" id="rleft"></div>
+    <div id="rbody"></div>
+    <div class="rcol" id="rright"></div>
   </div>
 </div>
 
@@ -1146,6 +1214,79 @@ $("dside").onclick = e => {
 
 $("dreset").onclick = () => { dStats = {}; store.set(SKEY, {}); renderDrill(); };
 
+/* ── 遥控器视图（小米 RC003）──────────────────────────────────────
+   文案与卡片结构全在 custom/keymap.yml 的 remote 段；这里只按 id 把键画到
+   遥控器本体的固定位置上（power / voice / dpad / ok / back / home / menu /
+   vol_up / vol_down / tv），再把两侧卡片和对应的键用 SVG 连线接起来。   */
+const RM = DATA.remote || {};
+
+function renderRemote() {
+  const keys = RM.keys || [];
+  const byId = new Map(keys.map(k => [k.id, k]));
+  const g = id => esc((byId.get(id) || {}).glyph || "");
+  const t = id => esc((byId.get(id) || {}).name || id);
+  const btn = (id, style, cls) =>
+    `<div class="rbtn ${cls || ""}" data-rk="${id}" title="${t(id)}" style="${style || ""}">${g(id)}</div>`;
+
+  $("rhead").innerHTML = `<div class="rtitle">${esc(RM.title || "")}</div>
+    <div class="rsub">${esc(RM.subtitle || "")}</div>
+    <div class="rlegend">
+      <span class="lv"><i></i>${esc(RM.legend_vibe || "")}</span>
+      <span class="lk"><i></i>${esc(RM.legend_kbm || "")}</span>
+    </div>`;
+
+  $("rbody").innerHTML =
+    btn("power", "left:28px;top:24px")
+    + btn("voice", "left:106px;top:24px;font-size:10px")
+    + `<div class="rpad" data-rk="dpad" title="${t("dpad")}">
+        <span style="top:8px;left:50%;transform:translateX(-50%)">▲</span>
+        <span style="bottom:8px;left:50%;transform:translateX(-50%)">▼</span>
+        <span style="left:10px;top:50%;transform:translateY(-50%)">◀</span>
+        <span style="right:10px;top:50%;transform:translateY(-50%)">▶</span>
+      </div>`
+    + btn("ok", "", "rok")
+    + btn("back", "left:28px;top:244px")
+    + btn("home", "left:28px;top:300px")
+    + btn("menu", "left:28px;top:356px")
+    + `<div class="rvol">
+        <div class="rvh" data-rk="vol_up" title="${t("vol_up")}">${g("vol_up")}</div>
+        <div class="rvh" data-rk="vol_down" title="${t("vol_down")}">${g("vol_down")}</div>
+      </div>`
+    + btn("tv", "left:106px;top:356px;font-size:11px");
+
+  const card = k => `<div class="rcard" data-rc="${esc(k.id)}">
+      <h5>${esc(k.name)}</h5>
+      ${(k.rows || []).map(r => `<div class="rrow ${r.kbm ? "kbm" : ""}">
+        <span class="rtag">${esc(r.tag)}</span><span>${esc(r.text)}</span></div>`).join("")}
+    </div>`;
+  $("rleft").innerHTML = keys.filter(k => k.side === "left").map(card).join("");
+  $("rright").innerHTML = keys.filter(k => k.side !== "left").map(card).join("");
+  drawRemoteLinks();
+}
+
+/** 卡片 ↔ 遥控器键的连线：按渲染后的实际位置画，窗口变化时重画 */
+function drawRemoteLinks() {
+  const svg = $("rlinks");
+  if (!svg || view !== "remote") return;
+  const wb = $("remote-wrap").getBoundingClientRect();
+  const parts = [];
+  document.querySelectorAll("#view-remote .rcard").forEach(c => {
+    const key = document.querySelector(`#rbody [data-rk="${CSS.escape(c.dataset.rc)}"]`);
+    if (!key) return;
+    const cb = c.getBoundingClientRect(), kb = key.getBoundingClientRect();
+    const leftSide = cb.left < kb.left;   // 卡片在遥控器左边还是右边
+    const x1 = (leftSide ? cb.right : cb.left) - wb.left;
+    const y1 = cb.top + cb.height / 2 - wb.top;
+    const x2 = (leftSide ? kb.left : kb.right) - wb.left;
+    const y2 = kb.top + kb.height / 2 - wb.top;
+    parts.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`
+      + `<circle cx="${x1}" cy="${y1}" r="2.5"/><circle cx="${x2}" cy="${y2}" r="2.5"/>`);
+  });
+  svg.setAttribute("viewBox", `0 0 ${wb.width} ${wb.height}`);
+  svg.innerHTML = parts.join("");
+}
+window.addEventListener("resize", () => { if (view === "remote") drawRemoteLinks(); });
+
 function renderChrome() {
   $("config").innerHTML = Object.keys(DATA.configs)
     .map(k => `<option value="${k}">${k}${k === DATA.default ? esc(UI.current_config_suffix) : ""}</option>`).join("");
@@ -1165,7 +1306,8 @@ function renderChrome() {
   $("view-overview").style.display = view === "overview" ? "block" : "none";
   $("view-sheet").style.display = view === "sheet" ? "block" : "none";
   $("view-drill").style.display = view === "drill" ? "block" : "none";
-  $("search").style.display = (view === "sheet" || view === "drill") ? "none" : "";
+  $("view-remote").style.display = view === "remote" ? "block" : "none";
+  $("search").style.display = (view === "sheet" || view === "drill" || view === "remote") ? "none" : "";
   $("macro-wrap").style.display = (view === "sheet" || view === "groups") ? "inline-flex" : "none";
   $("sheet-filter").style.display = view === "sheet" ? "flex" : "none";
   document.querySelectorAll("#views b").forEach(b => b.classList.toggle("on", b.dataset.view === view));
@@ -1177,6 +1319,7 @@ function refresh() {
   else if (view === "groups") renderGroups();
   else if (view === "overview") renderOverview();
   else if (view === "drill") renderDrill();
+  else if (view === "remote") renderRemote();
   else { renderFilter(); renderSheet(); }
 }
 

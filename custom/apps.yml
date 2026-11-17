@@ -31,11 +31,16 @@ apps:
           - { keys: cmd+control+l, label: 分屏右扩, action: "resize_split:right,20" }
       - name: 终端杂项
         items:
-          - { keys: cmd+u, label: 切换背景透明, action: toggle_background_opacity }
+          - { keys: cmd+u, label: 切换背景透明（默认不透明）, action: toggle_background_opacity }
+          - { keys: cmd+k, label: 清屏+清回滚（herdr 内也生效）, action: "text:\\x1b[107;9u → zsh widget" }
           - { keys: cmd+i, label: 检查器, action: "inspector:toggle" }
           - { keys: cmd+r, label: 重载配置, action: reload_config }
           - { keys: control+shift+up, label: 跳到上一个提示符, action: "jump_to_prompt:-1" }
           - { keys: control+shift+down, label: 跳到下一个提示符, action: "jump_to_prompt:1" }
+      - name: 误触护栏
+        note: macos-option-as-alt 让 herdr 未绑定的 ⌃⌥<字母> 退化成控制字符打在前台进程上；在 Ghostty 层吃掉，字节根本到不了 herdr/shell
+        items:
+          - { keys: ctrl+alt+d, label: 吞掉·防误触 ^D 退出 pane, action: ignore }
       - name: 终端行编辑
         note: 把 macOS 的组合键译成 readline 控制字符——翻译发生在字节层，跨 ssh 一样有效
         items:
@@ -67,6 +72,144 @@ apps:
           - { keys: cmd+option+w, label: 已解绑（原关闭标签）, action: unbind }
           - { keys: cmd+control+w, label: 已解绑, action: unbind }
           - { keys: cmd+shift+option+w, label: 已解绑, action: unbind }
+
+  # ── Pi（终端内的编码代理）─────────────────────────────────────────────
+  - app: Pi
+    source: ~/.pi/agent/keybindings.json
+    groups:
+      - name: 对话滚动
+        note: 仅 Pi fullscreen 模式生效；替换默认 Ctrl(+Shift)+↑/↓，不占用窗口管理方向键。需要终端链路保留 Ctrl+Shift 修饰键；运行 /reload 后生效。
+        items:
+          - { keys: "ctrl+shift+[", label: 跳到上一个对话标记, action: "tui.altScreen.previousPrompt" }
+          - { keys: "ctrl+shift+]", label: 跳到下一个对话标记, action: "tui.altScreen.nextPrompt" }
+
+  # ── tmux（Ghostty 内运行）──────────────────────────────────────────────
+  # 键位真相在 ~/.tmux.conf（chezmoi 托管：dot_tmux.conf），这里只做登记。
+  # 前缀序列（先 C-b 再按键）不是和弦，键位图渲染不了，所以 hidden 记录；
+  # 只有 Option+hjkl 是真和弦，正常进键位图。
+  - app: tmux
+    source: ~/.tmux.conf
+    groups:
+      - name: 面板直达
+        note: 无前缀一步切换面板，依赖 Ghostty 的 macos-option-as-alt = true
+        items:
+          - { keys: alt+h, label: 切到左侧面板, action: "select-pane -L" }
+          - { keys: alt+j, label: 切到下方面板, action: "select-pane -D" }
+          - { keys: alt+k, label: 切到上方面板, action: "select-pane -U" }
+          - { keys: alt+l, label: 切到右侧面板, action: "select-pane -R" }
+      - name: 前缀序列
+        note: 先按 Ctrl+B 或反引号 `（prefix2），松开再按命令键
+        hidden: true   # 序列不是和弦，只做记录不进键位图
+        items:
+          - { keys: "C-b |", label: 左右分屏（继承当前路径）, action: "splitw -h" }
+          - { keys: "C-b -", label: 上下分屏（继承当前路径）, action: "splitw -v" }
+          - { keys: "C-b c", label: 新建窗口（继承当前路径）, action: new-window }
+          - { keys: "C-b h/j/k/l", label: 切换面板（可连按）, action: select-pane }
+          - { keys: "C-b H/J/K/L", label: 调整面板大小, action: resize-pane }
+          - { keys: "C-b z", label: 面板最大化/还原, action: "resize-pane -Z" }
+          - { keys: "C-b d", label: 分离会话, action: detach-client }
+          - { keys: "C-b [", label: 复制模式（vi 键位，v 选 y 抄）, action: copy-mode }
+          - { keys: "C-b r", label: 重载 tmux 配置, action: source-file }
+          - { keys: "C-b C-s", label: 保存会话快照（resurrect）, action: resurrect-save }
+          - { keys: "C-b C-r", label: 恢复会话快照（resurrect）, action: resurrect-restore }
+          - { keys: "C-b I", label: 安装 TPM 插件, action: tpm-install }
+
+  # ── herdr（本机 + macmini 双端，mm 函数直达远端）──────────────────────
+  # AI 代理感知的终端复用器，取代 tmux 当主力（tmux 退居备胎，mm -t 进入）。
+  # 2026-08-17 启用无前缀 ctrl+alt 直达层（v5），按「右手在不在鼠标上」分三组：
+  # 右半区=高频移动（左手握 ⌃⌥ + 右手按键）、左手单手区=鼠标流穿插动作（zxvb+⇧x，
+  # 助记与前缀层同构）、编组=Harpoon 式数字书签（7890）。低频操作留在 C-b 前缀层。
+  # Magnet 为此禁用了四角/三分/三分之二共十个 ⌃⌥ 键（见 external.yml），仍归
+  # Magnet 的只剩：方向（半屏）、⏎、⌫、⌘⌃⌥←→；⌃⌥ c p [ ] 空闲备用。
+  # 2026-08-20 ⌃⌥X 补上 popup 临时 shell（herdr 唯一的浮层能力，只能由键位触发，
+  # socket API 无对应方法）。
+  # 2026-08-24 ⌃⌥Y 从 edit_scrollback 改判给 copy mode：agent pane 跑在终端备用屏，
+  # 滚出去的行不进 herdr 回滚（max_offset_from_bottom 恒为 0），外部编辑器只能拿到
+  # 可见的一屏，撑不起一个直达键；copy mode 读 herdr 自己的 grid，保留逻辑行。
+  # edit_scrollback 降回只留 C-b e。
+  # 两台机器 config.toml 一致；
+  # ⌘K 清屏链路登记在上面 Ghostty 组。
+  # 前缀 C-b 与 tmux 相同；序列键盘视图不高亮，但要进速查表/功能视图，故不 hidden。
+  # 键位有生成式规律：同字母加 Shift 升一级作用域（h 移焦点/H 交换 pane，
+  # x 关 pane/X 关 tab，n 切 tab/N 建 workspace）。忘键按 C-b ? 实时速查。
+  - app: herdr
+    source: ~/.config/herdr/config.toml
+    groups:
+      - name: 无前缀直达·右半区
+        note: 左手握 ⌃⌥、右手按键，高频移动类。助记：hjkl 是 vim 移动，p 跳回，
+              i/o 切 workspace，;/' 切 tab（小指本位排），n 新建 tab，y 翻回滚选中，
+              / 是 vim 式搜索跳转，u=urgent
+        items:
+          - { keys: ctrl+alt+h, label: 切到左侧面板, action: focus_pane_left }
+          - { keys: ctrl+alt+j, label: 切到下方面板, action: focus_pane_down }
+          - { keys: ctrl+alt+k, label: 切到上方面板, action: focus_pane_up }
+          - { keys: ctrl+alt+l, label: 切到右侧面板, action: focus_pane_right }
+          - { keys: ctrl+alt+m, label: 回到上一个面板, action: last_pane }
+          - { keys: "ctrl+alt+;", label: 上一个 tab, action: previous_tab }
+          - { keys: "ctrl+alt+'", label: 下一个 tab, action: next_tab }
+          - { keys: ctrl+alt+n, label: 新建 tab, action: new_tab }
+          - { keys: ctrl+alt+i, label: 上一个 workspace, action: previous_workspace }
+          - { keys: ctrl+alt+o, label: 下一个 workspace, action: next_workspace }
+          - { keys: "ctrl+alt+/", label: 全局跳转选择器, action: goto }
+          - { keys: ctrl+alt+u, label: 跳到通知来源 agent, action: open_notification_target }
+          - { keys: ctrl+alt+y, label: 回滚里翻找并选中复制（copy mode）, action: copy_mode }
+      - name: 无前缀直达·编组跳转
+        note: Harpoon 式书签：⇧+数字把当前 pane 记为组，裸数字跳回。agent pane
+              精确到 pane（agent focus），非 agent pane 到 tab 级。实现在
+              ~/.local/bin/herdr-group（chezmoi 托管，双端同步）
+        items:
+          - { keys: ctrl+alt+shift+7, label: 记为第 7 组, action: "herdr-group set 7" }
+          - { keys: ctrl+alt+7, label: 跳到第 7 组, action: "herdr-group go 7" }
+          - { keys: ctrl+alt+shift+8, label: 记为第 8 组, action: "herdr-group set 8" }
+          - { keys: ctrl+alt+8, label: 跳到第 8 组, action: "herdr-group go 8" }
+          - { keys: ctrl+alt+shift+9, label: 记为第 9 组, action: "herdr-group set 9" }
+          - { keys: ctrl+alt+9, label: 跳到第 9 组, action: "herdr-group go 9" }
+          - { keys: ctrl+alt+shift+0, label: 记为第 0 组, action: "herdr-group set 0" }
+          - { keys: ctrl+alt+0, label: 跳到第 0 组, action: "herdr-group go 0" }
+      - name: 无前缀直达·左手单手区
+        note: 左手单手可按（zxvb+⇧x），右手不用离开鼠标；助记与前缀层同构
+              （z=zoom，x=close，v=split，b=bar）。关 pane 无确认弹窗（实测），
+              所以 x 加 shift 当保险栓；裸 x 让给 popup 临时 shell——少按一个
+              shift 只多开一个随手能关的浮层，保险栓语义不变。
+              c/p/[/] 空闲备用（c 原归 Magnet 居中，2026-08-24 腾出）
+        items:
+          - { keys: ctrl+alt+z, label: 面板最大化/还原, action: zoom }
+          - { keys: ctrl+alt+x, label: 弹出临时 shell（浮层，不占布局）, action: "popup:zsh -l" }
+          - { keys: ctrl+alt+shift+x, label: 关闭面板（无确认，故加 ⇧）, action: close_pane }
+          - { keys: ctrl+alt+v, label: 右侧分屏, action: split_vertical }
+          - { keys: ctrl+alt+shift+v, label: 下方分屏, action: split_horizontal }
+          - { keys: ctrl+alt+b, label: 侧边栏开关, action: toggle_sidebar }
+      - name: 优先五键
+        note: 官方推荐先学这五个，其余交给鼠标（herdr 鼠标原生：点击聚焦/拖边框/右键菜单）
+        items:
+          - { keys: "C-b c", label: 新建 tab, action: new_tab }
+          - { keys: "C-b v", label: 右侧分屏, action: split_vertical }
+          - { keys: "C-b -", label: 下方分屏, action: split_horizontal }
+          - { keys: "C-b h/j/k/l", label: 面板间移动焦点, action: focus_pane }
+          - { keys: "C-b w", label: workspace 导航, action: workspace_nav }
+          - { keys: "C-b q", label: 分离会话（一切照跑）, action: detach }
+      - name: 面板
+        items:
+          - { keys: "C-b z", label: 面板最大化/还原, action: zoom }
+          - { keys: "C-b x", label: 关闭面板, action: close_pane }
+          - { keys: "C-b ⇧h/j/k/l", label: 交换面板位置, action: swap_pane }
+          - { keys: "C-b r", label: 调整大小模式, action: resize_mode }
+          - { keys: "C-b [", label: 复制模式（vi 键位，v 选 y 抄，/ 搜索）, action: copy_mode }
+      - name: 标签与工作区
+        items:
+          - { keys: "C-b n / C-b p", label: 下一个/上一个 tab, action: next_tab/previous_tab }
+          - { keys: "C-b 1..9", label: 跳到第 N 个 tab, action: goto_tab }
+          - { keys: "C-b ⇧t", label: 重命名 tab, action: rename_tab }
+          - { keys: "C-b ⇧x", label: 关闭 tab, action: close_tab }
+          - { keys: "C-b ⇧n", label: 新建 workspace, action: new_workspace }
+          - { keys: "C-b ⇧w", label: 重命名 workspace, action: rename_workspace }
+          - { keys: "C-b ⇧d", label: 关闭 workspace, action: close_workspace }
+          - { keys: "C-b g", label: 全局跳转选择器, action: goto_picker }
+          - { keys: "C-b o", label: 跳到通知来源 agent, action: open_notification_target }
+          - { keys: "C-b ⌥1..9", label: 直跳第 N 个 agent, action: focus_agent }
+          - { keys: "C-b b", label: 侧边栏开关, action: toggle_sidebar }
+          - { keys: "C-b ?", label: 键位速查（/ 可过滤）, action: keybind_help }
+          - { keys: "C-b ⇧r", label: Herdr App 重载配置（热加载，不重启终端）, action: "legacy-controls.reload-config" }
 
   # ── Zed ────────────────────────────────────────────────────────────────
   # 收录依据：《程序员修炼之道》Topic 18「Power Editing」点名了 12 类不该靠鼠标的

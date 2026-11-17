@@ -433,6 +433,8 @@ def main():
         "layers": LAYERS,
         "keyboards": UI["keyboards"],
         "categories": UI.get("categories", []),
+        # 遥控器视图（小米 RC003）：文案与卡片结构全在 keymap.yml 的 remote 段
+        "remote": UI.get("remote", {}),
         # 练习页判定答案时复用配置文件同一套按键写法（space/esc/enter…），保持一致
         "practice": {**UI.get("practice", {}), "key_aliases": EXT_KEYS},
     }

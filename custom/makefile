@@ -9,7 +9,8 @@ sync: compile
 	mkdir -p $$HOME/.local/bin
 	cp toggle_app.sh $$HOME/.local/bin/toggle_app
 	cp toggle_espanso_search.sh $$HOME/.local/bin/toggle_espanso_search
-	chmod +x $$HOME/.local/bin/toggle_app $$HOME/.local/bin/toggle_espanso_search
+	cp toggle_mic.sh $$HOME/.local/bin/toggle_mic
+	chmod +x $$HOME/.local/bin/toggle_app $$HOME/.local/bin/toggle_espanso_search $$HOME/.local/bin/toggle_mic
 	python3 sync_karabiner.py
 
 all:

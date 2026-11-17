@@ -11,6 +11,7 @@
 #   symbols   —— 修饰键符号
 #   keys      —— 按键在界面上的显示名
 #   keyboards —— 键盘视图与全览视图的物理布局，[键码, 键帽, 宽度]
+#   remote    —— 遥控器视图（小米 RC003）的键位卡片文案与结构
 
 ui:
   title: Capslock 键位图
@@ -21,6 +22,7 @@ ui:
     board: 键盘
     groups: 功能
     drill: 练习
+    remote: 遥控器
   sheet:
     title: Capslock 键位速查表
     subtitle: "{config} · {count} 条映射 · ⇪ = 按住 CapsLock（Hyper），其后为同时按住的修饰键"
@@ -75,7 +77,7 @@ practice:
   exam_size: 12
   kinds:
     text: [Hyper Navigation, Hyper Deletion, Hyper Shifter, Hyper Terminal]
-    pointer: [Hyper Mouse Mode, Hyper Mouse (Neru)]
+    pointer: [Hyper Mouse Mode, Hyper Mouse]
   # 打开练习页时默认勾选的组：光标移动、删除、符号、鼠标（窗口组不在 text 名单里，自动是闪卡）
   focus: [Hyper Navigation, Hyper Deletion, Hyper Shifter, Hyper Mouse Mode]
   # 这些输出会切走标签页、抢走焦点或弹系统面板，真按下去练不成，降级为闪卡
@@ -181,7 +183,7 @@ categories:
   - id: mouse
     zh: 鼠标
     note: 不碰鼠标完成定位、点击、滚动
-    groups: [Hyper Mouse (Neru), Hyper Mouse Mode]
+    groups: [Hyper Mouse, Hyper Mouse Mode]
   - id: app
     zh: 应用与窗口
     note: 唤起应用、摆放窗口
@@ -193,7 +195,7 @@ categories:
   - id: ghostty
     zh: Ghostty
     note: 唤起终端与应用内分屏，只在 Ghostty 前台生效
-    groups: [Cmd + Esc Toggle, "app:Ghostty:分屏", "app:Ghostty:分屏尺寸", "app:Ghostty:终端杂项"]
+    groups: [Cmd + Esc Toggle, Herdr Prefix IME, "app:Ghostty:分屏", "app:Ghostty:分屏尺寸", "app:Ghostty:终端杂项"]
   - id: tool
     zh: 工具
     note: 翻译、截图、系统级功能
@@ -224,13 +226,16 @@ groups:
   Hyper Application:
     zh: 应用切换
     note: 一键唤起 / 隐藏常用应用
+  Herdr Prefix IME:
+    zh: Herdr 前缀切英文
+    note: Ghostty 里按 herdr 前缀（⌃B 或 Hyper+B）时把输入法切到 ABC，防止前缀后的单键被中文输入法吃掉；英文态时不动作。回程：ABC 态下点按 Shift 切回微信输入法（内部中文态保留，手感与原生 Shift 切换一致）
   Hyper Terminal:
     zh: 终端控制键
     note: 终端与编辑器通用的 ⌃ 系控制键，以及 VSCode 调试
   Hyper Shifter:
     zh: 符号输入
     note: 括号在底排 , . 上（中指+无名指各管一边）；其余是角落里够不着的符号
-  Hyper Mouse (Neru):
+  Hyper Mouse:
     zh: 键盘鼠标
     note: 不碰鼠标完成点击、滚动、定位
   Hyper Mouse Mode:
@@ -239,7 +244,7 @@ groups:
       按住 Tab 时右手主键区变成屏幕缩略图，一键跳到任意区域；按住 ` 拖动
   Cmd + Esc Toggle:
     zh: 唤起终端
-    note: ⌘+Esc 唤起 / 收起 Ghostty
+    note: ⌘+Esc 唤起 / 收起 Herdr（临时体验）
 
 # actions
 actions:
@@ -318,7 +323,10 @@ actions:
   option + command + equal_sign (zoom in): 放大
   option + command + hyphen (zoom out): 缩小
   toggle Ghostty: Ghostty 终端
+  toggle Herdr: Herdr 终端
   Claude: Claude
+  Codex: Codex
+  Multica: Multica
   finder: 访达
   chrome: Chrome
   calender: 日历
@@ -339,6 +347,9 @@ actions:
   define: 查词
   ctrl-d (EOF): 终端 EOF
   ctrl-b: tmux 前缀
+  herdr prefix + abc (ghostty): herdr 前缀 · 顺手切英文
+  ctrl-b + abc (ghostty): herdr 前缀 · 顺手切英文
+  back to wetype (ghostty, abc): 点按切回微信输入法
   ctrl-v: Vim 块选
   ctrl-c: 中断
   ctrl-z: 挂起
@@ -346,11 +357,6 @@ actions:
   F5 (vscode debug): 启动调试
   ctrl + F5 (vscode run): 运行
   shift + F5 (vscode stop): 停止调试
-  neru hints: 屏幕点选
-  neru grid: 网格定位
-  neru recursive grid: 递归网格
-  neru monitor select: 选择显示器
-  neru scroll: 滚动模式
   mouse left click: 鼠标左键
   mouse right click: 鼠标右键
   mouse middle click: 鼠标中键
@@ -388,6 +394,23 @@ actions:
   backslash: 反斜杠 \
   pipe: 竖线 |
   backtick: 反引号 `
+  # 内置麦 <-> 小米遥控器虚拟麦，配合 SayAll.app 用遥控器语音输入
+  toggle mic (built-in <-> MiRemoteV 2ch): 切换麦克风
+
+  # ── 小米遥控器 RC003（速查表/功能视图里的说法；遥控器视图有专属 remote 节）──
+  escape: Esc
+  "ctrl+opt+m (herdr last pane) / hold = ctrl+opt+/ (goto)": 回上一面板 · 长按万能跳转
+  "ctrl+o (cc transcript) / hold = mouse mode": CC 浏览模式 · 长按进键鼠模式
+  "toggle Ghostty / hold = show desktop": 唤起 Ghostty · 长按显示桌面
+  "page up / hold = ctrl+opt+n (new tab)": 上翻半屏 · 长按新建 tab
+  "page down / hold = ctrl+opt+shift+n (close tab)": 下翻半屏 · 长按关闭 tab
+  "fn (hold to talk)": 按住说话
+  "delete via catch-all": 退格（无名键码兜底）
+  "rc003: passthrough arrows and ok": 直通
+  "rc003: passthrough down": 直通
+  "rc003: passthrough left": 直通
+  "rc003: passthrough right": 直通
+  "rc003: passthrough ok": 直通
 
 # symbols
 symbols:
@@ -449,6 +472,95 @@ keys:
   hyphen: '-'
   equal_sign: '='
   backslash: \
+
+# ── 遥控器视图 ──────────────────────────────────────────────────────
+# 小米蓝牙遥控器 2 Pro (RC003)。规则本体在 capslock.yml 的 "Xiaomi RC003 Remote"
+# 组里（按 vendor/product 过滤）；这里只管视图上显示的文案与卡片结构。
+#   side  —— 卡片放遥控器左侧还是右侧（left / right），列内按书写顺序排
+#   glyph —— 遥控器实体键上画的符号（非中文，可留空）
+#   rows  —— 该键的各个档位：tag 是行首徽标（短按 / 长按 / 键鼠…），
+#            kbm: true 的行表示键鼠模式专属功能，用另一套配色标出
+# 模板按 id 认位置（power / voice / dpad / ok / back / home / menu /
+# vol_up / vol_down / tv），改 id 要连模板里的画法一起改。
+remote:
+  title: 小米蓝牙遥控器 2 Pro
+  subtitle: RC003 · 蓝牙直连 · 规则组 Xiaomi RC003 Remote
+  legend_vibe: Vibe 模式（默认）
+  legend_kbm: 键鼠模式（长按 TV 进入）
+  keys:
+    - id: power
+      name: 电源
+      glyph: ⏻
+      side: left
+      rows:
+        - { tag: 短按, text: Esc（连按两下 = Claude Code 回溯编辑） }
+        - { tag: 键鼠, text: 退出键鼠模式, kbm: true }
+    - id: dpad
+      name: 方向键 ×4
+      side: left
+      rows:
+        - { tag: 短按, text: 方向键 ↑ ↓ ← → }
+        - { tag: 键鼠, text: 移动鼠标指针, kbm: true }
+    - id: back
+      name: 返回
+      glyph: ◁
+      side: left
+      rows:
+        - { tag: 短按, text: 退格（按住连删） }
+    - id: home
+      name: 主页
+      glyph: ⌂
+      side: left
+      rows:
+        - { tag: 短按, text: 唤起 / 切走 Ghostty }
+        - { tag: 长按, text: 显示桌面 }
+        - { tag: 键鼠, text: 同 Vibe 模式, kbm: true }
+    - id: menu
+      name: 菜单
+      glyph: ☰
+      side: left
+      rows:
+        - { tag: 短按, text: herdr 回到上一面板 (⌃⌥M) }
+        - { tag: 长按, text: herdr 万能跳转 (⌃⌥/) }
+        - { tag: 键鼠, text: 鼠标右键, kbm: true }
+    - id: voice
+      name: 语音键
+      glyph: MIC
+      side: right
+      rows:
+        - { tag: 按住, text: 按住说话（微信输入法，遥控器麦收音） }
+        - { tag: 键鼠, text: 同 Vibe 模式, kbm: true }
+    - id: ok
+      name: OK
+      glyph: OK
+      side: right
+      rows:
+        - { tag: 短按, text: 回车 / 批准 }
+        - { tag: 键鼠, text: 鼠标左键, kbm: true }
+    - id: vol_up
+      name: 音量 +
+      glyph: ＋
+      side: right
+      rows:
+        - { tag: 短按, text: 上翻半屏 (PageUp) }
+        - { tag: 长按, text: herdr 新建 tab (⌃⌥N) }
+        - { tag: 键鼠, text: 滚轮上, kbm: true }
+    - id: vol_down
+      name: 音量 −
+      glyph: −
+      side: right
+      rows:
+        - { tag: 短按, text: 下翻半屏 (PageDown) }
+        - { tag: 长按, text: herdr 关闭 tab (⌃⌥⇧N) }
+        - { tag: 键鼠, text: 滚轮下, kbm: true }
+    - id: tv
+      name: TV
+      glyph: TV
+      side: right
+      rows:
+        - { tag: 短按, text: Claude Code 浏览模式 (⌃O) }
+        - { tag: 长按, text: 进入键鼠模式 }
+        - { tag: 键鼠, text: 长按 = 退出键鼠模式, kbm: true }
 
 # 键盘布局：每项 [键码, 键帽显示, 宽度(u)]
 # full    —— 键盘视图用的完整布局

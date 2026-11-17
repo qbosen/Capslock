@@ -727,14 +727,15 @@ rules:
 
 
   ################################################################
-  #                      Cmd + Esc = Toggle Ghostty              #
+  #                      Cmd + Esc = Toggle Herdr                #
   ################################################################
   - description: Cmd + Esc Toggle
     manipulators:
-      - description: 'cmd + esc = toggle Ghostty'
+      # 暂时切换到 Herdr 体验；恢复时将本规则的目标改回 Ghostty。
+      - description: 'cmd + esc = toggle Herdr'
         type: basic
         from: { key_code: escape, modifiers: { mandatory: [ left_command ] } }
-        to: [ { shell_command: "~/.local/bin/toggle_app Ghostty" } ]
+        to: [ { shell_command: "~/.local/bin/toggle_app Herdr" } ]
 
   ################################################################
   #                      Hyper Application                       #
@@ -744,17 +745,25 @@ rules:
 
 
       #==========================================================#
-      # ( q ) --> Claude / play_pause                            #
+      # ( q ) --> Claude / Multica                               #
       #==========================================================#
-      - description: 'command + q = play/pause'
+      - description: 'command + q = Multica'
         type: basic
         from: { key_code: q, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
-        to: [ { consumer_key_code: "play_or_pause"} ]
+        to: [ { shell_command: "~/.local/bin/toggle_app 'Multica'" } ]
 
       - description: 'q = Claude'
         type: basic
         from: { key_code: q, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
         to: [ { shell_command: "~/.local/bin/toggle_app 'Claude'" } ]
+
+      #==========================================================#
+      # ( g ) --> Rakazo                                          #
+      #==========================================================#
+      - description: 'g = Rakazo'
+        type: basic
+        from: { key_code: g, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        to: [ { shell_command: "~/.local/bin/toggle_app 'Rakazo'" } ]
 
       #==========================================================#
       # ( command + g ) --> Codex                                 #
@@ -790,22 +799,22 @@ rules:
       #   to: [ { shell_command: "~/.local/bin/toggle_app 'Arc'" } ]
 
       #==========================================================#
-      # ( w ) --> logseq / obsidian / zed                        #
+      # ( w ) --> zed / obsidian / logseq                        #
       #==========================================================#
       - description: 'command + w = obsidian'
         type: basic
         from: { key_code: w, modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
         to: [ { shell_command: "~/.local/bin/toggle_app 'Obsidian'" } ]
 
-      - description: 'option + w = zed'
+      - description: 'option + w = logseq'
         type: basic
         from: { key_code: w, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: "~/.local/bin/toggle_app 'Zed'" } ]
+        to: [ { shell_command: "~/.local/bin/toggle_app 'Logseq'" } ]
 
-      - description: 'w = logseq'
+      - description: 'w = zed'
         type: basic
         from: { key_code: w, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: "~/.local/bin/toggle_app 'Logseq'" } ]
+        to: [ { shell_command: "~/.local/bin/toggle_app 'Zed'" } ]
 
 
       #==========================================================#
@@ -828,6 +837,63 @@ rules:
         type: basic
         from: { key_code: '1', modifiers: { mandatory: [ left_command, right_command,right_control,right_shift,right_option ] } }
         to: [ { shell_command: "~/.local/bin/toggle_app 'CCwork'" } ]
+
+  ################################################################
+  #                      Herdr Prefix IME                        #
+  ################################################################
+  # 独立组：Ghostty 前台按下 herdr prefix（⌃B）时，顺手把输入法切到
+  # ABC，防止 prefix 后的单字母键被微信输入法的中文模式吃掉。
+  # 两条入口互不回流，必须各写一条：物理 ⌃B、Hyper+B（后者是
+  # Hyper Terminal 组 'b = ctrl-b' 的 Ghostty 条件版，因此本组必须
+  # 排在 Hyper Terminal 之前——规则顺序即 if-else）。
+  # 回程（v2）：ABC 态下点按 Shift 切回微信输入法。实测其内部中/英
+  # 状态在输入源切换间保留——prefix 前在打中文，切回来就还是中文态，
+  # 所以对手感而言 Shift 始终是「去中文」键，与输入法原生习惯一致。
+  # ABC 态下空点 Shift 本无任何功能，劫持零成本；按住 Shift 打大写
+  # 不受影响（to 原样透传，仅 to_if_alone 触发切换）。
+  - description: Herdr Prefix IME
+    manipulators:
+
+      - description: 'shift tap = back to wetype (ghostty, abc)'
+        type: basic
+        conditions:
+          - { type: frontmost_application_if, bundle_identifiers: [ '^com\.mitchellh\.ghostty$' ] }
+          - { type: input_source_if, input_sources: [ { input_source_id: '^com\.apple\.keylayout\.ABC$' } ] }
+        from: { key_code: left_shift, modifiers: { optional: [ any ] } }
+        to: [ { key_code: left_shift } ]
+        to_if_alone: [ { select_input_source: { input_source_id: '^com\.tencent\.inputmethod\.wetype\.pinyin$' } } ]
+
+      - description: 'shift tap = back to wetype (ghostty, abc)'
+        type: basic
+        conditions:
+          - { type: frontmost_application_if, bundle_identifiers: [ '^com\.mitchellh\.ghostty$' ] }
+          - { type: input_source_if, input_sources: [ { input_source_id: '^com\.apple\.keylayout\.ABC$' } ] }
+        from: { key_code: right_shift, modifiers: { optional: [ any ] } }
+        to: [ { key_code: right_shift } ]
+        to_if_alone: [ { select_input_source: { input_source_id: '^com\.tencent\.inputmethod\.wetype\.pinyin$' } } ]
+
+      # input_source_if ^zh：已是英文时规则整个不匹配，⌃B 原样放行，
+      # 不做多余的 TIS 调用（这个条件继承自旧影子组 Terminal Prefix
+      # IME Guard，该组已被本组取代并删除）。
+      - description: 'ctrl + b = herdr prefix + abc (ghostty)'
+        type: basic
+        conditions:
+          - { type: frontmost_application_if, bundle_identifiers: [ '^com\.mitchellh\.ghostty$' ] }
+          - { type: input_source_if, input_sources: [ { language: '^zh' } ] }
+        from: { key_code: b, modifiers: { mandatory: [ control ] } }
+        to:
+          - { key_code: b, modifiers: [ left_control ] }
+          - { select_input_source: { input_source_id: '^com\.apple\.keylayout\.ABC$' } }
+
+      - description: 'b = ctrl-b + abc (ghostty)'
+        type: basic
+        conditions:
+          - { type: frontmost_application_if, bundle_identifiers: [ '^com\.mitchellh\.ghostty$' ] }
+          - { type: input_source_if, input_sources: [ { language: '^zh' } ] }
+        from: { key_code: b, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
+        to:
+          - { key_code: b, modifiers: [ left_control ] }
+          - { select_input_source: { input_source_id: '^com\.apple\.keylayout\.ABC$' } }
 
   ################################################################
   #                       Hyper Terminal                         #
@@ -888,8 +954,13 @@ rules:
         to: [ { key_code: c , modifiers: [ left_control ] } ]
 
       #==========================================================#
-      # ( v ) -->  Vim Prefix Meta Key                           #
+      # ( v ) -->  Vim Prefix Meta Key / Voice Mic Toggle        #
       #==========================================================#
+      - description: 'option + v = toggle mic (built-in <-> MiRemoteV 2ch)'
+        type: basic
+        from: { key_code: v, modifiers: { mandatory: [ left_option, right_command,right_control,right_shift,right_option ] } }
+        to: [ { shell_command: "~/.local/bin/toggle_mic" } ]
+
       # - description: 'v = vim meta key'
       - description: 'v = ctrl-v'
         type: basic
@@ -1061,9 +1132,9 @@ rules:
       #   to: [ { select_input_source: { input_mode_id: "^im\\.rime\\.inputmethod\\.Squirrel$", input_source_id: "^im\\.rime\\.inputmethod\\.Squirrel\\.Rime$", language: "zh-Hans" } } ]
 
   ################################################################
-  #                      Hyper Mouse (Neru)                      #
+  #                         Hyper Mouse                          #
   ################################################################
-  - description: Hyper Mouse (Neru)
+  - description: Hyper Mouse
     manipulators:
 
       - description: 'option + i = mouse back'
@@ -1079,16 +1150,6 @@ rules:
 
       # normal: cursor move
 
-      - description: 'f = neru hints'
-        type: basic
-        from: { key_code: f, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: '/opt/homebrew/bin/neru hints' } ]
-
-      - description: 'g = neru grid'
-        type: basic
-        from: { key_code: g, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
-        to: [ { shell_command: '/opt/homebrew/bin/neru grid' } ]
-
       - description: 'enter = mouse left click'
         type: basic
         from: { key_code: return_or_enter, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option ] } }
@@ -1103,11 +1164,6 @@ rules:
         type: basic
         from: { key_code: return_or_enter, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option,left_option ] } }
         to: [ { pointing_button: button3 } ]
-
-      - description: 'command + g = neru recursive grid'
-        type: basic
-        from: { key_code: g, modifiers: { mandatory: [ right_command,right_control,right_shift,right_option,left_command ] } }
-        to: [ { shell_command: '/opt/homebrew/bin/neru recursive_grid' } ]
 
       - description: 'r = exit mouse mode'
         type: basic
@@ -1138,7 +1194,7 @@ rules:
 
       # ── 区域定位：按住 space，右手主键区就是屏幕的缩略图 ──────────────
       # 3 排 × 5 列正好对上 yuiop / hjkl; / nm,./，K 落在屏幕正中心。
-      # 比 Neru 的网格快，因为不用看屏幕读标签——想去右上就按 O，眼睛始终盯着目标。
+      # 不用看屏幕读标签——想去右上就按 O，眼睛始终盯着目标。
       #
       # 已实测：set_mouse_cursor_position 省略 screen 时，百分比是相对「光标当前所在的
       # 那块屏幕」算的，不是主屏。所以这 15 条在三块屏上都对，不需要按屏各来一套。
@@ -1259,6 +1315,60 @@ rules:
         from: { key_code: k }
         conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
         to: [ { mouse_key: { y: -1600 } } ]
+
+      #==========================================================#
+      # 小米蓝牙遥控器 2 Pro —— 键鼠模式下的截流                  #
+      #==========================================================#
+      # 遥控器在 SayAll 里只配一套固定映射、永不改动，两个模式的差异全部
+      # 由下面这几条 mouse_mode 条件规则分流：Vibe 模式下方向键选列表、
+      # ⌃⌥/ 是 herdr 万能跳转、PageUp/PageDown 翻页；一进键鼠模式就被截走
+      # 当指针、右键和滚轮使。
+      # ok 键(Return)=左键、power 键(Esc)=退出，鼠标模式里本来就有，无需新增。
+      # 动作描述刻意与 hjkl / iop / m 那几条写成一致，键位图会自动合并成一行。
+      - description: 'mouse mode: left = mouse move left'
+        type: basic
+        from: { key_code: left_arrow }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { x: -1600 } } ]
+
+      - description: 'mouse mode: right = mouse move right'
+        type: basic
+        from: { key_code: right_arrow }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { x: 1600 } } ]
+
+      - description: 'mouse mode: down = mouse move down'
+        type: basic
+        from: { key_code: down_arrow }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { y: 1600 } } ]
+
+      - description: 'mouse mode: up = mouse move up'
+        type: basic
+        from: { key_code: up_arrow }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { y: -1600 } } ]
+
+      - description: 'mouse mode: page_up = mouse wheel up'
+        type: basic
+        from: { key_code: page_up }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { vertical_wheel: -32 } } ]
+
+      - description: 'mouse mode: page_down = mouse wheel down'
+        type: basic
+        from: { key_code: page_down }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { mouse_key: { vertical_wheel: 32 } } ]
+
+      # ⌃⌥m 在 Vibe 模式下是 herdr last_pane（最近两个 pane 来回），键鼠模式里
+      # 改当右键——同一个物理键 (menu 短按) 两种身份，遥控器那边不需要知道
+      # 自己现在是谁。右键是高频动作，所以绑短按而不是长按的 ⌃⌥/。
+      - description: 'mouse mode: control + option + m = mouse right click'
+        type: basic
+        from: { key_code: m, modifiers: { mandatory: [ left_control, left_option ] } }
+        conditions: [ { type: variable_if, name: mouse_mode, value: 1 } ]
+        to: [ { pointing_button: button2 } ]
 
       #==========================================================#
       # ( u i o p ) 滚轮 —— 内侧一对管垂直，外侧一对管水平        #
@@ -1520,3 +1630,188 @@ rules:
         to:
           - set_variable: { name: mouse_mode, value: 0 }
           - set_notification_message: { id: mouse_mode, text: "" }
+  ################################################################
+  #              小米蓝牙遥控器 2 Pro (RC003)                     #
+  ################################################################
+  # SayAll 只负责语音（ATVV 蓝牙流 + 服务层 F5→Fn，Karabiner 看不见语音键），
+  # 全部实体按键由 Karabiner 抓取（device_if vendor 10007 / product 12984）。
+  # SayAll 的 customMappingEnabled 保持关闭，避免它抢占 HID 设备。
+  #
+  # 实测键码（2026-08-22 探测）：方向=arrow、OK=return_or_enter、返回=grave、
+  # 菜单=application、主页=home、TV=grave、语音键附带f5（吞掉）、
+  # 音量=volume_up/down、电源=power。返回键三类探测均无事件，暂未配置。
+  #
+  # 方向键与 OK 键不写规则：直通原始键码，键鼠模式下由公共 mouse_mode
+  # 规则接管（方向=指针、return=左键）。同层输出不回流，模式切换必须
+  # set_variable，发 ⌘⌃⇧⌥R 让 Hyper+R 规则接是接不到的。
+  - description: Xiaomi RC003 Remote
+    manipulators:
+      # ---- 键鼠模式分支（带条件，必须排在无条件规则前）----
+      - description: 'rc003 mouse mode: power = exit mouse mode'
+        type: basic
+        from: { key_code: power, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+          - { type: variable_if, name: mouse_mode, value: 1 }
+        to:
+          - set_variable: { name: mouse_mode, value: 0 }
+          - set_variable: { name: zone, value: 0 }
+          - set_notification_message: { id: mouse_mode, text: "" }
+
+      - description: 'rc003 mouse mode: tv long press = exit mouse mode'
+        type: basic
+        from: { key_code: grave_accent_and_tilde, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+          - { type: variable_if, name: mouse_mode, value: 1 }
+        to_if_alone: [ { key_code: o, modifiers: [ left_control ] } ]
+        to_if_held_down:
+          - set_variable: { name: mouse_mode, value: 0 }
+          - set_variable: { name: zone, value: 0 }
+          - set_notification_message: { id: mouse_mode, text: "" }
+        parameters: { basic.to_if_held_down_threshold_milliseconds: 550 }
+
+      - description: 'rc003 mouse mode: menu = mouse right click'
+        type: basic
+        from: { key_code: application, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+          - { type: variable_if, name: mouse_mode, value: 1 }
+        to: [ { pointing_button: button2 } ]
+
+      # 音量键在键鼠模式当滚轮：不配长按，按住即持续滚动
+      - description: 'rc003 mouse mode: volume up = mouse wheel up'
+        type: basic
+        from: { key_code: volume_up, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+          - { type: variable_if, name: mouse_mode, value: 1 }
+        to: [ { mouse_key: { vertical_wheel: -32 } } ]
+
+      - description: 'rc003 mouse mode: volume down = mouse wheel down'
+        type: basic
+        from: { key_code: volume_down, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+          - { type: variable_if, name: mouse_mode, value: 1 }
+        to: [ { mouse_key: { vertical_wheel: 32 } } ]
+
+      # ---- Vibe 模式（无条件规则）----
+      # 电源：Esc。不配长按/双击，保住连按 Esc Esc = CC 回溯编辑
+      - description: 'rc003: power = escape'
+        type: basic
+        from: { key_code: power, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+        to: [ { key_code: escape } ]
+
+      # 菜单：单击 herdr last_pane，长按 herdr goto 万能跳转
+      - description: 'rc003: menu = ctrl+opt+m (herdr last pane) / hold = ctrl+opt+/ (goto)'
+        type: basic
+        from: { key_code: application, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+        to_if_alone: [ { key_code: m, modifiers: [ left_control, left_option ] } ]
+        to_if_held_down: [ { key_code: slash, modifiers: [ left_control, left_option ], repeat: false } ]
+        parameters: { basic.to_if_held_down_threshold_milliseconds: 550 }
+
+      # 语音键发 f5（实测按住型：down/up 间隔=按住时长）：透传为 Fn。
+      # 按住语音键=按住 Fn → 微信输入法长按语音。fn_tap 保持关闭，
+      # 这样菜单键固件推的音频流不会再被 SayAll 转成 Fn 点按（弹语音副作用消失）。
+      # 音频本体走 ATVV 流写入 MiRemoteV 2ch，输入法需从该设备收音。
+      - description: 'rc003: voice key f5 = fn (hold to talk)'
+        type: basic
+        from: { key_code: f5, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+        to: [ { key_code: fn } ]
+
+      # TV：单击 ⌃O 进/出 CC 浏览模式，长按进入键鼠模式
+      - description: 'rc003: tv = ctrl+o (cc transcript) / hold = mouse mode'
+        type: basic
+        from: { key_code: grave_accent_and_tilde, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+        to_if_alone: [ { key_code: o, modifiers: [ left_control ] } ]
+        to_if_held_down:
+          - set_variable: { name: mouse_mode, value: 1 }
+          - set_notification_message: { id: mouse_mode, text: "遥控器键鼠模式：方向=指针 OK=左键 菜单=右键 音量=滚轮 电源=退出" }
+        parameters: { basic.to_if_held_down_threshold_milliseconds: 550 }
+
+      # 主页：单击唤起/切走 Ghostty，长按显示桌面
+      - description: 'rc003: home = toggle Ghostty / hold = show desktop'
+        type: basic
+        from: { key_code: home, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+        to_if_alone: [ { shell_command: "~/.local/bin/toggle_app Ghostty" } ]
+        to_if_held_down: [ { apple_vendor_keyboard_key_code: expose_desktop, repeat: false } ]
+        parameters: { basic.to_if_held_down_threshold_milliseconds: 550 }
+
+      # 音量+：单击上翻半屏，长按 herdr 新建 tab
+      - description: 'rc003: volume up = page up / hold = ctrl+opt+n (new tab)'
+        type: basic
+        from: { key_code: volume_up, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+        to_if_alone: [ { key_code: page_up } ]
+        to_if_held_down: [ { key_code: n, modifiers: [ left_control, left_option ], repeat: false } ]
+        parameters: { basic.to_if_held_down_threshold_milliseconds: 550 }
+
+      # 音量−：单击下翻半屏，长按 herdr 关闭 tab（shift 当保险栓）
+      - description: 'rc003: volume down = page down / hold = ctrl+opt+shift+n (close tab)'
+        type: basic
+        from: { key_code: volume_down, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+        to_if_alone: [ { key_code: page_down } ]
+        to_if_held_down: [ { key_code: n, modifiers: [ left_control, left_option, left_shift ], repeat: false } ]
+        parameters: { basic.to_if_held_down_threshold_milliseconds: 550 }
+
+      # ---- 直通放行 + 无名氏兜底 ----
+      # 方向与 OK 原本靠直通；因为块末有 any 兜底，这里必须显式放行。
+      # 键鼠模式不受影响：公共 mouse_mode 规则在本块之前，先把它们截走。
+      - description: 'rc003: passthrough arrows and ok'
+        type: basic
+        from: { key_code: up_arrow, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+        to: [ { key_code: up_arrow } ]
+
+      - description: 'rc003: passthrough down'
+        type: basic
+        from: { key_code: down_arrow, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+        to: [ { key_code: down_arrow } ]
+
+      - description: 'rc003: passthrough left'
+        type: basic
+        from: { key_code: left_arrow, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+        to: [ { key_code: left_arrow } ]
+
+      - description: 'rc003: passthrough right'
+        type: basic
+        from: { key_code: right_arrow, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+        to: [ { key_code: right_arrow } ]
+
+      - description: 'rc003: passthrough ok'
+        type: basic
+        from: { key_code: return_or_enter, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+        to: [ { key_code: return_or_enter } ]
+
+      # 返回键：键码不在 Karabiner 206 个标准键名里（穷举无命中、any 兜底 30 连中），
+      # 是全遥控器唯一的无名键码。所有已知键在上面具名接走后，落到这条 any
+      # 兜底的只可能是它——不需要知道名字，直接当退格，保留按住连删。
+      - description: 'rc003: back (unnamed keycode) = delete via catch-all'
+        type: basic
+        from: { any: key_code, modifiers: { optional: [ any ] } }
+        conditions:
+          - { type: device_if, identifiers: [ { vendor_id: 10007, product_id: 12984 } ] }
+        to: [ { key_code: delete_or_backspace } ]
