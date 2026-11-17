@@ -2777,6 +2777,27 @@
           ]
         },
         {
+          "description": "command + g = Codex",
+          "type": "basic",
+          "from": {
+            "key_code": "g",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "right_command",
+                "right_control",
+                "right_shift",
+                "right_option"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "~/.local/bin/toggle_app 'com.openai.codex' 'ChatGPT'"
+            }
+          ]
+        },
+        {
           "description": "command + e = finder",
           "type": "basic",
           "from": {
